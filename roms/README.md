@@ -3,3 +3,9 @@
 ## keyboard.bin
 
 2716 for keyboard controller.
+
+## portal.rom
+
+2716 for boot ROM.
+
+8085 Assembly, loaded at 0. Only 0x432 (1074) bytes are used.
