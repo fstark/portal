@@ -20,7 +20,7 @@ The [images directory](images) contains images of the portal computer externals 
 
 The [disks directory](disks) will contain disk image of portal software
 
-## Docs
+## Documentation
 
 The [docs directory](docs) contains documentation on the portal
 
