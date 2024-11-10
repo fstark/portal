@@ -10,6 +10,13 @@ In memory, the screen is stored at FD5F
 
 Routine at FBCC outputs the screen buffer to the physical screen.
 
+# Keyboard
+
+Port 10 is keyboard strobe (bit 0 = 1 if key pressed)
+Port 11 is key (bits 0-6)
+
+WAIT_KEY is at FB81
+
 # Boot ports setup
 
 | Port | Values |
@@ -18,13 +25,30 @@ Routine at FBCC outputs the screen buffer to the physical screen.
 |  60  | F6     |
 |  61  | F7 BF  |
 
+
 # Boot ROM commands:
 
 | Key | Command      |
 |-----|--------------|
 | &   | (not known)  |
-| \n  | (not known)  |
+| \n  | (not known)  | 
 | *   | (not known)  |
 | :   | (not known)  |
 | G   | (not known)  |
 | B   | (not known)  |
+
+Cmd \n:
+
+* Flag = 1
+* Sends 30 on port 11.
+* Enable interrupts
+* Loop 39990 times
+* Disable interrupts
+* Flag = 0
+?
+
+Cmd 'B':
+
+Reads hex number from keyboard, must be 0-3
+Followed by 4 hex digits
+

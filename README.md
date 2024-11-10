@@ -1,24 +1,25 @@
 # portal
 Reverse engineering of the Micral Portal computer
 
-[Latest findings](docs/findings.md)
+![The Portal](images/portal.jpg)
 
-[Work log](misc/logs.md)
+Here are the [latest findings](docs/findings.md) and the [work log](misc/logs.md)
 
 ## Roms
 
-Contains roms from the portal
+The [roms directory](roms) roms from the portal
 
 [Keyboard rom](roms/keyboard.bin)
+
 [Boot rom](roms/portal.bin)
 
 ## Images (future)
 
-Contains images from the portal computer
+The [images directory](images) contains images of the portal computer externals and internals.
 
 ## Disks (future)
 
-Contains disk image of portal software
+The [disks directory](disks) will contain disk image of portal software
 
 ## Docs
 
