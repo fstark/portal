@@ -7,3 +7,5 @@
 * Pictures taken
 
 * At least two tantalum capacitors are dead
+
+* Start of portal boot rom disassembly

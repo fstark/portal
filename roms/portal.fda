@@ -1,0 +1,122 @@
+0000 CODE LOAD "Load address at boot.\nThis is then moved so 0017 is at F800\n(hence the load adress of F7E9)"
+000A CODE LOOP
+0017 CODE START "This is the code that is copied to F800 at boot time"
+0432 DATA UNUSED "Unused ROM space"
+F7E9 CODE IGNORE "R2E Micral Portal boot rom disassembly (in progress) \nThis code is executed from 0 and copies the rest into F800 in RAM"
+F7F8 CODE HOOK_TARGET "Copies the code 'JMP FA7A' here"
+F7FB STRZ MSG1
+F7FD CODE DF7FD
+F800 CODE RAM_START "The real start in RAM\nPorts:\n  11: 00\n  60: F6\n  61: F7 BF"
+F824 CODE MONITOR "Resets stack, print "
+F879 CODE CMD_ENTER
+F886 CODE LOOP_819
+F8EF CODE AGAIN "Redoes whatever this function tries to do.\nWEIRD ends here is C is zero"
+F95D CODE JMP_HL "Jumps to content of HL"
+F95E CODE WEIRD "Weird function with a suprious POP if C is zero..."
+F968 CODE NON_ZERO_C "Called when C is not Zero. Why? No idea yet."
+F99F CODE DF99F
+F9CE CODE SKIP
+FA0E CODE DFA0E
+FA1E CODE MEMCPY "Copies C bytes from HL to DE"
+FA7A CODE HOOK "May be a hook?\n(See RAM_START)"
+FB00 DATA DFB00
+FB05 CODE READ_HL "Reads HL in hex\nDigits must be entered and finished with ESC\nMy understanding is that we will crash at the 8th digit"
+FB0B CODE LOOP_811
+FB23 CODE SKIP_442
+FB33 CODE FAILED
+FB3C CODE DONE
+FB3E CODE CMD_STAR
+FB40 CODE LOOP_230
+FB60 CODE ECHO_CONTINUE
+FB66 CODE CMD_G "User typed 'G' in the monitor"
+FB6D CODE CMD_AMP "User typed '&' in the monitor"
+FB79 CODE MONITOR_REENTER "Display '#' and goes to monitor"
+FB81 CODE WAIT_KEY "Waits for a char and reads it in A"
+FB8C STRZ PSTR_PORTAL "TAB+SPACE+PORTAL"
+FB8D STRZ STR_PORTAL
+FB97 CODE READ_CHAR_ECHO "? Unsure, maybe be reading a char"
+FB9B CODE PRINT_CHAR "Prints char in C"
+FBB7 CODE PRINT_CR "Erase current cursor and put cursor at start of screen"
+FBCC CODE UPDATE_SCREEN "Outputs the content of SCREEN to ports 9F downto 80 "
+FBD3 CODE LOOP_737
+FBE7 CODE PRINT_LF "Clear screen, put cursor at column 0"
+FBF2 CODE LOOP_272
+FC0C CODE PRINT_PSTR "Prints pascal string pointed by HL\nFirst byte is length"
+FC0F CODE LOOP_874
+FC1B DATA UNUSED2
+FC23 CODE VALUE_B
+FC34 DATA FLAG
+FC35 DATA DFC35
+FD5D DATA CURSOR
+FD5F DATA SCREEN "32 bytes for the screen buffer.\nCursor is represented by '_'"
+FD7F DATA OTHER
+0014 COMMENT "Boot"
+0001 COMMENT "0017 at boot time"
+F80C COMMENT "JMP"
+F80F COMMENT "LOW(HOOK)"
+F812 COMMENT "HI(HOOK)"
+F850 COMMENT "':'"
+FBBB COMMENT "' '"
+FBDA COMMENT "Will be patched"
+FBD1 COMMENT "Port"
+FB84 COMMENT "Wait for char"
+FB89 COMMENT "Force ASCII"
+FB81 COMMENT "Char READY (bit 0)"
+FB87 COMMENT "Char"
+FB83 COMMENT "Bit 0 -> Carry"
+FB44 COMMENT "\n"
+FB49 COMMENT "\r"
+FB50 COMMENT "' '"
+FB4E COMMENT "0AH"
+FC0E COMMENT "Length"
+FB79 COMMENT "'#'"
+FB60 COMMENT "Useless should have been FB5A"
+F802 COMMENT "Set Serial Data Out to 1"
+F821 COMMENT "Some flag?"
+FB6C COMMENT "Jumpto address"
+FB8C COMMENT "9 Bytes string"
+F841 COMMENT "'&' command"
+F847 COMMENT "'\n' command"
+F84C COMMENT "'*' command"
+F858 COMMENT "'G' command"
+F861 COMMENT "'B' command"
+FBEB COMMENT "' '"
+FBF0 COMMENT "Do 32 times (32 characters)"
+FBF5 COMMENT "Copies 32 spaces"
+FBFB COMMENT "'_'"
+FBFD COMMENT "Overrides fist ' ' with '_'"
+FBAF COMMENT "'_'"
+FBC4 COMMENT "'_'"
+F882 COMMENT "33990"
+F88B COMMENT "Loops 33990 times"
+F963 COMMENT "Weird..."
+F964 COMMENT "C = 1"
+F965 COMMENT "Again"
+FB11 COMMENT "Fails if <'0'"
+FB16 COMMENT "Fails if original char >'F'"
+FB1B COMMENT "Jumps if original was 'A'-'F'"
+FB0F COMMENT "; '0' is at 0"
+FB14 COMMENT "'F' is at FF"
+FB19 COMMENT "'A' is at 0"
+FB1E COMMENT "'9' is at FF"
+FB20 COMMENT "Jumps if orignal >'9' and <'A'"
+FB23 COMMENT "'0' is at 0, 'F' at 15"
+FB2A COMMENT "*2"
+FB2B COMMENT "*4"
+FB2C COMMENT "*8"
+FB2D COMMENT "*16"
+FB2E COMMENT "Why?"
+FB25 COMMENT "Why?"
+FB2F COMMENT "Replace last hex digit"
+FB34 COMMENT "ESC"
+FB36 COMMENT "Only correct way to exit"
+FB3A COMMENT "Error"
+FB3B COMMENT "Return"
+FB3C COMMENT "Why?"
+FB09 COMMENT "Read at most 8 hex chars"
+FB06 COMMENT "Starts with 0000"
+FB0B COMMENT "Read one digit"
+FB27 COMMENT "Will crash because lack of POP B"
+F86F COMMENT "Must be 0 to 3"
+F839 COMMENT "0 to 3, can be changed by B command"
+F830 COMMENT "Can be changed by B command"
