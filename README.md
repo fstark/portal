@@ -22,9 +22,9 @@ The [disks directory](disks) will contain disk image of portal software
 
 ## Docs
 
-The Contains documentation on the portal
+The [docs directory](docs) contains documentation on the portal
 
-[Findings](docs/findings.md)
+Of interest may be the [findings](docs/findings.md), containing the latest findings on the portal.
 
 ## Misc
 
