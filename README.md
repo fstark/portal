@@ -12,7 +12,7 @@ Here are the [latest findings](docs/findings.md) and the [work log](misc/logs.md
 
 The [roms directory](roms) roms from the portal
 
-## Images (future)
+## Images
 
 The [images directory](images) contains images of the portal computer externals and internals.
 
