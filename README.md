@@ -1,5 +1,8 @@
-# portal
-Reverse engineering of the Micral Portal computer
+# Micral R2E Portal CCMC
+
+Reverse engineering of the Micral Portal computer.
+
+The reverse engineered specimen has no readable serial number. Many internal components are dated 1984.
 
 ![The Portal](images/portal.jpg)
 
@@ -8,10 +11,6 @@ Here are the [latest findings](docs/findings.md) and the [work log](misc/logs.md
 ## Roms
 
 The [roms directory](roms) roms from the portal
-
-[Keyboard rom](roms/keyboard.bin)
-
-[Boot rom](roms/portal.bin)
 
 ## Images (future)
 
@@ -23,7 +22,7 @@ The [disks directory](disks) will contain disk image of portal software
 
 ## Docs
 
-Contains documentation on the portal
+The Contains documentation on the portal
 
 [Findings](docs/findings.md)
 
