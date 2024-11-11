@@ -5,7 +5,7 @@ Manufacturer | Part Number | Description | Board Marking | Pictures | Documentat
 ----------- | ----------- | ----------- | ------------- | -------- | -------------
 INTEL | P8253-5 | Programmable Interval Timer | 8253-5 | [1](../images/motherboard_1.jpg),[2](../images/motherboard_2.jpg)
 INTEL | D8202 | DRAM Controller | 8202 | [1](../images/motherboard_1.jpg),[2](../images/motherboard_2.jpg) | [Datasheet](https://archive.org/details/intel-8202-datasheet)
-NEC | D765AC | Floppy Controller | uPD 765c | [2](../images/motherboard_2.jpg) | [Datasheet](UPD765_Datasheet_OCRed.pdf)
+NEC | D765AC | Floppy Controller | uPD 765c | [2](../images/motherboard_2.jpg) | [Datasheet](datasheets/UPD765.pdf)
 INTERSIL | IM6402AIPL | UART | 6402 | [3](../images/motherboard_3.jpg),[4](../images/motherboard_4.jpg)
 SIGNETICS | SCN2652ACIN40 | MPCC(*) | 2652 | [3](../images/motherboard_3.jpg),[4](../images/motherboard_4.jpg) | [Datasheet](364-22200-0-SCN2652.pdf)
 MITSUBISHI | M5l8257P-5 | DMA | 8257-5 | [3](../images/motherboard_3.jpg),[4](../images/motherboard_4.jpg)
