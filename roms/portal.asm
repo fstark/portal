@@ -14,9 +14,10 @@ IGNORE:
 	INX D
 	DCX B
 ;
-; Copies the code 'JMP FA7A' here
+; Copies the code 'JMP FA7A' (HOOK) here
+; This is also RST 1
 ;
-HOOK_TARGET:
+RST1:
 	MOV A,B
 	ORA C
 	JNZ 0AH
@@ -63,6 +64,7 @@ MONITOR:
 	LXI H,110H	; Can be changed by B command
 	SHLD 0FC3DH
 	LXI D,80H
+MONITOR2:
 	MVI B,0	; 0 to 3, can be changed by B command
 	CALL 0FB97H
 	MOV A,C
@@ -82,6 +84,10 @@ MONITOR:
 	MVI A,42H
 	CMP B
 	JNZ 0FB79H
+;
+; Read B (0-3) and re-reads HL (gets ignored)
+;
+CMD_B:
 	CALL 0FB05H	; 'B' command
 	JNC 0FB79H
 	MOV A,H
@@ -98,7 +104,7 @@ CMD_ENTER:
 	STA 0FC34H
 	MVI A,30H
 	OUT 11H
-	LXI D,84C6H	; 33990
+	LXI D,84C6H	; 33990 (loop counter)
 	EI
 LOOP_819:
 	XTHL
@@ -156,7 +162,7 @@ LOOP_819:
 	SHLD 0FC3BH
 ;
 ; Redoes whatever this function tries to do.
-; WEIRD ends here is C is zero
+; WEIRD ends here if C is zero
 ;
 AGAIN:
 	CALL 0F95EH
@@ -392,10 +398,10 @@ DFA27:
 	RZ
 	JMP 0FA69H
 ;
-; May be a hook?
+; Stored as the target of a JMP instruction in 0008
 ; (See RAM_START)
 ;
-HOOK:
+INTERRUPT:
 	PUSH PSW
 	PUSH B
 	PUSH H
@@ -414,19 +420,23 @@ HOOK:
 	JC 0FAA5H
 	MVI A,1
 	STA 0FC33H
+DONE_54:
 	MVI A,66H
 	OUT 60H
 	POP H
 	POP B
 	POP PSW
 	RET
+XXX:
 	MVI A,7FH
 	JMP 0FA9AH
+XXX_898:
 	LXI H,0FC1FH
 	MVI M,8
 	MVI C,1
 	CALL 0FAD3H
 	JMP 0FA84H
+XXX_580:
 	LXI H,0FC2AH
 	MVI B,0
 	IN 50H
@@ -443,6 +453,7 @@ HOOK:
 	INR B
 	MOV M,A
 	JMP 0FABCH
+XXX_698:
 	IN 50H
 	ANI 10H
 	JNZ 0FAD3H
@@ -457,6 +468,7 @@ HOOK:
 	DCR C
 	JNZ 0FADAH
 	RET
+XXX_891:
 	CALL 0FAD3H
 	XRA A
 	STA 0FC33H
@@ -465,9 +477,8 @@ HOOK:
 	ORA A
 	JZ 0FAF5H
 	RET
-	MOV D,E
-	SIM
-	NOP
+YYY:
+	DB 53H,30H,28H
 DFB00:
 	DB 1,10H,20H,0,32H
 ;
@@ -512,6 +523,9 @@ FAILED:
 DONE:
 	ORA A	; Why?
 	RET
+;
+; Weird infinite loop with echo of the type char (if not space).
+;
 CMD_STAR:
 	MVI B,9
 LOOP_230:
@@ -521,15 +535,16 @@ LOOP_230:
 	JZ 0FB58H
 	CPI 0AH	; \r
 	JZ 0FB58H
-	INR B	; 0AH
+	INR B	; 0AH initial call
 	MOV A,B
 	CPI 20H	; ' '
 	JNZ 0FB60H
 	CALL 0FBE7H
+LF:
 	MVI B,0
 	CALL 0FB9BH
 	JMP 0FB40H
-ECHO_CONTINUE:
+CONT:
 	CALL 0FB9BH	; Useless should have been FB5A
 	JMP 0FB40H
 ;
@@ -689,19 +704,27 @@ VALUE_B:
 	NOP
 	NOP
 	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-FLAG:
+;
+; Another 0/1 flag
+;
+FLAG2:
+	DB 0,0,0,0,0,0,0,0
+FLAG3:
+	DB 0
+;
+; Flag that contains 0 at boot, and 1 during the 39990 loop...
+;
+FLAG1:
 	DB 0
 DFC35:
 	DB 0,0,0,0,0,0,0,0
+;
+; Unsure what this is for yet
+; 0110H by default
+;
+BOOT_HL:
+	DW 0
+DFC3F:
 	DB 0,0,0,0,0,0,0,0
 	DB 0,0,0,0,0,0,0,0
 	DB 0,0,0,0,0,0,0,0
@@ -737,7 +760,11 @@ DFC35:
 	DB 0,0,0,0,0,0,0,0
 	DB 0,0,0,0,0,0,0,0
 	DB 0,0,0,0,0,0,0,0
-	DB 0,0,0,0,0,0,0,0
+	DB 0,0,0,0,0,0
+;
+; Location of the cursor in the SCREEN area.
+; Before CURSOR, the inital Stack Frame
+;
 CURSOR:
 	DB 0,0
 ;

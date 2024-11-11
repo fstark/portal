@@ -3,14 +3,16 @@
 0017 CODE START "This is the code that is copied to F800 at boot time"
 0432 DATA UNUSED "Unused ROM space"
 F7E9 CODE IGNORE "R2E Micral Portal boot rom disassembly (in progress) \nThis code is executed from 0 and copies the rest into F800 in RAM"
-F7F8 CODE HOOK_TARGET "Copies the code 'JMP FA7A' here"
+F7F8 CODE RST1 "Copies the code 'JMP FA7A' (HOOK) here\nThis is also RST 1"
 F7FB STRZ MSG1
 F7FD CODE DF7FD
 F800 CODE RAM_START "The real start in RAM\nPorts:\n  11: 00\n  60: F6\n  61: F7 BF"
 F824 CODE MONITOR "Resets stack, print "
+F839 CODE MONITOR2
+F861 CODE CMD_B "Read B (0-3) and re-reads HL (gets ignored)"
 F879 CODE CMD_ENTER
 F886 CODE LOOP_819
-F8EF CODE AGAIN "Redoes whatever this function tries to do.\nWEIRD ends here is C is zero"
+F8EF CODE AGAIN "Redoes whatever this function tries to do.\nWEIRD ends here if C is zero"
 F95D CODE JMP_HL "Jumps to content of HL"
 F95E CODE WEIRD "Weird function with a suprious POP if C is zero..."
 F968 CODE NON_ZERO_C "Called when C is not Zero. Why? No idea yet."
@@ -19,16 +21,24 @@ F9CE CODE SKIP
 FA0E CODE DFA0E
 FA1E CODE MEMCPY "Copies C bytes from HL to DE"
 FA27 CODE DFA27 "HL = 'UNUSED2' + 'VALUE_B' & 0x3"
-FA7A CODE HOOK "May be a hook?\n(See RAM_START)"
+FA7A CODE INTERRUPT "Stored as the target of a JMP instruction in 0008\n(See RAM_START)"
+FA9D CODE DONE_54
+FAA5 CODE XXX
+FAAA CODE XXX_898
+FAB7 CODE XXX_580
+FAD3 CODE XXX_698
+FAED CODE XXX_891
+FAFD DATA YYY
 FB00 DATA DFB00
 FB05 CODE READ_HL "Reads HL in hex\nDigits must be entered and finished with ESC\nMy understanding is that we will crash at the 8th digit"
 FB0B CODE LOOP_811
 FB23 CODE SKIP_442
 FB33 CODE FAILED
 FB3C CODE DONE
-FB3E CODE CMD_STAR
+FB3E CODE CMD_STAR "Weird infinite loop with echo of the type char (if not space)."
 FB40 CODE LOOP_230
-FB60 CODE ECHO_CONTINUE
+FB58 CODE LF
+FB60 CODE CONT
 FB66 CODE CMD_G "User typed 'G' in the monitor"
 FB6D CODE CMD_AMP "User typed '&' in the monitor"
 FB79 CODE MONITOR_REENTER "Display '#' and goes to monitor"
@@ -46,9 +56,13 @@ FC0C CODE PRINT_PSTR "Prints pascal string pointed by HL\nFirst byte is length"
 FC0F CODE LOOP_874
 FC1B DATA UNUSED2
 FC23 CODE VALUE_B
-FC34 DATA FLAG
+FC2B DATA FLAG2 "Another 0/1 flag"
+FC33 DATA FLAG3
+FC34 DATA FLAG1 "Flag that contains 0 at boot, and 1 during the 39990 loop..."
 FC35 DATA DFC35
-FD5D DATA CURSOR
+FC3D DATAW BOOT_HL "Unsure what this is for yet\n0110H by default"
+FC3F DATA DFC3F
+FD5D DATA CURSOR "Location of the cursor in the SCREEN area.\nBefore CURSOR, the inital Stack Frame"
 FD5F DATA SCREEN "32 bytes for the screen buffer.\nCursor is represented by '_'"
 FD7F DATA OTHER
 0014 COMMENT "Boot"
@@ -68,7 +82,6 @@ FB83 COMMENT "Bit 0 -> Carry"
 FB44 COMMENT "\n"
 FB49 COMMENT "\r"
 FB50 COMMENT "' '"
-FB4E COMMENT "0AH"
 FC0E COMMENT "Length"
 FB79 COMMENT "'#'"
 FB60 COMMENT "Useless should have been FB5A"
@@ -88,7 +101,6 @@ FBFB COMMENT "'_'"
 FBFD COMMENT "Overrides fist ' ' with '_'"
 FBAF COMMENT "'_'"
 FBC4 COMMENT "'_'"
-F882 COMMENT "33990"
 F88B COMMENT "Loops 33990 times"
 F963 COMMENT "Weird..."
 F964 COMMENT "C = 1"
@@ -121,3 +133,5 @@ FB27 COMMENT "Will crash because lack of POP B"
 F86F COMMENT "Must be 0 to 3"
 F839 COMMENT "0 to 3, can be changed by B command"
 F830 COMMENT "Can be changed by B command"
+FB4E COMMENT "0AH initial call"
+F882 COMMENT "33990 (loop counter)"

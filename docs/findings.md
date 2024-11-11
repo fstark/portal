@@ -68,5 +68,13 @@ Cmd \n:
 Cmd 'B':
 
 Reads hex number from keyboard, must be 0-3
-Followed by 4 hex digits
+Followed by 4 hex digits which are ignored.
+
+Cmd '*':
+
+Weird command that juse echoes the keyboard on a loop
+
+Cmd '&':
+
+Allows to edit the value of 'HL' at boot (initially 0110H)
 
