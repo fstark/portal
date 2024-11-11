@@ -1,7 +1,7 @@
-0000 CODE LOAD "Load address at boot.\nThis is then moved so 0017 is at F800\n(hence the load adress of F7E9)"
-000A CODE LOOP
-0017 CODE START "This is the code that is copied to F800 at boot time"
-0432 DATA UNUSED "Unused ROM space"
+0000 CODE BOOT_LOAD "Load address at boot.\nThis is then moved so 0017 is at F800\n(hence the load adress of F7E9)"
+000A CODE BOOT_LOOP
+0017 CODE BOOT_START "This is the code that is copied to F800 at boot time"
+0432 DATA BOOT_UNUSED "Unused ROM space"
 F7E9 CODE IGNORE "R2E Micral Portal boot rom disassembly (in progress) \nThis code is executed from 0 and copies the rest into F800 in RAM"
 F7F8 CODE RST1 "Copies the code 'JMP FA7A' (HOOK) here\nThis is also RST 1"
 F7FB STRZ MSG1
@@ -10,13 +10,16 @@ F800 CODE RAM_START "The real start in RAM\nPorts:\n  11: 00\n  60: F6\n  61: F7
 F824 CODE MONITOR "Resets stack, print "
 F839 CODE MONITOR2
 F861 CODE CMD_B "Read B (0-3) and re-reads HL (gets ignored)"
-F879 CODE CMD_ENTER
+F879 CODE CMD_ENTER "B : Drive #"
 F886 CODE LOOP_819
 F8EF CODE AGAIN "Redoes whatever this function tries to do.\nWEIRD ends here if C is zero"
 F95D CODE JMP_HL "Jumps to content of HL"
 F95E CODE WEIRD "Weird function with a suprious POP if C is zero..."
 F968 CODE NON_ZERO_C "Called when C is not Zero. Why? No idea yet."
-F99F CODE DF99F
+F99F CODE MYSTERY_CODE "(LOoks like some sort of division of HL by E)\nNeed to understand what:\nHL is at start\nE is at start (not modified)\n  (E may be C6H (198) from 'CMD_ENTER')\n"
+F9A4 CODE LOOP "16 times (every bit of HL)"
+F9AD CODE BIT7
+F9AF CODE SKIP_217
 F9CE CODE SKIP
 FA0E CODE DFA0E
 FA1E CODE MEMCPY "Copies C bytes from HL to DE"
@@ -57,12 +60,12 @@ FBF2 CODE LOOP_272
 FC0C CODE PRINT_PSTR "Prints pascal string pointed by HL\nFirst byte is length"
 FC0F CODE LOOP_874
 FC1B DATA UNUSED2
-FC23 CODE VALUE_B
+FC23 DATA DRIVE "0-3, boot drive"
 FC2A DATA PORT51_INDATA
 FC2B DATA FLAG2 "Another 0/1 flag"
 FC33 DATA FLAG3 "00, 01 or 7F"
 FC34 DATA FLAG1 "Flag that contains 0 at boot, and 1 during the 39990 loop..."
-FC35 DATA DFC35
+FC35 DATA XXX_DATA
 FC3D DATAW BOOT_HL "Unsure what this is for yet\n0110H by default"
 FC3F DATA DFC3F
 FD5D DATA CURSOR "Location of the cursor in the SCREEN area.\nBefore CURSOR, the inital Stack Frame"
@@ -135,10 +138,14 @@ FB0B COMMENT "Read one digit"
 FB27 COMMENT "Will crash because lack of POP B"
 F86F COMMENT "Must be 0 to 3"
 F839 COMMENT "0 to 3, can be changed by B command"
-F830 COMMENT "Can be changed by B command"
 FB4E COMMENT "0AH initial call"
 F882 COMMENT "33990 (loop counter)"
 FAC3 COMMENT "0010 0000"
 FABF COMMENT "Wait for bit 7"
 FAC8 COMMENT "Cannot happen"
 FA89 COMMENT "No data read"
+F830 COMMENT "Can be changed by B command. I Suspect it is some track/sector"
+F9AD COMMENT "L |= 1"
+F9AA COMMENT "A < E"
+F9A5 COMMENT "A gets the high bit of HL"
+F9A4 COMMENT "C = HL & 8000 ; HL <<= 1"

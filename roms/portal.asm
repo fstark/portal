@@ -61,7 +61,7 @@ MONITOR:
 	CALL 0FBE7H
 	LXI H,0FB8CH
 	CALL 0FC0CH
-	LXI H,110H	; Can be changed by B command
+	LXI H,110H	; Can be changed by B command. I Suspect it is some track/sector
 	SHLD 0FC3DH
 	LXI D,80H
 MONITOR2:
@@ -99,6 +99,9 @@ CMD_B:
 	MOV B,L
 	CALL 0FB05H
 	JNC 0FB79H
+;
+; B : Drive #
+;
 CMD_ENTER:
 	MVI A,1
 	STA 0FC34H
@@ -269,18 +272,31 @@ NON_ZERO_C:
 	POP H
 	DCR C
 	RET
-DF99F:
+;
+; (LOoks like some sort of division of HL by E)
+; Need to understand what:
+; HL is at start
+; E is at start (not modified)
+;   (E may be C6H (198) from 'CMD_ENTER')
+;
+MYSTERY_CODE:
 	PUSH H
 	PUSH D
 	XRA A
 	MVI D,10H
-	DAD H
-	RAL
+;
+; 16 times (every bit of HL)
+;
+LOOP:
+	DAD H	; C = HL & 8000 ; HL <<= 1
+	RAL	; A gets the high bit of HL
 	JC 0F9ADH
 	CMP E
-	JC 0F9AFH
-	INR L
+	JC 0F9AFH	; A < E
+BIT7:
+	INR L	; L |= 1
 	SUB E
+SKIP_217:
 	DCR D
 	JNZ 0F9A4H
 	INR A
@@ -702,14 +718,11 @@ LOOP_874:
 	RET
 UNUSED2:
 	DB 0,0,0,0,0,0,0,0
-VALUE_B:
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
+;
+; 0-3, boot drive
+;
+DRIVE:
+	DB 0,0,0,0,0,0,0
 PORT51_INDATA:
 	DB 0
 ;
@@ -727,7 +740,7 @@ FLAG3:
 ;
 FLAG1:
 	DB 0
-DFC35:
+XXX_DATA:
 	DB 0,0,0,0,0,0,0,0
 ;
 ; Unsure what this is for yet
