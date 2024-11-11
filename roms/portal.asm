@@ -398,6 +398,7 @@ DFA27:
 	RZ
 	JMP 0FA69H
 ;
+; Interrupt?
 ; Stored as the target of a JMP instruction in 0008
 ; (See RAM_START)
 ;
@@ -411,7 +412,7 @@ INTERRUPT:
 	CALL 0FAB7H
 	MOV A,B
 	ANA A
-	JZ 0FAAAH
+	JZ 0FAAAH	; No data read
 	LXI H,0FC2BH
 	MOV A,M
 	RLC
@@ -419,6 +420,7 @@ INTERRUPT:
 	RLC
 	JC 0FAA5H
 	MVI A,1
+STORE_FLAG3:
 	STA 0FC33H
 DONE_54:
 	MVI A,66H
@@ -436,18 +438,23 @@ XXX_898:
 	MVI C,1
 	CALL 0FAD3H
 	JMP 0FA84H
-XXX_580:
+;
+; Reads from 51H into PORT51_INDATA
+; B contains number of bytes read
+;
+READ_51H:
 	LXI H,0FC2AH
 	MVI B,0
+LOOP_576:
 	IN 50H
 	RLC
-	JNC 0FABCH
+	JNC 0FABCH	; Wait for bit 7
 	MOV C,A
-	ANI 20H
+	ANI 20H	; 0010 0000
 	RZ
 	MOV A,C
 	RLC
-	JNC 0FABCH
+	JNC 0FABCH	; Cannot happen
 	IN 51H
 	INX H
 	INR B
@@ -703,12 +710,16 @@ VALUE_B:
 	NOP
 	NOP
 	NOP
-	NOP
+PORT51_INDATA:
+	DB 0
 ;
 ; Another 0/1 flag
 ;
 FLAG2:
 	DB 0,0,0,0,0,0,0,0
+;
+; 00, 01 or 7F
+;
 FLAG3:
 	DB 0
 ;

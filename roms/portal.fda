@@ -21,11 +21,13 @@ F9CE CODE SKIP
 FA0E CODE DFA0E
 FA1E CODE MEMCPY "Copies C bytes from HL to DE"
 FA27 CODE DFA27 "HL = 'UNUSED2' + 'VALUE_B' & 0x3"
-FA7A CODE INTERRUPT "Stored as the target of a JMP instruction in 0008\n(See RAM_START)"
+FA7A CODE INTERRUPT "Interrupt?\nStored as the target of a JMP instruction in 0008\n(See RAM_START)"
+FA9A CODE STORE_FLAG3
 FA9D CODE DONE_54
 FAA5 CODE XXX
 FAAA CODE XXX_898
-FAB7 CODE XXX_580
+FAB7 CODE READ_51H "Reads from 51H into PORT51_INDATA\nB contains number of bytes read"
+FABC CODE LOOP_576
 FAD3 CODE XXX_698
 FAED CODE XXX_891
 FAFD DATA YYY
@@ -56,8 +58,9 @@ FC0C CODE PRINT_PSTR "Prints pascal string pointed by HL\nFirst byte is length"
 FC0F CODE LOOP_874
 FC1B DATA UNUSED2
 FC23 CODE VALUE_B
+FC2A DATA PORT51_INDATA
 FC2B DATA FLAG2 "Another 0/1 flag"
-FC33 DATA FLAG3
+FC33 DATA FLAG3 "00, 01 or 7F"
 FC34 DATA FLAG1 "Flag that contains 0 at boot, and 1 during the 39990 loop..."
 FC35 DATA DFC35
 FC3D DATAW BOOT_HL "Unsure what this is for yet\n0110H by default"
@@ -135,3 +138,7 @@ F839 COMMENT "0 to 3, can be changed by B command"
 F830 COMMENT "Can be changed by B command"
 FB4E COMMENT "0AH initial call"
 F882 COMMENT "33990 (loop counter)"
+FAC3 COMMENT "0010 0000"
+FABF COMMENT "Wait for bit 7"
+FAC8 COMMENT "Cannot happen"
+FA89 COMMENT "No data read"

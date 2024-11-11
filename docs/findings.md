@@ -9,12 +9,28 @@ NEC | D765AC | Floppy Controller | uPD 765c | [2](../images/motherboard_2.jpg) |
 INTERSIL | IM6402AIPL | UART | 6402 | [3](../images/motherboard_3.jpg),[4](../images/motherboard_4.jpg)
 SIGNETICS | SCN2652ACIN40 | MPCC(*) | 2652 | [3](../images/motherboard_3.jpg),[4](../images/motherboard_4.jpg) | [Datasheet](364-22200-0-SCN2652.pdf)
 MITSUBISHI | M5l8257P-5 | DMA | 8257-5 | [3](../images/motherboard_3.jpg),[4](../images/motherboard_4.jpg)
-NEC | D8259C-5 | PIC(**) | 8259c | [3](../images/motherboard_3.jpg),[4](../images/motherboard_4.jpg)
+NEC | D8259C-5 | PIC(**) | 8259c | [3](../images/motherboard_3.jpg),[4](../images/motherboard_4.jpg) | [Datasheet](datasheets/D8259C.pdf)
 NEC | D8085AC | CPU | 8085 | [4](../images/motherboard_4.jpg)
 SMC | KR3600-017 | Keyboard Encoder | 3600 | [4](../images/motherboard_4.jpg) | [Datasheet](SMC%20KR3600-XX,ST,STD,PRO%20specifications.pdf)
 
 (*)  MPCC = Multi-Protocol Communications Controller
 (**) PIC = Programmable Interrupt Controller
+
+# Ports (incomplete)
+
+Port | Input Description | Ouput Description
+-----|-------------------|-----------------
+10H | Keyboard strobe |
+11H | Keyboard data | 00H at start, 30H before big loop
+40H |
+41H |
+48H |
+50H | 
+51H |
+60H |
+61H |
+80H-9FH	| Screen
+
 
 # Screen
 
@@ -43,8 +59,19 @@ WAIT_KEY is at FB81
 |  60  | F6     |
 |  61  | F7 BF  |
 
+Interrupt:
 
-# Boot ROM commands:
+Start:
+    loop:
+        Wait until PORT(50H) & 0x80
+        if not PORT(50&0x20)
+            return
+        Store PORT(51H) in FC2A and after (only latest is used, apparently)
+
+At end of interrupt, PORT(60H) <= 66H
+
+
+# [Boot ROM](../roms/portal.asm) commands:
 
 | Key | Command      |
 |-----|--------------|
