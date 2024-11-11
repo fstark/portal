@@ -18,6 +18,7 @@ F99F CODE DF99F
 F9CE CODE SKIP
 FA0E CODE DFA0E
 FA1E CODE MEMCPY "Copies C bytes from HL to DE"
+FA27 CODE DFA27 "HL = 'UNUSED2' + 'VALUE_B' & 0x3"
 FA7A CODE HOOK "May be a hook?\n(See RAM_START)"
 FB00 DATA DFB00
 FB05 CODE READ_HL "Reads HL in hex\nDigits must be entered and finished with ESC\nMy understanding is that we will crash at the 8th digit"

@@ -18,7 +18,7 @@ The [images directory](images) contains images of the portal computer externals 
 
 ## Disks (future)
 
-The [disks directory](disks) will contain disk image of portal software
+The [disks directory](disks) will contain disk images of portal software
 
 ## Documentation
 

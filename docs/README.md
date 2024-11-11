@@ -3,7 +3,7 @@ Documentations
 
 # General
 
-There is a [Wikipedia page](https://en.wikipedia.org/wiki/Portal_(computer)) of questionable accuracy. No, the Portal was not running Prolog, but Prologue.
+There is a [Wikipedia page](https://en.wikipedia.org/wiki/Portal_(computer)) of questionable accuracy. No, the Portal was not running Prolog as an operating system.
 
 # Marketing
 
