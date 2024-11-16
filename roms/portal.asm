@@ -15,10 +15,11 @@ IGNORE:
 	DCX B
 ;
 ; Copies the code 'JMP FA7A' (HOOK) here
-; This is also written to by F809H and becomes RST 1
+; This is also written to by F809H and becomes INT_VECTOR
 ; (JMP @FA7AH / JMP @INTERRUPT)
+; PIC sets interrupts to be at F7E0+4*INT#, so this is INT 6.
 ;
-RST1:
+INT_VECTOR:
 	MOV A,B
 	ORA C
 	JNZ 0AH
@@ -46,11 +47,11 @@ RAM_START:
 	MVI M,7AH	; LOW(@INTERRUPT)
 	INX H
 	MVI M,0FAH	; HI(@INTERRUPT)
-	MVI A,0F6H
+	MVI A,0F6H	; ICW1 : PIC init word 1
 	OUT 60H
-	MVI A,0F7H
+	MVI A,0F7H	; ICW2 : PIC init word 2 (interrupt at F7E0+4*INT)
 	OUT 61H
-	MVI A,0BFH
+	MVI A,0BFH	; ICW3 : PIC init word 3
 	OUT 61H
 	XRA A
 	STA 0FC34H	; Some flag?
@@ -109,7 +110,7 @@ CMD_B:
 ;
 CMD_ENTER:
 	MVI A,1
-	STA 0FC34H
+	STA 0FC34H	; We skip interrupt code
 	MVI A,30H
 	OUT 11H
 	LXI D,84C6H	; 33990 (loop counter)
@@ -123,11 +124,11 @@ LOOP_819:
 	JNZ 0F886H	; Loops 33990 times
 	DI
 	XRA A
-	STA 0FC34H
+	STA 0FC34H	; We activate the @INTERRUPT code
 	SHLD 0FC35H
 	MOV A,B
 	STA 0FC23H
-	LXI H,0FAFDH	; "S0"
+	LXI H,0FAFDH	; 
 	LXI D,0FC1FH
 	MVI A,3
 	STAX D
@@ -432,12 +433,15 @@ INTERRUPT:
 	PUSH H
 	LDA 0FC34H
 	ANA A
-	JNZ 0FA9DH
-DFA84:
+	JNZ 0FA9DH	; Skip interrupt code
+;
+; Reads from 51H
+;
+INTERRUPT_READ:
 	CALL 0FAB7H
 	MOV A,B
 	ANA A
-	JZ 0FAAAH	; No data read
+	JZ 0FAAAH	; B=0 => No data read
 	LXI H,0FC2BH
 	MOV A,M
 	RLC
@@ -448,9 +452,9 @@ DFA84:
 ;
 ; Used to communicate with non interrupt code
 ;
-STORE_FLAG3:
+INTERRUPT_CODE:
 	STA 0FC33H
-DONE_54:
+INTERRUPT_END:
 	MVI A,66H
 	OUT 60H
 	POP H
@@ -460,10 +464,14 @@ DONE_54:
 ;
 ; I suspect this is an error code
 ;
-XXX:
+INTERRUPT_ERROR:
 	MVI A,7FH
 	JMP 0FA9AH
-XXX_898:
+;
+; I guess this is a retry to get some data
+; (writes 1 in bit 4 of 51H)
+;
+INTERRUPT_RETRY:
 	LXI H,0FC1FH
 	MVI M,8
 	MVI C,1
@@ -768,13 +776,10 @@ LOOP_874:
 BUFFER:
 	DB 0,0,0,0
 ;
-; 3 bytes that gets written to 51H
+; Buffer often written to 51H (3 bytes or 1 byte)
 ;
 DATA51H_3:
-	NOP
-	NOP
-	NOP
-	NOP
+	DB 0,0,0,0
 ;
 ; 0-3, boot drive
 ;
@@ -793,9 +798,9 @@ FLAG2:
 FLAG3:
 	DB 0
 ;
-; Flag that contains 0 at boot, and 1 during the 39990 loop...
+; Interrupt code does nothing if set to 1
 ;
-FLAG1:
+SKIP_INTERRUP:
 	DB 0
 XXX_DATA:
 	DB 0,0,0,0,0,0,0,0
