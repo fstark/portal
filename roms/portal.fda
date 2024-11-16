@@ -1,151 +1,245 @@
-0000 CODE BOOT_LOAD "Load address at boot.\nThis is then moved so 0017 is at F800\n(hence the load adress of F7E9)"
-000A CODE BOOT_LOOP
-0017 CODE BOOT_START "This is the code that is copied to F800 at boot time"
-0432 DATA BOOT_UNUSED "Unused ROM space"
-F7E9 CODE IGNORE "R2E Micral Portal boot rom disassembly (in progress) \nThis code is executed from 0 and copies the rest into F800 in RAM"
-F7F8 CODE RST1 "Copies the code 'JMP FA7A' (HOOK) here\nThis is also RST 1"
-F7FB STRZ MSG1
-F7FD CODE DF7FD
-F800 CODE RAM_START "The real start in RAM\nPorts:\n  11: 00\n  60: F6\n  61: F7 BF"
-F824 CODE MONITOR "Resets stack, print "
-F839 CODE MONITOR2
-F861 CODE CMD_B "Read B (0-3) and re-reads HL (gets ignored)"
-F879 CODE CMD_ENTER "B : Drive #"
-F886 CODE LOOP_819
-F8EF CODE AGAIN "Redoes whatever this function tries to do.\nWEIRD ends here if C is zero"
-F95D CODE JMP_HL "Jumps to content of HL"
-F95E CODE WEIRD "Weird function with a suprious POP if C is zero..."
-F968 CODE NON_ZERO_C "Called when C is not Zero. Why? No idea yet."
-F99F CODE MYSTERY_CODE "(LOoks like some sort of division of HL by E)\nNeed to understand what:\nHL is at start\nE is at start (not modified)\n  (E may be C6H (198) from 'CMD_ENTER')\n"
-F9A4 CODE LOOP "16 times (every bit of HL)"
-F9AD CODE BIT7
-F9AF CODE SKIP_217
-F9CE CODE SKIP
-FA0E CODE DFA0E
-FA1E CODE MEMCPY "Copies C bytes from HL to DE"
-FA27 CODE DFA27 "HL = 'UNUSED2' + 'VALUE_B' & 0x3"
-FA7A CODE INTERRUPT "Interrupt?\nStored as the target of a JMP instruction in 0008\n(See RAM_START)"
-FA9A CODE STORE_FLAG3
-FA9D CODE DONE_54
-FAA5 CODE XXX
-FAAA CODE XXX_898
-FAB7 CODE READ_51H "Reads from 51H into PORT51_INDATA\nB contains number of bytes read"
-FABC CODE LOOP_576
-FAD3 CODE XXX_698
-FAED CODE XXX_891
-FAFD DATA YYY
-FB00 DATA DFB00
-FB05 CODE READ_HL "Reads HL in hex\nDigits must be entered and finished with ESC\nMy understanding is that we will crash at the 8th digit"
-FB0B CODE LOOP_811
-FB23 CODE SKIP_442
-FB33 CODE FAILED
-FB3C CODE DONE
-FB3E CODE CMD_STAR "Weird infinite loop with echo of the type char (if not space)."
-FB40 CODE LOOP_230
-FB58 CODE LF
-FB60 CODE CONT
-FB66 CODE CMD_G "User typed 'G' in the monitor"
-FB6D CODE CMD_AMP "User typed '&' in the monitor"
-FB79 CODE MONITOR_REENTER "Display '#' and goes to monitor"
-FB81 CODE WAIT_KEY "Waits for a char and reads it in A"
-FB8C STRZ PSTR_PORTAL "TAB+SPACE+PORTAL"
-FB8D STRZ STR_PORTAL
-FB97 CODE READ_CHAR_ECHO "? Unsure, maybe be reading a char"
-FB9B CODE PRINT_CHAR "Prints char in C"
-FBB7 CODE PRINT_CR "Erase current cursor and put cursor at start of screen"
-FBCC CODE UPDATE_SCREEN "Outputs the content of SCREEN to ports 9F downto 80 "
-FBD3 CODE LOOP_737
-FBE7 CODE PRINT_LF "Clear screen, put cursor at column 0"
-FBF2 CODE LOOP_272
-FC0C CODE PRINT_PSTR "Prints pascal string pointed by HL\nFirst byte is length"
-FC0F CODE LOOP_874
-FC1B DATA UNUSED2
-FC23 DATA DRIVE "0-3, boot drive"
-FC2A DATA PORT51_INDATA
-FC2B DATA FLAG2 "Another 0/1 flag"
-FC33 DATA FLAG3 "00, 01 or 7F"
-FC34 DATA FLAG1 "Flag that contains 0 at boot, and 1 during the 39990 loop..."
-FC35 DATA XXX_DATA
-FC3D DATAW BOOT_HL "Unsure what this is for yet\n0110H by default"
-FC3F DATA DFC3F
-FD5D DATA CURSOR "Location of the cursor in the SCREEN area.\nBefore CURSOR, the inital Stack Frame"
-FD5F DATA SCREEN "32 bytes for the screen buffer.\nCursor is represented by '_'"
-FD7F DATA OTHER
-0014 COMMENT "Boot"
-0001 COMMENT "0017 at boot time"
-F80C COMMENT "JMP"
-F80F COMMENT "LOW(HOOK)"
-F812 COMMENT "HI(HOOK)"
-F850 COMMENT "':'"
-FBBB COMMENT "' '"
-FBDA COMMENT "Will be patched"
-FBD1 COMMENT "Port"
-FB84 COMMENT "Wait for char"
-FB89 COMMENT "Force ASCII"
-FB81 COMMENT "Char READY (bit 0)"
-FB87 COMMENT "Char"
-FB83 COMMENT "Bit 0 -> Carry"
-FB44 COMMENT "\n"
-FB49 COMMENT "\r"
-FB50 COMMENT "' '"
-FC0E COMMENT "Length"
-FB79 COMMENT "'#'"
-FB60 COMMENT "Useless should have been FB5A"
-F802 COMMENT "Set Serial Data Out to 1"
-F821 COMMENT "Some flag?"
-FB6C COMMENT "Jumpto address"
-FB8C COMMENT "9 Bytes string"
-F841 COMMENT "'&' command"
-F847 COMMENT "'\n' command"
-F84C COMMENT "'*' command"
-F858 COMMENT "'G' command"
-F861 COMMENT "'B' command"
-FBEB COMMENT "' '"
-FBF0 COMMENT "Do 32 times (32 characters)"
-FBF5 COMMENT "Copies 32 spaces"
-FBFB COMMENT "'_'"
-FBFD COMMENT "Overrides fist ' ' with '_'"
-FBAF COMMENT "'_'"
-FBC4 COMMENT "'_'"
-F88B COMMENT "Loops 33990 times"
-F963 COMMENT "Weird..."
-F964 COMMENT "C = 1"
-F965 COMMENT "Again"
-FB11 COMMENT "Fails if <'0'"
-FB16 COMMENT "Fails if original char >'F'"
-FB1B COMMENT "Jumps if original was 'A'-'F'"
-FB0F COMMENT "; '0' is at 0"
-FB14 COMMENT "'F' is at FF"
-FB19 COMMENT "'A' is at 0"
-FB1E COMMENT "'9' is at FF"
-FB20 COMMENT "Jumps if orignal >'9' and <'A'"
-FB23 COMMENT "'0' is at 0, 'F' at 15"
-FB2A COMMENT "*2"
-FB2B COMMENT "*4"
-FB2C COMMENT "*8"
-FB2D COMMENT "*16"
-FB2E COMMENT "Why?"
-FB25 COMMENT "Why?"
-FB2F COMMENT "Replace last hex digit"
-FB34 COMMENT "ESC"
-FB36 COMMENT "Only correct way to exit"
-FB3A COMMENT "Error"
-FB3B COMMENT "Return"
-FB3C COMMENT "Why?"
-FB09 COMMENT "Read at most 8 hex chars"
-FB06 COMMENT "Starts with 0000"
-FB0B COMMENT "Read one digit"
-FB27 COMMENT "Will crash because lack of POP B"
-F86F COMMENT "Must be 0 to 3"
-F839 COMMENT "0 to 3, can be changed by B command"
-FB4E COMMENT "0AH initial call"
-F882 COMMENT "33990 (loop counter)"
-FAC3 COMMENT "0010 0000"
-FABF COMMENT "Wait for bit 7"
-FAC8 COMMENT "Cannot happen"
-FA89 COMMENT "No data read"
-F830 COMMENT "Can be changed by B command. I Suspect it is some track/sector"
-F9AD COMMENT "L |= 1"
-F9AA COMMENT "A < E"
-F9A5 COMMENT "A gets the high bit of HL"
-F9A4 COMMENT "C = HL & 8000 ; HL <<= 1"
+LABEL 0000H CODE BOOT_LOAD
+COMMENT LABEL BOOT_LOAD "Load address at boot.\nThis is then moved so 0017 is at F800\n(hence the load adress of F7E9)"
+LABEL 000AH CODE BOOT_LOOP
+LABEL 0017H CODE BOOT_START
+COMMENT LABEL BOOT_START "This is the code that is copied to F800 at boot time"
+LABEL 0432H DATA BOOT_UNUSED
+COMMENT LABEL BOOT_UNUSED "Unused ROM space"
+LABEL F7E9H CODE IGNORE
+COMMENT LABEL IGNORE "R2E Micral Portal boot rom disassembly (in progress) \nThis code is executed from 0 and copies the rest into F800 in RAM"
+LABEL F7F8H CODE RST1
+COMMENT LABEL RST1 "Copies the code 'JMP FA7A' (HOOK) here\nThis is also written to by F809H and becomes RST 1\n(JMP @FA7AH / JMP @INTERRUPT)"
+LABEL F7FBH STRZ MSG1
+LABEL F7FDH CODE DF7FD
+LABEL F800H CODE RAM_START
+COMMENT LABEL RAM_START "The real start in RAM\nPorts:\n  11: 00\n  60: F6\n  61: F7 BF"
+LABEL F824H CODE MONITOR
+COMMENT LABEL MONITOR "Resets stack, print "
+LABEL F839H CODE MONITOR2
+LABEL F861H CODE CMD_B
+COMMENT LABEL CMD_B "Here the 'B' (Boot ?) command starts\nAsks for a 0-3 number (drive #?)\nthen a 4 hex number (#of bytes to read? sector?)\nand executes the 'ENTER' function (real boot)"
+LABEL F879H CODE CMD_ENTER
+COMMENT LABEL CMD_ENTER "B : Drive #"
+LABEL F886H CODE LOOP_819
+LABEL F8EFH CODE AGAIN
+COMMENT LABEL AGAIN "Redoes whatever this function tries to do.\nWEIRD ends here if C is zero"
+LABEL F932H CODE DF932
+LABEL F93EH CODE DF93E
+LABEL F95DH CODE JMP_HL
+COMMENT LABEL JMP_HL "Jumps to content of HL"
+LABEL F95EH CODE WEIRD
+COMMENT LABEL WEIRD "Weird function with a suprious POP if C is zero..."
+LABEL F968H CODE NON_ZERO_C
+COMMENT LABEL NON_ZERO_C "Called when C is not Zero. Why? No idea yet."
+LABEL F990H CODE DF990
+LABEL F997H CODE DF997
+LABEL F99FH CODE DIV
+COMMENT LABEL DIV "Divides HL by E\n  (E may be C6H (198) from '@CMD_ENTER'?)\n"
+LABEL F9A4H CODE LOOP
+COMMENT LABEL LOOP "16 times (every bit of HL)"
+LABEL F9ADH CODE BIT7
+LABEL F9AFH CODE SKIP_217
+LABEL F9CEH CODE SKIP
+LABEL F9E8H CODE LOOP_609
+LABEL FA0EH CODE DFA0E
+LABEL FA1EH CODE MEMCPY
+COMMENT LABEL MEMCPY "Copies C bytes from HL to DE"
+LABEL FA27H CODE DFA27
+COMMENT LABEL DFA27 "HL = @BUFFER + @DRIVE & 0x3"
+LABEL FA34H CODE XXX_635
+LABEL FA7AH CODE INTERRUPT
+COMMENT LABEL INTERRUPT "Interrupt?\nStored as the target of a JMP instruction in 0008\n(See RAM_START)"
+LABEL FA84H CODE DFA84
+LABEL FA9AH CODE STORE_FLAG3
+COMMENT LABEL STORE_FLAG3 "Used to communicate with non interrupt code"
+LABEL FA9DH CODE DONE_54
+LABEL FAA5H CODE XXX
+COMMENT LABEL XXX "I suspect this is an error code"
+LABEL FAAAH CODE XXX_898
+LABEL FAB7H CODE READ_51H
+COMMENT LABEL READ_51H "Reads from 51H into PORT51_INDATA\nReads as long as 50H bits 6 and 7 are set\nStops if 50H has bit 7 set and bit 5 cleared\nB contains number of bytes read\nCalled from interrupt"
+LABEL FABCH CODE LOOP_576
+LABEL FAD3H CODE WRITE_51H
+COMMENT LABEL WRITE_51H "Write C chars into HL (from floppy?)\nWaits for 50H bit 4 to clear\nThen similar logic to READ:\nWaits for bit 7 set and 6 cleared"
+LABEL FADAH CODE WRITE2_51H
+COMMENT LABEL WRITE2_51H "Writes C chars from HL to 51H\n(waits for 50H bit 7 to be set)"
+LABEL FAEDH CODE XXX_891
+COMMENT LABEL XXX_891 "Suspects that is is read from floppy sync"
+LABEL FAF5H CODE BUSY_LOOP
+LABEL FAFDH STRF2 DATA_S0
+COMMENT LABEL DATA_S0 "2 bytes of data "
+LABEL FAFFH DATA DATA_TR
+COMMENT LABEL DATA_TR "Maybe track count? Inited at 40..."
+LABEL FB00H DATA DATA_X4
+COMMENT LABEL DATA_X4 "4 bytes of data"
+LABEL FB05H CODE READ_HL
+COMMENT LABEL READ_HL "Reads HL in hex\nDigits must be entered and finished with ESC\nMy understanding is that we will crash at the 8th digit"
+LABEL FB0BH CODE LOOP_811
+LABEL FB23H CODE SKIP_442
+LABEL FB33H CODE FAILED
+LABEL FB3CH CODE DONE
+LABEL FB3EH CODE CMD_STAR
+COMMENT LABEL CMD_STAR "Weird infinite loop with echo of the type char (if not space).\nMay be a keyboard tester"
+LABEL FB40H CODE LOOP_230
+LABEL FB58H CODE LF
+LABEL FB60H CODE CONT
+LABEL FB66H CODE CMD_G
+COMMENT LABEL CMD_G "User typed 'G' in the monitor"
+LABEL FB6DH CODE CMD_AMP
+COMMENT LABEL CMD_AMP "User typed '&' in the monitor"
+LABEL FB79H CODE MONITOR_REENTER
+COMMENT LABEL MONITOR_REENTER "Display '#' and goes to monitor"
+LABEL FB81H CODE WAIT_KEY
+COMMENT LABEL WAIT_KEY "Waits for a char and reads it in A"
+LABEL FB8CH STRZ PSTR_PORTAL
+COMMENT LABEL PSTR_PORTAL "TAB+SPACE+PORTAL"
+LABEL FB8DH STRZ STR_PORTAL
+LABEL FB97H CODE READ_CHAR_ECHO
+COMMENT LABEL READ_CHAR_ECHO "? Unsure, maybe be reading a char"
+LABEL FB9BH CODE PRINT_CHAR
+COMMENT LABEL PRINT_CHAR "Prints char in C"
+LABEL FBB7H CODE PRINT_CR
+COMMENT LABEL PRINT_CR "Erase current cursor and put cursor at start of screen"
+LABEL FBCCH CODE UPDATE_SCREEN
+COMMENT LABEL UPDATE_SCREEN "Outputs the content of @SCREEN to ports 9F downto 80 "
+LABEL FBD3H CODE LOOP_737
+LABEL FBE7H CODE PRINT_LF
+COMMENT LABEL PRINT_LF "Clear screen, put cursor at column 0"
+LABEL FBF2H CODE LOOP_272
+LABEL FC0CH CODE PRINT_PSTR
+COMMENT LABEL PRINT_PSTR "Prints pascal string pointed by HL\nFirst byte is length"
+LABEL FC0FH CODE LOOP_874
+LABEL FC1BH DATA BUFFER
+COMMENT LABEL BUFFER "(At least 9 bytes are used, maybe more)"
+LABEL FC1FH CODE DATA51H_3
+COMMENT LABEL DATA51H_3 "3 bytes that gets written to 51H"
+LABEL FC23H DATA DRIVE
+COMMENT LABEL DRIVE "0-3, boot drive"
+LABEL FC2AH DATA PORT51_INDATA
+LABEL FC2BH DATA FLAG2
+COMMENT LABEL FLAG2 "Another 0/1 flag"
+LABEL FC33H DATA FLAG3
+COMMENT LABEL FLAG3 "00, 01 or 7F"
+LABEL FC34H DATA FLAG1
+COMMENT LABEL FLAG1 "Flag that contains 0 at boot, and 1 during the 39990 loop..."
+LABEL FC35H DATA XXX_DATA
+LABEL FC3DH DATAW BOOT_HL
+COMMENT LABEL BOOT_HL "Unsure what this is for yet\n0110H by default"
+LABEL FC3FH DATA DFC3F
+LABEL FD5DH DATA CURSOR
+COMMENT LABEL CURSOR "Location of the cursor in the SCREEN area.\nBefore CURSOR, the inital Stack Frame"
+LABEL FD5FH DATA SCREEN
+COMMENT LABEL SCREEN "32 bytes for the screen buffer.\nCursor is represented by '_'"
+LABEL FD7FH DATA OTHER
+COMMENT LINE F812H "HI(@INTERRUPT)"
+COMMENT LINE 0014H "Boot"
+COMMENT LINE 0001H "0017 at boot time"
+COMMENT LINE F80CH "JMP"
+COMMENT LINE F850H "':'"
+COMMENT LINE FBBBH "' '"
+COMMENT LINE FBDAH "Will be patched"
+COMMENT LINE FBD1H "Port"
+COMMENT LINE FB84H "Wait for char"
+COMMENT LINE FB89H "Force ASCII"
+COMMENT LINE FB81H "Char READY (bit 0)"
+COMMENT LINE FB87H "Char"
+COMMENT LINE FB83H "Bit 0 -> Carry"
+COMMENT LINE FB44H "\n"
+COMMENT LINE FB49H "\r"
+COMMENT LINE FB50H "' '"
+COMMENT LINE FC0EH "Length"
+COMMENT LINE FB79H "'#'"
+COMMENT LINE FB60H "Useless should have been FB5A"
+COMMENT LINE F802H "Set Serial Data Out to 1"
+COMMENT LINE F821H "Some flag?"
+COMMENT LINE FB6CH "Jumpto address"
+COMMENT LINE FB8CH "9 Bytes string"
+COMMENT LINE F841H "'&' command"
+COMMENT LINE F847H "'\n' command"
+COMMENT LINE F84CH "'*' command"
+COMMENT LINE F858H "'G' command"
+COMMENT LINE FBEBH "' '"
+COMMENT LINE FBF0H "Do 32 times (32 characters)"
+COMMENT LINE FBF5H "Copies 32 spaces"
+COMMENT LINE FBFBH "'_'"
+COMMENT LINE FBFDH "Overrides fist ' ' with '_'"
+COMMENT LINE FBAFH "'_'"
+COMMENT LINE FBC4H "'_'"
+COMMENT LINE F88BH "Loops 33990 times"
+COMMENT LINE F963H "Weird..."
+COMMENT LINE F964H "C = 1"
+COMMENT LINE F965H "Again"
+COMMENT LINE FB11H "Fails if <'0'"
+COMMENT LINE FB16H "Fails if original char >'F'"
+COMMENT LINE FB1BH "Jumps if original was 'A'-'F'"
+COMMENT LINE FB0FH "; '0' is at 0"
+COMMENT LINE FB14H "'F' is at FF"
+COMMENT LINE FB19H "'A' is at 0"
+COMMENT LINE FB1EH "'9' is at FF"
+COMMENT LINE FB20H "Jumps if orignal >'9' and <'A'"
+COMMENT LINE FB23H "'0' is at 0, 'F' at 15"
+COMMENT LINE FB2AH "*2"
+COMMENT LINE FB2BH "*4"
+COMMENT LINE FB2CH "*8"
+COMMENT LINE FB2DH "*16"
+COMMENT LINE FB2EH "Why?"
+COMMENT LINE FB25H "Why?"
+COMMENT LINE FB2FH "Replace last hex digit"
+COMMENT LINE FB34H "ESC"
+COMMENT LINE FB36H "Only correct way to exit"
+COMMENT LINE FB3AH "Error"
+COMMENT LINE FB3BH "Return"
+COMMENT LINE FB3CH "Why?"
+COMMENT LINE FB09H "Read at most 8 hex chars"
+COMMENT LINE FB06H "Starts with 0000"
+COMMENT LINE FB0BH "Read one digit"
+COMMENT LINE FB27H "Will crash because lack of POP B"
+COMMENT LINE F86FH "Must be 0 to 3"
+COMMENT LINE FB4EH "0AH initial call"
+COMMENT LINE FAC3H "0010 0000"
+COMMENT LINE FABFH "Wait for bit 7"
+COMMENT LINE FA89H "No data read"
+COMMENT LINE F9ADH "L |= 1"
+COMMENT LINE F9AAH "A < E"
+COMMENT LINE F9A5H "A gets the high bit of HL"
+COMMENT LINE F9A4H "C = HL & 8000 ; HL <<= 1"
+COMMENT LINE FA98H "Signal we are done"
+COMMENT LINE F882H "33990 (loop counter)"
+COMMENT LINE F7EAH "Test @RAM_START"
+COMMENT LINE F7F0H "Start of boot @RAM_START..."
+COMMENT LINE F80FH "LOW(@INTERRUPT)"
+COMMENT LINE FAC5H "Return if 5th bit clear"
+COMMENT LINE FAC8H "Wait for bit 6"
+COMMENT LINE F9FFH "Read 9 bytes"
+COMMENT LINE FAB1H "Write [0x08]"
+COMMENT LINE F97BH "HL = HL / E"
+COMMENT LINE F9DDH "01 10 20 00"
+COMMENT LINE F8B4H "Drive 0 & 1"
+COMMENT LINE F8B7H "Drive 2 & 3"
+COMMENT LINE FB3EH "Probablu current column"
+COMMENT LINE F861H "Drive #"
+COMMENT LINE F830H "Can be changed by the @CMD_AMP command"
+COMMENT LINE F836H "Can be changed by the @CMD_B command. I Suspect it is some track/sector"
+COMMENT LINE F839H "0 to 3, can be changed by @CMD_B command"
+COMMENT LINE F873H "Size? Len? @F836H (defaults to 0080)"
+COMMENT LINE F886H "Waste some cycles"
+COMMENT LINE F89AH "\"S0\""
+COMMENT LINE F8ABH "Contains [3,'S','0']"
+COMMENT LINE F8C7H "Wtf is this code?"
+COMMENT LINE F8D0H "We juste did an MVI A,46H"
+COMMENT LINE F8C8H "?"
+COMMENT LINE F8CAH "?"
+COMMENT LINE F8CBH "?"
+COMMENT LINE F8CCH "?"
+COMMENT LINE F8CDH "?"
+COMMENT LINE F8CEH "?"
+COMMENT LINE F8D8H "Why?"
+COMMENT LINE F8DAH "C is always 0"
+COMMENT LINE FAFFH "28H = 40. Tracks?"
+COMMENT LINE FAF5H "Interrup will set this to 1"
+IO 00H PORT00 "I have no idea what this port does.\n\nNeither do you."
+IO 10H KBDSTROBE "Bit 0 is 1 if key presse (see @WAIT_KEY)"
+IO 11H KDBDATA "Keyboard read data (maybe something else when writing?)\nNeeds AND with 7FH"
+IO 50H PROBE51H "Probe for writing in 51H\nGenerally waits for bit 4 to be zero and bit 7 to be zero"
+IO 60H  "May be the PIC or DMA controller ?"
+IO 9FH SCRN00 "First char of screen (80-9F, one port per on-screen character)"

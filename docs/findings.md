@@ -25,8 +25,8 @@ Port | Input Description | Ouput Description
 40H |
 41H |
 48H |
-50H | 
-51H |
+50H | (Drive Strobe)
+51H | (Drive Data)
 60H |
 61H |
 80H-9FH	| Screen
@@ -94,8 +94,8 @@ Cmd \n:
 
 Cmd 'B':
 
-Reads hex number from keyboard, must be 0-3
-Followed by 4 hex digits which are ignored.
+Reads hex number from keyboard, must be 0-3 (drive #)
+Followed by 4 hex digits which are unclear.
 
 Cmd '*':
 

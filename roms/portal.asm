@@ -5,9 +5,9 @@
 ;
 IGNORE:
 	DI
-	LXI H,17H
+	LXI H,17H	; Test @RAM_START
 	LXI B,41CH
-	LXI D,0F800H
+	LXI D,0F800H	; Start of boot @RAM_START...
 	MOV A,M
 	STAX D
 	INX H
@@ -15,7 +15,8 @@ IGNORE:
 	DCX B
 ;
 ; Copies the code 'JMP FA7A' (HOOK) here
-; This is also RST 1
+; This is also written to by F809H and becomes RST 1
+; (JMP @FA7AH / JMP @INTERRUPT)
 ;
 RST1:
 	MOV A,B
@@ -42,9 +43,9 @@ RAM_START:
 	LXI H,0F7F8H
 	MVI M,0C3H	; JMP
 	INX H
-	MVI M,7AH	; LOW(HOOK)
+	MVI M,7AH	; LOW(@INTERRUPT)
 	INX H
-	MVI M,0FAH	; HI(HOOK)
+	MVI M,0FAH	; HI(@INTERRUPT)
 	MVI A,0F6H
 	OUT 60H
 	MVI A,0F7H
@@ -61,18 +62,19 @@ MONITOR:
 	CALL 0FBE7H
 	LXI H,0FB8CH
 	CALL 0FC0CH
-	LXI H,110H	; Can be changed by B command. I Suspect it is some track/sector
+	LXI H,110H	; Can be changed by the @CMD_AMP command
 	SHLD 0FC3DH
-	LXI D,80H
+	LXI D,80H	; Can be changed by the @CMD_B command. I Suspect it is some track/sector
 MONITOR2:
-	MVI B,0	; 0 to 3, can be changed by B command
+	MVI B,0	; 0 to 3, can be changed by @CMD_B command
 	CALL 0FB97H
 	MOV A,C
 	CPI 26H
 	JZ 0FB6DH	; '&' command
 	CPI 0DH
 	XCHG
-	JZ 0F879H	; '\n' command
+	JZ 0F879H	; '
+' command
 	CPI 2AH
 	JZ 0FB3EH	; '*' command
 	MOV B,A
@@ -85,10 +87,13 @@ MONITOR2:
 	CMP B
 	JNZ 0FB79H
 ;
-; Read B (0-3) and re-reads HL (gets ignored)
+; Here the 'B' (Boot ?) command starts
+; Asks for a 0-3 number (drive #?)
+; then a 4 hex number (#of bytes to read? sector?)
+; and executes the 'ENTER' function (real boot)
 ;
 CMD_B:
-	CALL 0FB05H	; 'B' command
+	CALL 0FB05H	; Drive #
 	JNC 0FB79H
 	MOV A,H
 	ORA A
@@ -97,7 +102,7 @@ CMD_B:
 	CPI 4
 	JNC 0FB79H	; Must be 0 to 3
 	MOV B,L
-	CALL 0FB05H
+	CALL 0FB05H	; Size? Len? @F836H (defaults to 0080)
 	JNC 0FB79H
 ;
 ; B : Drive #
@@ -110,7 +115,7 @@ CMD_ENTER:
 	LXI D,84C6H	; 33990 (loop counter)
 	EI
 LOOP_819:
-	XTHL
+	XTHL	; Waste some cycles
 	XTHL
 	DCX D
 	MOV A,E
@@ -122,7 +127,7 @@ LOOP_819:
 	SHLD 0FC35H
 	MOV A,B
 	STA 0FC23H
-	LXI H,0FAFDH
+	LXI H,0FAFDH	; "S0"
 	LXI D,0FC1FH
 	MVI A,3
 	STAX D
@@ -130,29 +135,29 @@ LOOP_819:
 	MVI C,2
 	CALL 0FA1EH
 	MVI C,3
-	LXI H,0FC1FH
+	LXI H,0FC1FH	; Contains [3,'S','0']
 	CALL 0FADAH
 	LXI H,0FFFFH
-	SHLD 0FC1BH
-	SHLD 0FC1DH
+	SHLD 0FC1BH	; Drive 0 & 1
+	SHLD 0FC1DH	; Drive 2 & 3
 	LXI H,0FC22H
 	MVI M,4
 	MVI C,2
 	CALL 0FADAH
 	CALL 0FAB7H
-	MOV A,M
-	ANI 8
-	RLC
-	RLC
-	RLC
-	RLC
-	MVI A,40H
-	ORI 6
+	MOV A,M	; Wtf is this code?
+	ANI 8	; ?
+	RLC	; ?
+	RLC	; ?
+	RLC	; ?
+	RLC	; ?
+	MVI A,40H	; ?
+	ORI 6	; We juste did an MVI A,46H
 	STA 0FC22H
 	LXI H,0FAFFH
-	RLC
+	RLC	; Why?
 	MOV A,M
-	JNC 0F8DEH
+	JNC 0F8DEH	; C is always 0
 	RLC
 	INX H
 	INX H
@@ -198,12 +203,14 @@ AGAIN:
 	JNC 0FB79H
 	CALL 0F95EH
 	JMP 0F92CH
+DF932:
 	CALL 0F95EH
 	MOV M,A
 	CMP M
 	JNZ 0FB79H
 	INX H
 	JMP 0F932H
+DF93E:
 	CALL 0F95EH
 	MVI B,4
 	RLC
@@ -254,7 +261,7 @@ NON_ZERO_C:
 	LHLD 0FC37H
 	XCHG
 	LHLD 0FC35H
-	CALL 0F99FH
+	CALL 0F99FH	; HL = HL / E
 	SHLD 0FC35H
 	POP B
 	POP D
@@ -263,9 +270,11 @@ NON_ZERO_C:
 	SHLD 0FC3BH
 	LXI H,0FC3FH
 	JMP 0F997H
+DF990:
 	DCX H
 	SHLD 0FC3BH
 	LHLD 0FC39H
+DF997:
 	MOV A,M
 	INX H
 	SHLD 0FC39H
@@ -273,13 +282,10 @@ NON_ZERO_C:
 	DCR C
 	RET
 ;
-; (LOoks like some sort of division of HL by E)
-; Need to understand what:
-; HL is at start
-; E is at start (not modified)
-;   (E may be C6H (198) from 'CMD_ENTER')
+; Divides HL by E
+;   (E may be C6H (198) from '@CMD_ENTER'?)
 ;
-MYSTERY_CODE:
+DIV:
 	PUSH H
 	PUSH D
 	XRA A
@@ -324,10 +330,11 @@ SKIP:
 	RRC
 	RRC
 	STA 0FC25H
-	LXI H,0FB00H
+	LXI H,0FB00H	; 01 10 20 00
 	MVI C,4
 	LXI D,0FC27H
 	CALL 0FA1EH
+LOOP_609:
 	MVI A,3FH
 	OUT 40H
 	MVI A,0FCH
@@ -339,7 +346,7 @@ SKIP:
 	MVI A,0E5H
 	OUT 48H
 	CALL 0FA34H
-	MVI C,9
+	MVI C,9	; Read 9 bytes
 	LXI H,0FC22H
 	CALL 0FAEDH
 	DCR A
@@ -366,7 +373,7 @@ MEMCPY:
 	JNZ 0FA1EH
 	RET
 ;
-; HL = 'UNUSED2' + 'VALUE_B' & 0x3
+; HL = @BUFFER + @DRIVE & 0x3
 ;
 DFA27:
 	LDA 0FC23H
@@ -377,6 +384,7 @@ DFA27:
 	RNC
 	INR H
 	RET
+XXX_635:
 	CALL 0FA27H
 	MOV A,M
 	INR A
@@ -425,6 +433,7 @@ INTERRUPT:
 	LDA 0FC34H
 	ANA A
 	JNZ 0FA9DH
+DFA84:
 	CALL 0FAB7H
 	MOV A,B
 	ANA A
@@ -435,7 +444,10 @@ INTERRUPT:
 	JC 0FAA5H
 	RLC
 	JC 0FAA5H
-	MVI A,1
+	MVI A,1	; Signal we are done
+;
+; Used to communicate with non interrupt code
+;
 STORE_FLAG3:
 	STA 0FC33H
 DONE_54:
@@ -445,6 +457,9 @@ DONE_54:
 	POP B
 	POP PSW
 	RET
+;
+; I suspect this is an error code
+;
 XXX:
 	MVI A,7FH
 	JMP 0FA9AH
@@ -452,11 +467,14 @@ XXX_898:
 	LXI H,0FC1FH
 	MVI M,8
 	MVI C,1
-	CALL 0FAD3H
+	CALL 0FAD3H	; Write [0x08]
 	JMP 0FA84H
 ;
 ; Reads from 51H into PORT51_INDATA
+; Reads as long as 50H bits 6 and 7 are set
+; Stops if 50H has bit 7 set and bit 5 cleared
 ; B contains number of bytes read
+; Called from interrupt
 ;
 READ_51H:
 	LXI H,0FC2AH
@@ -467,19 +485,30 @@ LOOP_576:
 	JNC 0FABCH	; Wait for bit 7
 	MOV C,A
 	ANI 20H	; 0010 0000
-	RZ
+	RZ	; Return if 5th bit clear
 	MOV A,C
 	RLC
-	JNC 0FABCH	; Cannot happen
+	JNC 0FABCH	; Wait for bit 6
 	IN 51H
 	INX H
 	INR B
 	MOV M,A
 	JMP 0FABCH
-XXX_698:
+;
+; Write C chars into HL (from floppy?)
+; Waits for 50H bit 4 to clear
+; Then similar logic to READ:
+; Waits for bit 7 set and 6 cleared
+;
+WRITE_51H:
 	IN 50H
 	ANI 10H
 	JNZ 0FAD3H
+;
+; Writes C chars from HL to 51H
+; (waits for 50H bit 7 to be set)
+;
+WRITE2_51H:
 	IN 50H
 	RLC
 	JNC 0FADAH
@@ -491,18 +520,33 @@ XXX_698:
 	DCR C
 	JNZ 0FADAH
 	RET
+;
+; Suspects that is is read from floppy sync
+;
 XXX_891:
 	CALL 0FAD3H
 	XRA A
 	STA 0FC33H
 	EI
-	LDA 0FC33H
+BUSY_LOOP:
+	LDA 0FC33H	; Interrup will set this to 1
 	ORA A
 	JZ 0FAF5H
 	RET
-YYY:
-	DB 53H,30H,28H
-DFB00:
+;
+; 2 bytes of data 
+;
+DATA_S0:
+	DB "S0",0
+;
+; Maybe track count? Inited at 40...
+;
+DATA_TR:
+	DB 28H	; 28H = 40. Tracks?
+;
+; 4 bytes of data
+;
+DATA_X4:
 	DB 1,10H,20H,0,32H
 ;
 ; Reads HL in hex
@@ -548,15 +592,17 @@ DONE:
 	RET
 ;
 ; Weird infinite loop with echo of the type char (if not space).
+; May be a keyboard tester
 ;
 CMD_STAR:
-	MVI B,9
+	MVI B,9	; Probablu current column
 LOOP_230:
 	CALL 0FB81H
 	MOV C,A
-	CPI 0DH	; \n
+	CPI 0DH	; 
+
 	JZ 0FB58H
-	CPI 0AH	; \r
+	CPI 0AH	; 
 	JZ 0FB58H
 	INR B	; 0AH initial call
 	MOV A,B
@@ -650,7 +696,7 @@ PRINT_CR:
 	POP H
 	RET
 ;
-; Outputs the content of SCREEN to ports 9F downto 80 
+; Outputs the content of @SCREEN to ports 9F downto 80 
 ;
 UPDATE_SCREEN:
 	PUSH H
@@ -716,8 +762,19 @@ LOOP_874:
 	POP H
 	POP B
 	RET
-UNUSED2:
-	DB 0,0,0,0,0,0,0,0
+;
+; (At least 9 bytes are used, maybe more)
+;
+BUFFER:
+	DB 0,0,0,0
+;
+; 3 bytes that gets written to 51H
+;
+DATA51H_3:
+	NOP
+	NOP
+	NOP
+	NOP
 ;
 ; 0-3, boot drive
 ;
