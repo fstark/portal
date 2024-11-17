@@ -105,3 +105,19 @@ Cmd '&':
 
 Allows to edit the value of 'HL' at boot (initially 0110H)
 
+
+# History
+
+Presented for the first time a the Paris SICOB, 17-26 Sept 1980
+
+CCMC: https://www.lemonde.fr/archives/article/1988/08/20/restructuration-dans-les-services-informatiques-ccmc-entre-dans-la-galaxie-thomson_4093359_1819218.html
+
+According to Ordinateur Individuel #68, the Portal Price was 35 000F in 1985.
+
+"FAST PORTAL" software
+
+https://archive.org/details/micro-ordinateurs-oric/Micro_Ordinateurs_017-Decembre%201983%20-%20Pages%200%2C74-75%2C87%2C94-95%2C100%2C106%2C109%2C110-111/page/n5/mode/1up
+
+Picture of the Portal at the "personal computer festival" 1980 arlington, at the time where it was called "La Valise Micral V2" (V2 of Micral Suitcase). Note the difference on the screen and printer scroll button.
+
+https://archive.org/details/ord-ind-s1-019/page/122/mode/1up
