@@ -128,7 +128,7 @@ LOOP_819:
 	SHLD 0FC35H
 	MOV A,B
 	STA 0FC23H
-	LXI H,0FAFDH	; 
+	LXI H,0FAFDH
 	LXI D,0FC1FH
 	MVI A,3
 	STAX D
@@ -191,6 +191,7 @@ AGAIN:
 	ANI 1
 	JZ 0F912H
 	DAD D
+DF912:
 	MOV A,B
 	CPI 0C2H
 	JZ 0F932H
@@ -202,6 +203,7 @@ AGAIN:
 	JC 0FB79H
 	CPI 0DBH
 	JNC 0FB79H
+DF92C:
 	CALL 0F95EH
 	JMP 0F92CH
 DF932:
@@ -603,7 +605,7 @@ DONE:
 ; May be a keyboard tester
 ;
 CMD_STAR:
-	MVI B,9	; Probablu current column
+	MVI B,9	; Probably current column
 LOOP_230:
 	CALL 0FB81H
 	MOV C,A
