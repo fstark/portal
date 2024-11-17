@@ -7,8 +7,13 @@ There is a [Wikipedia page](https://en.wikipedia.org/wiki/Portal_(computer)) of 
 
 # Marketing
 
-[One picture of the Portal at the Paris SICOB show (198?)](portal_au_sicob.pdf)
+Description | Links | Source
+------------|-------| ------
+2 pages marketing flyer about the portal | [1](plaquette_portal.pdf) | *unknown*
+Some pictures of the portal at the 1980 SICOB | [2](portal_au_sicob.pdf),[3](portal_au_sicob2.pdf) | *unknown*
 
 # Technical
 
 See the [findings](findings.md) document.
+
+
