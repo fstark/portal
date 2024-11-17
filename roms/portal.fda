@@ -8,7 +8,7 @@ COMMENT LABEL BOOT_UNUSED "Unused ROM space"
 LABEL F7E9H CODE IGNORE
 COMMENT LABEL IGNORE "R2E Micral Portal boot rom disassembly (in progress) \nThis code is executed from 0 and copies the rest into F800 in RAM"
 LABEL F7F8H CODE INT_VECTOR
-COMMENT LABEL INT_VECTOR "Copies the code 'JMP FA7A' (HOOK) here\nThis is also written to by F809H and becomes INT_VECTOR\n(JMP @FA7AH / JMP @INTERRUPT)\nPIC sets interrupts to be at F7E0+4*INT#, so this is INT 6."
+COMMENT LABEL INT_VECTOR "Copies the code 'JMP FA7A' (HOOK) here\nThis is also written to by F809H and becomes @INT_VECTOR\n(JMP @FA7AH / JMP @INTERRUPT)\nPIC sets interrupts to be at F7E0+4*INT#, so this is INT 6."
 LABEL F7FBH STRZ MSG1
 LABEL F7FDH CODE DF7FD
 LABEL F800H CODE RAM_START
@@ -53,8 +53,8 @@ LABEL FA7AH CODE INTERRUPT
 COMMENT LABEL INTERRUPT "Interrupt?\nStored as the target of a JMP instruction in 0008\n(See RAM_START)"
 LABEL FA84H CODE INTERRUPT_READ
 COMMENT LABEL INTERRUPT_READ "Reads from 51H"
-LABEL FA9AH CODE INTERRUPT_CODE
-COMMENT LABEL INTERRUPT_CODE "Used to communicate with non interrupt code"
+LABEL FA9AH CODE INTERRUPT_RETURN
+COMMENT LABEL INTERRUPT_RETURN "Returns with a code (in @FLAG3)"
 LABEL FA9DH CODE INTERRUPT_END
 LABEL FAA5H CODE INTERRUPT_ERROR
 COMMENT LABEL INTERRUPT_ERROR "I suspect this is an error code"
@@ -208,7 +208,6 @@ COMMENT LINE F9A5H "A gets the high bit of HL"
 COMMENT LINE F9A4H "C = HL & 8000 ; HL <<= 1"
 COMMENT LINE FA98H "Signal we are done"
 COMMENT LINE F882H "33990 (loop counter)"
-COMMENT LINE F7EAH "Test @RAM_START"
 COMMENT LINE F7F0H "Start of boot @RAM_START..."
 COMMENT LINE F80FH "LOW(@INTERRUPT)"
 COMMENT LINE FAC5H "Return if 5th bit clear"
@@ -246,6 +245,13 @@ COMMENT LINE F814H "ICW1 : PIC init word 1"
 COMMENT LINE F81CH "ICW3 : PIC init word 3"
 COMMENT LINE F818H "ICW2 : PIC init word 2 (interrupt at F7E0+4*INT)"
 COMMENT LINE FB3EH "Probably current column"
+COMMENT LINE F7EAH "Test @RAM_START"
+COMMENT LINE FAB7H "Actually @FLAG2-1"
+COMMENT LINE FACDH "@FLAG2 (@PORT51_INDATA+1)"
+COMMENT LINE FA87H "B is length (0 or 1)"
+COMMENT LINE FA8FH "Data read from 51H"
+COMMENT LINE FA91H "Checks it is 0xxxxxxx"
+COMMENT LINE FA95H "Checks it is 00xxxxxx"
 IO 00H PORT00 "I have no idea what this port does.\n\nNeither do you."
 IO 10H KBDSTROBE "Bit 0 is 1 if key presse (see @WAIT_KEY)"
 IO 11H KDBDATA "Keyboard read data (maybe something else when writing?)\nNeeds AND with 7FH"

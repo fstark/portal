@@ -15,7 +15,7 @@ IGNORE:
 	DCX B
 ;
 ; Copies the code 'JMP FA7A' (HOOK) here
-; This is also written to by F809H and becomes INT_VECTOR
+; This is also written to by F809H and becomes @INT_VECTOR
 ; (JMP @FA7AH / JMP @INTERRUPT)
 ; PIC sets interrupts to be at F7E0+4*INT#, so this is INT 6.
 ;
@@ -452,9 +452,9 @@ INTERRUPT_READ:
 	JC 0FAA5H
 	MVI A,1	; Signal we are done
 ;
-; Used to communicate with non interrupt code
+; Returns with a code (in @FLAG3)
 ;
-INTERRUPT_CODE:
+INTERRUPT_RETURN:
 	STA 0FC33H
 INTERRUPT_END:
 	MVI A,66H
