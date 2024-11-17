@@ -1,8 +1,13 @@
+; This is a debug ROM for the Portal
+; It tests the screen, the keyboard and the RAM
+
 	ORG 0
 
+; IO ports (keyboard)
 KBDSTROBE EQU 10H
 KBDDATA EQU 11H
 
+; Boot (portal ROM does the same)
 	DI
 	XRA A
 	OUT KBDDATA
@@ -39,7 +44,7 @@ NEXT1:
 	CPI 060H
 	JNZ LOOP		; Last char
 
-;	TEST 2 : keyboards echo until ESC
+;	TEST 2 : keyboards echo on all screen until ESC
 WAITKEY:
 	IN KBDSTROBE
 	RRC
@@ -51,7 +56,7 @@ WAITKEY:
 	LXI H,WAITKEY
 	JMP DISPLAYALL
 
-;	TEST 3 : RAM TEST
+;	TEST 3 : Test all RAM
 TESTRAM:
 	MVI B,0FFH  ; Value stored
 	LXI H,0800H	; Start of RAM
@@ -66,6 +71,10 @@ TESTRAMLOOP:
 	JNZ TESTRAMLOOP ; Not finished
 	INX B		; Next Byte
 	JMP TESTRAM
+
+; In case of failure we display
+; Address and failed bits with the following format
+; 1234:__*_*___
 
 TESTRAMFAILED:
 	; Failed
