@@ -168,42 +168,42 @@ ERR6:
 
 	ANI 020H	; Bit 5
 	MVI A,'_'   ; '_' = ok
-	JNZ ERR6
+	JNZ ERR5
 	MVI A,'*'	; '*' = nok
 ERR5:
 	OUT 8EH
 
 	ANI 010H	; Bit 4
 	MVI A,'_'   ; '_' = ok
-	JNZ ERR6
+	JNZ ERR4
 	MVI A,'*'	; '*' = nok
 ERR4:
 	OUT 8DH
 
 	ANI 008H	; Bit 3
 	MVI A,'_'   ; '_' = ok
-	JNZ ERR6
+	JNZ ERR3
 	MVI A,'*'	; '*' = nok
 ERR3:
 	OUT 8CH
 
 	ANI 004H	; Bit 2
 	MVI A,'_'   ; '_' = ok
-	JNZ ERR6
+	JNZ ERR2
 	MVI A,'*'	; '*' = nok
 ERR2:
 	OUT 8BH
 
 	ANI 002H	; Bit 1
 	MVI A,'_'   ; '_' = ok
-	JNZ ERR6
+	JNZ ERR1
 	MVI A,'*'	; '*' = nok
 ERR1:
 	OUT 8AH
 
 	ANI 001H	; Bit 0
 	MVI A,'_'   ; '_' = ok
-	JNZ ERR6
+	JNZ ERR0
 	MVI A,'*'	; '*' = nok
 ERR0:
 	OUT 7FH
