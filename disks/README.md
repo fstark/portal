@@ -2,7 +2,7 @@
 
 The following images come from the same box of Portal software archives. They were dumped by Jeff/HxC2001
 
-All disks are single sided, , 40 tracks, 16 soft sectors.
+All disks are single sided, 40 tracks, 16 soft sectors, 256 bytes per sector.
 
 Number | Title                              | Dump | Bootable | Contents 
 ------ | ---------------------------------- | ---- | -------- | --------
@@ -33,3 +33,14 @@ Number | Title                              | Dump | Bootable | Contents
  0025  | Test V24 Portal CDC Modens         |  OK  | ?        | ?
 
 \*: 1 corrupted sector
+
+The images use the .AFI file format, which is readable in [HxC2001_FloppyEmulator](https://github.com/jfdelnero/HxCFloppyEmulator).
+
+Either drag and drop the file in the GUI, or use `hxcfe` to convert it:
+```bash
+# AFI -> IMD
+hxcfe -finput:0022.afi -conv:IMD_IMG -foutput:0022.imd
+
+# AFI -> Raw sectors
+hxcfe -finput:0022.afi -conv:RAW_LOADER -foutput:0022.img
+```
