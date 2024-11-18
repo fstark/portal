@@ -1,13 +1,99 @@
+BOOT_LOAD:   ; 0
+BOOT_LOOP:   ; 0AH
+BOOT_START:   ; 17H
+BOOT_UNUSED:   ; 432H
+IGNORE:   ; 0F7E9H
+INT_VECTOR:   ; 0F7F8H
+MSG1:   ; 0F7FBH
+DF7FD:   ; 0F7FDH
+RAM_START:   ; 0F800H
+MONITOR:   ; 0F824H
+MONITOR2:   ; 0F839H
+CMD_B:   ; 0F861H
+CMD_ENTER:   ; 0F879H
+LOOP_819:   ; 0F886H
+AGAIN:   ; 0F8EFH
+DF912:   ; 0F912H
+DF92C:   ; 0F92CH
+DF932:   ; 0F932H
+DF93E:   ; 0F93EH
+JMP_HL:   ; 0F95DH
+WEIRD:   ; 0F95EH
+NON_ZERO_C:   ; 0F968H
+DF990:   ; 0F990H
+DF997:   ; 0F997H
+DIV:   ; 0F99FH
+LOOP:   ; 0F9A4H
+BIT7:   ; 0F9ADH
+SKIP_217:   ; 0F9AFH
+SKIP:   ; 0F9CEH
+LOOP_609:   ; 0F9E8H
+DFA0E:   ; 0FA0EH
+MEMCPY:   ; 0FA1EH
+DFA27:   ; 0FA27H
+XXX_635:   ; 0FA34H
+INTERRUPT:   ; 0FA7AH
+INTERRUPT_READ:   ; 0FA84H
+INTERRUPT_RETURN:   ; 0FA9AH
+INTERRUPT_END:   ; 0FA9DH
+INTERRUPT_ERROR:   ; 0FAA5H
+INTERRUPT_RETRY:   ; 0FAAAH
+READ_51H:   ; 0FAB7H
+LOOP_576:   ; 0FABCH
+WRITE_51H:   ; 0FAD3H
+WRITE2_51H:   ; 0FADAH
+XXX_891:   ; 0FAEDH
+BUSY_LOOP:   ; 0FAF5H
+DATA_S0:   ; 0FAFDH
+DATA_TR:   ; 0FAFFH
+DATA_X4:   ; 0FB00H
+READ_HL:   ; 0FB05H
+LOOP_811:   ; 0FB0BH
+SKIP_442:   ; 0FB23H
+FAILED:   ; 0FB33H
+DONE:   ; 0FB3CH
+CMD_STAR:   ; 0FB3EH
+LOOP_230:   ; 0FB40H
+LF:   ; 0FB58H
+CONT:   ; 0FB60H
+CMD_G:   ; 0FB66H
+CMD_AMP:   ; 0FB6DH
+MONITOR_REENTER:   ; 0FB79H
+WAIT_KEY:   ; 0FB81H
+PSTR_PORTAL:   ; 0FB8CH
+STR_PORTAL:   ; 0FB8DH
+READ_CHAR_ECHO:   ; 0FB97H
+PRINT_CHAR:   ; 0FB9BH
+PRINT_CR:   ; 0FBB7H
+UPDATE_SCREEN:   ; 0FBCCH
+LOOP_737:   ; 0FBD3H
+PRINT_LF:   ; 0FBE7H
+LOOP_272:   ; 0FBF2H
+PRINT_PSTR:   ; 0FC0CH
+LOOP_874:   ; 0FC0FH
+BUFFER:   ; 0FC1BH
+DATA51H_3:   ; 0FC1FH
+DRIVE:   ; 0FC23H
+PORT51_INDATA:   ; 0FC2AH
+FLAG2:   ; 0FC2BH
+FLAG3:   ; 0FC33H
+SKIP_INTERRUP:   ; 0FC34H
+XXX_DATA:   ; 0FC35H
+BOOT_HL:   ; 0FC3DH
+DFC3F:   ; 0FC3FH
+CURSOR:   ; 0FD5DH
+SCREEN:   ; 0FD5FH
+OTHER:   ; 0FD7FH
 	ORG 0F7E9H
 ;
 ; R2E Micral Portal boot rom disassembly (in progress) 
 ; This code is executed from 0 and copies the rest into F800 in RAM
 ;
-IGNORE:
+IGNORE:   ; 0F7E9H
 	DI
 	LXI H,17H	; Test @RAM_START
 	LXI B,41CH
-	LXI D,0F800H	; Start of boot @RAM_START...
+	LXI D,RAM_START	; Start of boot @RAM_START...
 	MOV A,M
 	STAX D
 	INX H
@@ -19,15 +105,15 @@ IGNORE:
 ; (JMP @FA7AH / JMP @INTERRUPT)
 ; PIC sets interrupts to be at F7E0+4*INT#, so this is INT 6.
 ;
-INT_VECTOR:
+INT_VECTOR:   ; 0F7F8H
 	MOV A,B
 	ORA C
 	JNZ 0AH
 	DB 0C2H
-MSG1:
+MSG1:   ; 0F7FBH
 	DB 0AH,0
-DF7FD:
-	JMP 0F800H
+DF7FD:   ; 0F7FDH
+	JMP RAM_START
 ;
 ; The real start in RAM
 ; Ports:
@@ -35,13 +121,13 @@ DF7FD:
 ;   60: F6
 ;   61: F7 BF
 ;
-RAM_START:
+RAM_START:   ; 0F800H
 	MVI A,0C0H
 	SIM	; Set Serial Data Out to 1
-	LXI SP,0FD5DH
+	LXI SP,CURSOR
 	XRA A
 	OUT 11H
-	LXI H,0F7F8H
+	LXI H,INT_VECTOR
 	MVI M,0C3H	; JMP
 	INX H
 	MVI M,7AH	; LOW(@INTERRUPT)
@@ -54,98 +140,98 @@ RAM_START:
 	MVI A,0BFH	; ICW3 : PIC init word 3
 	OUT 61H
 	XRA A
-	STA 0FC34H	; Some flag?
+	STA SKIP_INTERRUP	; Some flag?
 ;
 ; Resets stack, print 
 ;
-MONITOR:
-	LXI SP,0FD5DH
-	CALL 0FBE7H
-	LXI H,0FB8CH
-	CALL 0FC0CH
+MONITOR:   ; 0F824H
+	LXI SP,CURSOR
+	CALL PRINT_LF
+	LXI H,PSTR_PORTAL
+	CALL PRINT_PSTR
 	LXI H,110H	; Can be changed by the @CMD_AMP command
-	SHLD 0FC3DH
+	SHLD BOOT_HL
 	LXI D,80H	; Can be changed by the @CMD_B command. I Suspect it is some track/sector
-MONITOR2:
+MONITOR2:   ; 0F839H
 	MVI B,0	; 0 to 3, can be changed by @CMD_B command
-	CALL 0FB97H
+	CALL READ_CHAR_ECHO
 	MOV A,C
 	CPI 26H
-	JZ 0FB6DH	; '&' command
+	JZ CMD_AMP	; '&' command
 	CPI 0DH
 	XCHG
-	JZ 0F879H	; '
+	JZ CMD_ENTER	; '
 ' command
 	CPI 2AH
-	JZ 0FB3EH	; '*' command
+	JZ CMD_STAR	; '*' command
 	MOV B,A
 	MVI C,3AH	; ':'
-	CALL 0FB9BH
+	CALL PRINT_CHAR
 	MVI A,47H
 	CMP B
-	JZ 0FB66H	; 'G' command
+	JZ CMD_G	; 'G' command
 	MVI A,42H
 	CMP B
-	JNZ 0FB79H
+	JNZ MONITOR_REENTER
 ;
 ; Here the 'B' (Boot ?) command starts
 ; Asks for a 0-3 number (drive #?)
 ; then a 4 hex number (#of bytes to read? sector?)
 ; and executes the 'ENTER' function (real boot)
 ;
-CMD_B:
-	CALL 0FB05H	; Drive #
-	JNC 0FB79H
+CMD_B:   ; 0F861H
+	CALL READ_HL	; Drive #
+	JNC MONITOR_REENTER
 	MOV A,H
 	ORA A
-	JNZ 0FB79H
+	JNZ MONITOR_REENTER
 	MOV A,L
 	CPI 4
-	JNC 0FB79H	; Must be 0 to 3
+	JNC MONITOR_REENTER	; Must be 0 to 3
 	MOV B,L
-	CALL 0FB05H	; Size? Len? @F836H (defaults to 0080)
-	JNC 0FB79H
+	CALL READ_HL	; Size? Len? @F836H (defaults to 0080)
+	JNC MONITOR_REENTER
 ;
 ; B : Drive #
 ;
-CMD_ENTER:
+CMD_ENTER:   ; 0F879H
 	MVI A,1
-	STA 0FC34H	; We skip interrupt code
+	STA SKIP_INTERRUP	; We skip interrupt code
 	MVI A,30H
 	OUT 11H
 	LXI D,84C6H	; 33990 (loop counter)
 	EI
-LOOP_819:
+LOOP_819:   ; 0F886H
 	XTHL	; Waste some cycles
 	XTHL
 	DCX D
 	MOV A,E
 	ORA D
-	JNZ 0F886H	; Loops 33990 times
+	JNZ LOOP_819	; Loops 33990 times
 	DI
 	XRA A
-	STA 0FC34H	; We activate the @INTERRUPT code
-	SHLD 0FC35H
+	STA SKIP_INTERRUP	; We activate the @INTERRUPT code
+	SHLD XXX_DATA
 	MOV A,B
-	STA 0FC23H
-	LXI H,0FAFDH
-	LXI D,0FC1FH
+	STA DRIVE
+	LXI H,DATA_S0
+	LXI D,DATA51H_3
 	MVI A,3
 	STAX D
 	INX D
 	MVI C,2
-	CALL 0FA1EH
+	CALL MEMCPY
 	MVI C,3
-	LXI H,0FC1FH	; Contains [3,'S','0']
-	CALL 0FADAH
+	LXI H,DATA51H_3	; Contains [3,'S','0']
+	CALL WRITE2_51H
 	LXI H,0FFFFH
-	SHLD 0FC1BH	; Drive 0 & 1
-	SHLD 0FC1DH	; Drive 2 & 3
-	LXI H,0FC22H
+	SHLD BUFFER	; Drive 0 & 1
+	SHLD BUFFER+2	; Drive 2 & 3
+	LXI H,DATA51H_3+3
 	MVI M,4
 	MVI C,2
-	CALL 0FADAH
-	CALL 0FAB7H
+	CALL WRITE2_51H
+	CALL READ_51H
 	MOV A,M	; Wtf is this code?
 	ANI 8	; ?
 	RLC	; ?
@@ -154,8 +240,8 @@ LOOP_819:
 	RLC	; ?
 	MVI A,40H	; ?
 	ORI 6	; We juste did an MVI A,46H
-	STA 0FC22H
-	LXI H,0FAFFH
+	STA DATA51H_3+3
+	LXI H,DATA_TR
 	RLC	; Why?
 	MOV A,M
 	JNC 0F8DEH	; C is always 0
@@ -164,8 +250,8 @@ LOOP_819:
 	INX H
 	MOV L,M
 	MOV H,A
-	SHLD 0FC37H
-	LHLD 0FC3DH
+	SHLD XXX_DATA+2
+	LHLD BOOT_HL
 	XCHG
 	LXI H,0
 	SHLD 0FC3BH
@@ -173,51 +259,51 @@ LOOP_819:
 ; Redoes whatever this function tries to do.
 ; WEIRD ends here if C is zero
 ;
-AGAIN:
-	CALL 0F95EH
+AGAIN:   ; 0F8EFH
+	CALL WEIRD
 	ANA A
-	JZ 0FB79H
+	JZ MONITOR_REENTER
 	MOV C,A
-	CALL 0F95EH
+	CALL WEIRD
 	MOV B,A
 	MOV A,C
 	CPI 3
-	JC 0F912H
-	CALL 0F95EH
+	JC DF912
+	CALL WEIRD
 	MOV H,A
-	CALL 0F95EH
+	CALL WEIRD
 	MOV L,A
-	CALL 0F95EH
+	CALL WEIRD
 	ANI 1
-	JZ 0F912H
+	JZ DF912
 	DAD D
-DF912:
+DF912:   ; 0F912H
 	MOV A,B
 	CPI 0C2H
-	JZ 0F932H
+	JZ DF932
 	CPI 0D2H
-	JZ 0F93EH
+	JZ DF93E
 	CPI 0C6H
-	JZ 0F95DH
+	JZ JMP_HL
 	CPI 0C1H
-	JC 0FB79H
+	JC MONITOR_REENTER
 	CPI 0DBH
-	JNC 0FB79H
-DF92C:
-	CALL 0F95EH
-	JMP 0F92CH
-DF932:
-	CALL 0F95EH
+	JNC MONITOR_REENTER
+DF92C:   ; 0F92CH
+	CALL WEIRD
+	JMP DF92C
+DF932:   ; 0F932H
+	CALL WEIRD
 	MOV M,A
 	CMP M
-	JNZ 0FB79H
+	JNZ MONITOR_REENTER
 	INX H
-	JMP 0F932H
-DF93E:
-	CALL 0F95EH
+	JMP DF932
+DF93E:   ; 0F93EH
+	CALL WEIRD
 	MVI B,4
 	RLC
-	JC 0FB79H
+	JC MONITOR_REENTER
 	RLC
 	JNC 0F955H
 	PUSH PSW
@@ -232,55 +318,55 @@ DF93E:
 	POP PSW
 	INX H
 	DCR B
-	JNZ 0F943H
-	JMP 0F93EH
+	JNZ DF93E+5
+	JMP DF93E
 ;
 ; Jumps to content of HL
 ;
-JMP_HL:
+JMP_HL:   ; 0F95DH
 	PCHL
 ;
 ; Weird function with a suprious POP if C is zero...
 ;
-WEIRD:
+WEIRD:   ; 0F95EH
 	INR C
 	DCR C
-	JNZ 0F968H
+	JNZ NON_ZERO_C
 	POP PSW	; Weird...
 	INR C	; C = 1
-	JMP 0F8EFH	; Again
+	JMP AGAIN	; Again
 ;
 ; Called when C is not Zero. Why? No idea yet.
 ;
-NON_ZERO_C:
+NON_ZERO_C:   ; 0F968H
 	PUSH H
 	LHLD 0FC3BH
 	MOV A,H
 	ORA L
-	JNZ 0F990H
+	JNZ DF990
 	PUSH H
 	PUSH D
 	PUSH B
-	LHLD 0FC37H
+	LHLD XXX_DATA+2
 	XCHG
-	LHLD 0FC35H
-	CALL 0F99FH	; HL = HL / E
-	SHLD 0FC35H
+	LHLD XXX_DATA
+	CALL DIV	; HL = HL / E
+	SHLD XXX_DATA
 	POP B
 	POP D
 	POP H
 	LXI H,0FFH
 	SHLD 0FC3BH
-	LXI H,0FC3FH
-	JMP 0F997H
-DF990:
+	LXI H,DFC3F
+	JMP DF997
+DF990:   ; 0F990H
 	DCX H
 	SHLD 0FC3BH
-	LHLD 0FC39H
-DF997:
+	LHLD XXX_DATA+4
+DF997:   ; 0F997H
 	MOV A,M
 	INX H
-	SHLD 0FC39H
+	SHLD XXX_DATA+4
 	POP H
 	DCR C
 	RET
@@ -288,7 +374,7 @@ DF997:
 ; Divides HL by E
 ;   (E may be C6H (198) from '@CMD_ENTER'?)
 ;
-DIV:
+DIV:   ; 0F99FH
 	PUSH H
 	PUSH D
 	XRA A
@@ -296,48 +382,48 @@ DIV:
 ;
 ; 16 times (every bit of HL)
 ;
-LOOP:
+LOOP:   ; 0F9A4H
 	DAD H	; C = HL & 8000 ; HL <<= 1
 	RAL	; A gets the high bit of HL
-	JC 0F9ADH
+	JC BIT7
 	CMP E
-	JC 0F9AFH	; A < E
-BIT7:
+	JC SKIP_217	; A < E
+BIT7:   ; 0F9ADH
 	INR L	; L |= 1
 	SUB E
-SKIP_217:
+SKIP_217:   ; 0F9AFH
 	DCR D
-	JNZ 0F9A4H
+	JNZ LOOP
 	INR A
-	STA 0FC26H
+	STA DRIVE+3
 	MOV A,L
 	POP D
 	CMP D
-	JNC 0FB79H
-	LDA 0FC22H
+	JNC MONITOR_REENTER
+	LDA DATA51H_3+3
 	RLC
 	MVI B,0
 	MOV A,L
-	JNC 0F9CEH
+	JNC SKIP
 	ORA A
 	RAR
-	JNC 0F9CEH
+	JNC SKIP
 	MVI B,4
-SKIP:
-	STA 0FC24H
-	LXI H,0FC23H
+SKIP:   ; 0F9CEH
+	STA DRIVE+1
+	LXI H,DRIVE
 	MOV A,B
 	ORA M
 	MOV M,A
 	MOV A,B
 	RRC
 	RRC
-	STA 0FC25H
-	LXI H,0FB00H	; 01 10 20 00
+	STA DRIVE+2
+	LXI H,DATA_X4	; 01 10 20 00
 	MVI C,4
-	LXI D,0FC27H
-	CALL 0FA1EH
-LOOP_609:
+	LXI D,DRIVE+4
+	CALL MEMCPY
+LOOP_609:   ; 0F9E8H
 	MVI A,3FH
 	OUT 40H
 	MVI A,0FCH
@@ -348,67 +434,67 @@ LOOP_609:
 	OUT 41H
 	MVI A,0E5H
 	OUT 48H
-	CALL 0FA34H
+	CALL XXX_635
 	MVI C,9	; Read 9 bytes
-	LXI H,0FC22H
-	CALL 0FAEDH
+	LXI H,DATA51H_3+3
+	CALL XXX_891
 	DCR A
-	JNZ 0FA0EH
+	JNZ DFA0E
 	POP H
 	INX H
 	RET
-DFA0E:
-	LDA 0FC2CH
+DFA0E:   ; 0FA0EH
+	LDA FLAG2+1
 	ANI 84H
-	JZ 0F9E8H
-	CALL 0FA27H
+	JZ LOOP_609
+	CALL DFA27
 	MVI M,0FFH
-	JMP 0F9E8H
+	JMP LOOP_609
 ;
 ; Copies C bytes from HL to DE
 ;
-MEMCPY:
+MEMCPY:   ; 0FA1EH
 	MOV A,M
 	STAX D
 	INX H
 	INX D
 	DCR C
-	JNZ 0FA1EH
+	JNZ MEMCPY
 	RET
 ;
 ; HL = @BUFFER + @DRIVE & 0x3
 ;
-DFA27:
-	LDA 0FC23H
+DFA27:   ; 0FA27H
+	LDA DRIVE
 	ANI 3
-	LXI H,0FC1BH
+	LXI H,BUFFER
 	ADD L
 	MOV L,A
 	RNC
 	INR H
 	RET
-XXX_635:
-	CALL 0FA27H
+XXX_635:   ; 0FA34H
+	CALL DFA27
 	MOV A,M
 	INR A
 	JZ 0FA5FH
-	LDA 0FC24H
+	LDA DRIVE+1
 	CMP M
 	RZ
 	ORA A
 	XCHG
 	JZ 0FA69H
-	LXI H,0FC21H
+	LXI H,DATA51H_3+2
 	MOV M,A
 	MVI B,0FH
 	MVI C,3
-	LXI H,0FC20H
-	LDA 0FC23H
+	LXI H,DATA51H_3+1
+	LDA DRIVE
 	MOV M,A
 	DCX H
 	MOV M,B
-	CALL 0FAEDH
-	LDA 0FC24H
+	CALL XXX_891
+	LDA DRIVE+1
 	STAX D
 	RET
 	XCHG
@@ -419,7 +505,7 @@ XXX_635:
 	MVI B,7
 	MVI C,2
 	CALL 0FA4EH
-	LDA 0FC33H
+	LDA FLAG3
 	DCR A
 	MVI A,0
 	RZ
@@ -429,34 +515,34 @@ XXX_635:
 ; Stored as the target of a JMP instruction in 0008
 ; (See RAM_START)
 ;
-INTERRUPT:
+INTERRUPT:   ; 0FA7AH
 	PUSH PSW
 	PUSH B
 	PUSH H
-	LDA 0FC34H
+	LDA SKIP_INTERRUP
 	ANA A
-	JNZ 0FA9DH	; Skip interrupt code
+	JNZ INTERRUPT_END	; Skip interrupt code
 ;
 ; Reads from 51H
 ;
-INTERRUPT_READ:
-	CALL 0FAB7H
-	MOV A,B
+INTERRUPT_READ:   ; 0FA84H
+	CALL READ_51H
+	MOV A,B	; B is length (0 or 1)
 	ANA A
-	JZ 0FAAAH	; B=0 => No data read
-	LXI H,0FC2BH
-	MOV A,M
+	JZ INTERRUPT_RETRY	; B=0 => No data read
+	LXI H,FLAG2
+	MOV A,M	; Data read from 51H
 	RLC
-	JC 0FAA5H
+	JC INTERRUPT_ERROR	; Checks it is 0xxxxxxx
 	RLC
-	JC 0FAA5H
+	JC INTERRUPT_ERROR	; Checks it is 00xxxxxx
 	MVI A,1	; Signal we are done
 ;
 ; Returns with a code (in @FLAG3)
 ;
-INTERRUPT_RETURN:
-	STA 0FC33H
-INTERRUPT_END:
+INTERRUPT_RETURN:   ; 0FA9AH
+	STA FLAG3
+INTERRUPT_END:   ; 0FA9DH
 	MVI A,66H
 	OUT 60H
 	POP H
@@ -466,19 +552,19 @@ INTERRUPT_END:
 ;
 ; I suspect this is an error code
 ;
-INTERRUPT_ERROR:
+INTERRUPT_ERROR:   ; 0FAA5H
 	MVI A,7FH
-	JMP 0FA9AH
+	JMP INTERRUPT_RETURN
 ;
 ; I guess this is a retry to get some data
 ; (writes 1 in bit 4 of 51H)
 ;
-INTERRUPT_RETRY:
-	LXI H,0FC1FH
+INTERRUPT_RETRY:   ; 0FAAAH
+	LXI H,DATA51H_3
 	MVI M,8
 	MVI C,1
-	CALL 0FAD3H	; Write [0x08]
-	JMP 0FA84H
+	CALL WRITE_51H	; Write [0x08]
+	JMP INTERRUPT_READ
 ;
 ; Reads from 51H into PORT51_INDATA
 ; Reads as long as 50H bits 6 and 7 are set
@@ -486,234 +572,234 @@ INTERRUPT_RETRY:
 ; B contains number of bytes read
 ; Called from interrupt
 ;
-READ_51H:
-	LXI H,0FC2AH
+READ_51H:   ; 0FAB7H
+	LXI H,PORT51_INDATA	; Actually @FLAG2-1
 	MVI B,0
-LOOP_576:
+LOOP_576:   ; 0FABCH
 	IN 50H
 	RLC
-	JNC 0FABCH	; Wait for bit 7
+	JNC LOOP_576	; Wait for bit 7
 	MOV C,A
 	ANI 20H	; 0010 0000
 	RZ	; Return if 5th bit clear
 	MOV A,C
 	RLC
-	JNC 0FABCH	; Wait for bit 6
+	JNC LOOP_576	; Wait for bit 6
 	IN 51H
-	INX H
+	INX H	; @FLAG2 (@PORT51_INDATA+1)
 	INR B
 	MOV M,A
-	JMP 0FABCH
+	JMP LOOP_576
 ;
 ; Write C chars into HL (from floppy?)
 ; Waits for 50H bit 4 to clear
 ; Then similar logic to READ:
 ; Waits for bit 7 set and 6 cleared
 ;
-WRITE_51H:
+WRITE_51H:   ; 0FAD3H
 	IN 50H
 	ANI 10H
-	JNZ 0FAD3H
+	JNZ WRITE_51H
 ;
 ; Writes C chars from HL to 51H
 ; (waits for 50H bit 7 to be set)
 ;
-WRITE2_51H:
+WRITE2_51H:   ; 0FADAH
 	IN 50H
 	RLC
-	JNC 0FADAH
+	JNC WRITE2_51H
 	RLC
-	JC 0FADAH
+	JC WRITE2_51H
 	MOV A,M
 	OUT 51H
 	INX H
 	DCR C
-	JNZ 0FADAH
+	JNZ WRITE2_51H
 	RET
 ;
 ; Suspects that is is read from floppy sync
 ;
-XXX_891:
-	CALL 0FAD3H
+XXX_891:   ; 0FAEDH
+	CALL WRITE_51H
 	XRA A
-	STA 0FC33H
+	STA FLAG3
 	EI
-BUSY_LOOP:
-	LDA 0FC33H	; Interrup will set this to 1
+BUSY_LOOP:   ; 0FAF5H
+	LDA FLAG3	; Interrup will set this to 1
 	ORA A
-	JZ 0FAF5H
+	JZ BUSY_LOOP
 	RET
 ;
 ; 2 bytes of data 
 ;
-DATA_S0:
+DATA_S0:   ; 0FAFDH
 	DB "S0",0
 ;
 ; Maybe track count? Inited at 40...
 ;
-DATA_TR:
+DATA_TR:   ; 0FAFFH
 	DB 28H	; 28H = 40. Tracks?
 ;
 ; 4 bytes of data
 ;
-DATA_X4:
+DATA_X4:   ; 0FB00H
 	DB 1,10H,20H,0,32H
 ;
 ; Reads HL in hex
 ; Digits must be entered and finished with ESC
 ; My understanding is that we will crash at the 8th digit
 ;
-READ_HL:
+READ_HL:   ; 0FB05H
 	PUSH B
 	LXI H,0	; Starts with 0000
 	MVI B,9	; Read at most 8 hex chars
-LOOP_811:
-	CALL 0FB97H	; Read one digit
+LOOP_811:   ; 0FB0BH
+	CALL READ_CHAR_ECHO	; Read one digit
 	MOV A,C
 	SUI 30H	; ; '0' is at 0
-	JC 0FB33H	; Fails if <'0'
+	JC FAILED	; Fails if <'0'
 	ADI 0E9H	; 'F' is at FF
-	JC 0FB33H	; Fails if original char >'F'
+	JC FAILED	; Fails if original char >'F'
 	ADI 6	; 'A' is at 0
-	JP 0FB23H	; Jumps if original was 'A'-'F'
+	JP SKIP_442	; Jumps if original was 'A'-'F'
 	ADI 7	; '9' is at FF
-	JC 0FB33H	; Jumps if orignal >'9' and <'A'
-SKIP_442:
+	JC FAILED	; Jumps if orignal >'9' and <'A'
+SKIP_442:   ; 0FB23H
 	ADI 0AH	; '0' is at 0, 'F' at 15
 	ORA A	; Why?
 	DCR B
-	JZ 0FB3CH	; Will crash because lack of POP B
+	JZ DONE	; Will crash because lack of POP B
 	DAD H	; *2
 	DAD H	; *4
 	DAD H	; *8
 	DAD H	; *16
 	ORA L	; Why?
 	MOV L,A	; Replace last hex digit
-	JMP 0FB0BH
-FAILED:
+	JMP LOOP_811
+FAILED:   ; 0FB33H
 	MOV A,C
 	CPI 1BH	; ESC
 	POP B	; Only correct way to exit
-	JZ 0FB3CH
+	JZ DONE
 	STC	; Error
 	RET	; Return
-DONE:
+DONE:   ; 0FB3CH
 	ORA A	; Why?
 	RET
 ;
 ; Weird infinite loop with echo of the type char (if not space).
 ; May be a keyboard tester
 ;
-CMD_STAR:
+CMD_STAR:   ; 0FB3EH
 	MVI B,9	; Probably current column
-LOOP_230:
-	CALL 0FB81H
+LOOP_230:   ; 0FB40H
+	CALL WAIT_KEY
 	MOV C,A
 	CPI 0DH	; 
 
-	JZ 0FB58H
+	JZ LF
 	CPI 0AH	; 
-	JZ 0FB58H
+	JZ LF
 	INR B	; 0AH initial call
 	MOV A,B
 	CPI 20H	; ' '
-	JNZ 0FB60H
-	CALL 0FBE7H
-LF:
+	JNZ CONT
+	CALL PRINT_LF
+LF:   ; 0FB58H
 	MVI B,0
-	CALL 0FB9BH
-	JMP 0FB40H
-CONT:
-	CALL 0FB9BH	; Useless should have been FB5A
-	JMP 0FB40H
+	CALL PRINT_CHAR
+	JMP LOOP_230
+CONT:   ; 0FB60H
+	CALL PRINT_CHAR	; Useless should have been FB5A
+	JMP LOOP_230
 ;
 ; User typed 'G' in the monitor
 ;
-CMD_G:
-	CALL 0FB05H
-	JNC 0FB79H
+CMD_G:   ; 0FB66H
+	CALL READ_HL
+	JNC MONITOR_REENTER
 	PCHL	; Jumpto address
 ;
 ; User typed '&' in the monitor
 ;
-CMD_AMP:
-	CALL 0FB05H
-	JNC 0FB79H
-	SHLD 0FC3DH
-	JMP 0F839H
+CMD_AMP:   ; 0FB6DH
+	CALL READ_HL
+	JNC MONITOR_REENTER
+	SHLD BOOT_HL
+	JMP MONITOR2
 ;
 ; Display '#' and goes to monitor
 ;
-MONITOR_REENTER:
+MONITOR_REENTER:   ; 0FB79H
 	MVI C,23H	; '#'
-	CALL 0FB9BH
-	JMP 0F824H
+	CALL PRINT_CHAR
+	JMP MONITOR
 ;
 ; Waits for a char and reads it in A
 ;
-WAIT_KEY:
+WAIT_KEY:   ; 0FB81H
 	IN 10H	; Char READY (bit 0)
 	RRC	; Bit 0 -> Carry
-	JNC 0FB81H	; Wait for char
+	JNC WAIT_KEY	; Wait for char
 	IN 11H	; Char
 	ANI 7FH	; Force ASCII
 	RET
 ;
 ; TAB+SPACE+PORTAL
 ;
-PSTR_PORTAL:
+PSTR_PORTAL:   ; 0FB8CH
 	DB 9	; 9 Bytes string
-STR_PORTAL:
+STR_PORTAL:   ; 0FB8DH
 	DB " PORTAL..",0
 ;
 ; ? Unsure, maybe be reading a char
 ;
-READ_CHAR_ECHO:
-	CALL 0FB81H
+READ_CHAR_ECHO:   ; 0FB97H
+	CALL WAIT_KEY
 	MOV C,A
 ;
 ; Prints char in C
 ;
-PRINT_CHAR:
+PRINT_CHAR:   ; 0FB9BH
 	MOV A,C
 	CPI 0DH
-	JZ 0FBB7H
+	JZ PRINT_CR
 	CPI 0AH
-	JZ 0FBE7H
+	JZ PRINT_LF
 	PUSH H
-	LHLD 0FD5DH
+	LHLD CURSOR
 	MOV M,C
 	INX H
-	SHLD 0FD5DH
+	SHLD CURSOR
 	MVI A,5FH	; '_'
 	MOV M,A
-	CALL 0FBCCH
+	CALL UPDATE_SCREEN
 	POP H
 	RET
 ;
 ; Erase current cursor and put cursor at start of screen
 ;
-PRINT_CR:
+PRINT_CR:   ; 0FBB7H
 	PUSH H
-	LHLD 0FD5DH
+	LHLD CURSOR
 	MVI A,20H	; ' '
 	MOV M,A
-	LXI H,0FD5FH
-	SHLD 0FD5DH
+	LXI H,SCREEN
+	SHLD CURSOR
 	MVI A,5FH	; '_'
 	MOV M,A
-	CALL 0FBCCH
+	CALL UPDATE_SCREEN
 	POP H
 	RET
 ;
 ; Outputs the content of @SCREEN to ports 9F downto 80 
 ;
-UPDATE_SCREEN:
+UPDATE_SCREEN:   ; 0FBCCH
 	PUSH H
 	PUSH B
-	LXI H,0FD5FH
+	LXI H,SCREEN
 	MVI B,9FH	; Port
-LOOP_737:
+LOOP_737:   ; 0FBD3H
 	PUSH H
 	LXI H,0FBDBH
 	MOV M,B
@@ -724,32 +810,32 @@ LOOP_737:
 	DCR B
 	MOV A,B
 	CPI 7FH
-	JNZ 0FBD3H
+	JNZ LOOP_737
 	POP B
 	POP H
 	RET
 ;
 ; Clear screen, put cursor at column 0
 ;
-PRINT_LF:
+PRINT_LF:   ; 0FBE7H
 	PUSH PSW
 	PUSH B
 	PUSH D
 	PUSH H
 	MVI A,20H	; ' '
-	LXI H,0FD5FH
+	LXI H,SCREEN
 	MVI C,20H	; Do 32 times (32 characters)
-LOOP_272:
+LOOP_272:   ; 0FBF2H
 	MOV M,A
 	INX H
 	DCR C
-	JNZ 0FBF2H	; Copies 32 spaces
-	LXI H,0FD5FH
+	JNZ LOOP_272	; Copies 32 spaces
+	LXI H,SCREEN
 	MVI A,5FH	; '_'
 	MOV M,A	; Overrides fist ' ' with '_'
-	CALL 0FBCCH
-	LXI H,0FD5FH
-	SHLD 0FD5DH
+	CALL UPDATE_SCREEN
+	LXI H,SCREEN
+	SHLD CURSOR
 	POP H
 	POP D
 	POP B
@@ -759,60 +845,60 @@ LOOP_272:
 ; Prints pascal string pointed by HL
 ; First byte is length
 ;
-PRINT_PSTR:
+PRINT_PSTR:   ; 0FC0CH
 	PUSH B
 	PUSH H
 	MOV B,M	; Length
-LOOP_874:
+LOOP_874:   ; 0FC0FH
 	INX H
 	MOV C,M
-	CALL 0FB9BH
+	CALL PRINT_CHAR
 	DCR B
-	JNZ 0FC0FH
+	JNZ LOOP_874
 	POP H
 	POP B
 	RET
 ;
 ; (At least 9 bytes are used, maybe more)
 ;
-BUFFER:
+BUFFER:   ; 0FC1BH
 	DB 0,0,0,0
 ;
 ; Buffer often written to 51H (3 bytes or 1 byte)
 ;
-DATA51H_3:
+DATA51H_3:   ; 0FC1FH
 	DB 0,0,0,0
 ;
 ; 0-3, boot drive
 ;
-DRIVE:
+DRIVE:   ; 0FC23H
 	DB 0,0,0,0,0,0,0
-PORT51_INDATA:
+PORT51_INDATA:   ; 0FC2AH
 	DB 0
 ;
 ; Another 0/1 flag
 ;
-FLAG2:
+FLAG2:   ; 0FC2BH
 	DB 0,0,0,0,0,0,0,0
 ;
 ; 00, 01 or 7F
 ;
-FLAG3:
+FLAG3:   ; 0FC33H
 	DB 0
 ;
 ; Interrupt code does nothing if set to 1
 ;
-SKIP_INTERRUP:
+SKIP_INTERRUP:   ; 0FC34H
 	DB 0
-XXX_DATA:
+XXX_DATA:   ; 0FC35H
 	DB 0,0,0,0,0,0,0,0
 ;
 ; Unsure what this is for yet
 ; 0110H by default
 ;
-BOOT_HL:
+BOOT_HL:   ; 0FC3DH
 	DW 0
-DFC3F:
+DFC3F:   ; 0FC3FH
 	DB 0,0,0,0,0,0,0,0
 	DB 0,0,0,0,0,0,0,0
 	DB 0,0,0,0,0,0,0,0
@@ -853,18 +939,18 @@ DFC3F:
 ; Location of the cursor in the SCREEN area.
 ; Before CURSOR, the inital Stack Frame
 ;
-CURSOR:
+CURSOR:   ; 0FD5DH
 	DB 0,0
 ;
 ; 32 bytes for the screen buffer.
 ; Cursor is represented by '_'
 ;
-SCREEN:
+SCREEN:   ; 0FD5FH
 	DB 0,0,0,0,0,0,0,0
 	DB 0,0,0,0,0,0,0,0
 	DB 0,0,0,0,0,0,0,0
 	DB 0,0,0,0,0,0,0,0
-OTHER:
+OTHER:   ; 0FD7FH
 	DB 0,0,0,0,0,0,0,0
 	DB 0,0,0,0,0,0,0,0
 	DB 0,0,0,0,0,0,0,0

@@ -6,11 +6,14 @@ The reverse engineered specimen has no readable serial number. Many internal com
 
 ![The Portal](images/portal.jpg)
 
+![After re-cap and a custom ROM](images/boot1.jpg)
+
+
 Here are the [latest findings](docs/findings.md) and the [work log](misc/logs.md)
 
 ## Roms
 
-The [roms directory](roms) roms from the portal
+The [roms directory](roms) contains roms from the portal, a disassembly and a custom debug rom (in progress)
 
 ## Images
 
