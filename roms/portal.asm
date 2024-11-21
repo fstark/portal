@@ -112,8 +112,8 @@
 0F882H: 	LXI D,84C6H          ; 33990 (loop counter)
 0F885H: 	EI
 0F886H: WAIT_LOOP:   ; 0F886H
-0F886H: 	???                  ; Waste some cycles
-0F887H: 	???
+0F886H: 	XTHL                 ; Waste some cycles
+0F887H: 	XTHL
 0F888H: 	DCX D
 0F889H: 	MOV A,E
 0F88AH: 	ORA D
@@ -165,7 +165,7 @@
 0F8E5H: 	LHLD BOOT_HL
 0F8E8H: 	XCHG
 0F8E9H: 	LXI H,0
-0F8ECH: 	SHLD XXX_LEN4
+0F8ECH: 	SHLD XXX_LEN4        ; The buffer starts empty
 0F8EFH: ;
 0F8EFH: ; Redoes whatever this function tries to do.
 0F8EFH: ; WEIRD ends here if C is zero
@@ -174,35 +174,35 @@
 0F8EFH: 	CALL WEIRD
 0F8F2H: 	ANA A                ; A=0 ?
 0F8F3H: 	JZ MONITOR_REENTER
-0F8F6H: 	MOV C,A
+0F8F6H: 	MOV C,A              ; C = GET()
 0F8F7H: 	CALL WEIRD
-0F8FAH: 	MOV B,A
+0F8FAH: 	MOV B,A              ; B = GET()
 0F8FBH: 	MOV A,C
 0F8FCH: 	CPI 3
-0F8FEH: 	JC DF912
+0F8FEH: 	JC DF912             ; IF C < 3 ...
 0F901H: 	CALL WEIRD
-0F904H: 	MOV H,A
+0F904H: 	MOV H,A              ; H = GET()
 0F905H: 	CALL WEIRD
-0F908H: 	MOV L,A
+0F908H: 	MOV L,A              ; L = GET()
 0F909H: 	CALL WEIRD
-0F90CH: 	ANI 1
+0F90CH: 	ANI 1                ; IF GET()&1 THEN DE++
 0F90EH: 	JZ DF912
 0F911H: 	DAD D
 0F912H: DF912:   ; 0F912H
 0F912H: 	MOV A,B
 0F913H: 	CPI 0C2H
-0F915H: 	JZ DF932
+0F915H: 	JZ DF932             ; IF B=C2 THEN F932
 0F918H: 	CPI 0D2H
-0F91AH: 	JZ DF93E
+0F91AH: 	JZ DF93E             ; IF B=D2 THEN F93E
 0F91DH: 	CPI 0C6H
 0F91FH: 	JZ JMP_HL            ; Execute some loaded code?
 0F922H: 	CPI 0C1H
-0F924H: 	JC MONITOR_REENTER
+0F924H: 	JC MONITOR_REENTER   ; IF B=C1 THEN ABORT()
 0F927H: 	CPI 0DBH
-0F929H: 	JNC MONITOR_REENTER
+0F929H: 	JNC MONITOR_REENTER  ; IF B=DB THEN ABORT()
 0F92CH: DF92C:   ; 0F92CH
 0F92CH: 	CALL WEIRD
-0F92FH: 	JMP DF92C
+0F92FH: 	JMP DF92C            ; FOR (;;) GET()
 0F932H: DF932:   ; 0F932H
 0F932H: 	CALL WEIRD
 0F935H: 	MOV M,A
@@ -216,29 +216,29 @@
 0F93EH: ; Ensure those groups are 00 or 01
 0F93EH: ; When they are 01, it adds DE to (HL,H+1)
 0F93EH: ; HL is in incremented between each loop.
-0F93EH: ; (like if HL was some sortof
 0F93EH: ;
 0F93EH: DF93E:   ; 0F93EH
 0F93EH: 	CALL WEIRD
-0F941H: 	MVI B,4
+0F941H: 	MVI B,4              ; Will work on the 4 group of 2 bits
+0F943H: LOOP_383:   ; 0F943H
 0F943H: 	RLC
-0F944H: 	JC MONITOR_REENTER
+0F944H: 	JC MONITOR_REENTER   ; 10 or 11 => ABORT()
 0F947H: 	RLC
 0F948H: 	JNC SKIP_ADD
-0F94BH: 	PUSH PSW             ; (HL,HL+1) += DE
+0F94BH: 	PUSH PSW             ; All this does: (HL,HL+1) += DE
 0F94CH: 	MOV A,M
 0F94DH: 	ADD E
-0F94EH: 	MOV M,A
+0F94EH: 	MOV M,A              ; (HL) += E
 0F94FH: 	INX H
 0F950H: 	MOV A,M
 0F951H: 	ADC D
-0F952H: 	MOV M,A
+0F952H: 	MOV M,A              ; (HL+1) += D (with carry from above)
 0F953H: 	DCX H
 0F954H: 	POP PSW
 0F955H: SKIP_ADD:   ; 0F955H
 0F955H: 	INX H
 0F956H: 	DCR B
-0F957H: 	JNZ DF93E+5
+0F957H: 	JNZ LOOP_383
 0F95AH: 	JMP DF93E
 0F95DH: ;
 0F95DH: ; Jumps to content of HL
@@ -247,28 +247,30 @@
 0F95DH: 	PCHL
 0F95EH: ;
 0F95EH: ; Weird function with a spurious POP if C is zero...
-0F95EH: ; I suspect it reads from sort of FIFO into A
+0F95EH: ; If C is not zero it reads one byte from @XXX_PTR3
 0F95EH: ;
 0F95EH: WEIRD:   ; 0F95EH
 0F95EH: 	INR C
 0F95FH: 	DCR C
-0F960H: 	JNZ NON_ZERO_C
+0F960H: 	JNZ NON_ZERO_C       ; If C!=0 GOTO NON_ZERO_C
 0F963H: 	POP PSW              ; Weird...
 0F964H: 	INR C                ; C = 1
 0F965H: 	JMP AGAIN            ; Again
 0F968H: ;
 0F968H: ; Called when C is not Zero. Why? No idea yet.
+0F968H: ; Reads one byte out of @XXX_PTR3 until @XXX_LEN4 is zero
+0F968H: ; Resets @XXX_LEN4 to FF and @XXX_PTR to @XXX_BUFFER at last element
 0F968H: ;
 0F968H: NON_ZERO_C:   ; 0F968H
 0F968H: 	PUSH H
-0F969H: 	LHLD XXX_LEN4
+0F969H: 	LHLD XXX_LEN4        ; HL = @XXX_LEN4
 0F96CH: 	MOV A,H
 0F96DH: 	ORA L
-0F96EH: 	JNZ NOT_FULL         ; @XXX_LEN4 != 0
+0F96EH: 	JNZ NOT_EMPTY        ; IF HL != 0 GOTO NOT_EMPTY
 0F971H: ;
-0F971H: ; Buffer is full
+0F971H: ; Buffer is empty
 0F971H: ;
-0F971H: FULL:   ; 0F971H
+0F971H: EMPTY:   ; 0F971H
 0F971H: 	PUSH H
 0F972H: 	PUSH D
 0F973H: 	PUSH B
@@ -276,21 +278,21 @@
 0F977H: 	XCHG
 0F978H: 	LHLD XXX_PTR1
 0F97BH: 	CALL DIV             ; HL = HL / E
-0F97EH: 	SHLD XXX_PTR1
+0F97EH: 	SHLD XXX_PTR1        ; @XXX_PTR1 = @XXX_PTR1 / @XXX_PTR2 (first byte)
 0F981H: 	POP B
 0F982H: 	POP D
 0F983H: 	POP H
 0F984H: 	LXI H,0FFH
-0F987H: 	SHLD XXX_LEN4
-0F98AH: 	LXI H,XXX_BUFFER     ; HL = &XXX_BUFFER
+0F987H: 	SHLD XXX_LEN4        ; @XXX_LEN4 = FF
+0F98AH: 	LXI H,XXX_BUFFER     ; HL = &XXX_BUFFER (reset @XXX_PTR3 buffer)
 0F98DH: 	JMP DF997
-0F990H: NOT_FULL:   ; 0F990H
-0F990H: 	DCX H
-0F991H: 	SHLD XXX_LEN4        ; Decrement @XXX_LEN4
+0F990H: NOT_EMPTY:   ; 0F990H
+0F990H: 	DCX H                ; HL--
+0F991H: 	SHLD XXX_LEN4        ; @XXX_LEN4 = HL
 0F994H: 	LHLD XXX_PTR3
 0F997H: DF997:   ; 0F997H
-0F997H: 	MOV A,M
-0F998H: 	INX H
+0F997H: 	MOV A,M              ; Get next from @XXX_PTR3
+0F998H: 	INX H                ; @XXX_PTR3++
 0F999H: 	SHLD XXX_PTR3        ; XXX_PTR3++ or XXX_PTR3=&XXX_BUFFER after every 256 bytes
 0F99CH: 	POP H
 0F99DH: 	DCR C
@@ -495,7 +497,7 @@
 0FAB7H: ; Reads as long as 50H bits 6 and 7 are set
 0FAB7H: ; Stops if 50H has bit 7 set and bit 5 cleared
 0FAB7H: ; B contains number of bytes read
-0FAB7H: ; Called from interrupt
+0FAB7H: ; Also called from interrupt
 0FAB7H: ;
 0FAB7H: READ_51H:   ; 0FAB7H
 0FAB7H: 	LXI H,PORT51_INDATA  ; Actually @FLAG2-1
@@ -751,17 +753,17 @@
 0FBEBH: 	MVI A,20H            ; ' '
 0FBEDH: 	LXI H,SCREEN
 0FBF0H: 	MVI C,20H            ; Do 32 times (32 characters)
-0FBF2H: LOOP_272:   ; 0FBF2H
+0FBF2H: NEXT_COLUMN:   ; 0FBF2H
 0FBF2H: 	MOV M,A
 0FBF3H: 	INX H
 0FBF4H: 	DCR C
-0FBF5H: 	JNZ LOOP_272         ; Copies 32 spaces
+0FBF5H: 	JNZ NEXT_COLUMN      ; Copies 32 spaces
 0FBF8H: 	LXI H,SCREEN
 0FBFBH: 	MVI A,5FH            ; '_'
-0FBFDH: 	MOV M,A              ; Overrides fist ' ' with '_'
+0FBFDH: 	MOV M,A              ; First char is '_'
 0FBFEH: 	CALL UPDATE_SCREEN
 0FC01H: 	LXI H,SCREEN
-0FC04H: 	SHLD CURSOR
+0FC04H: 	SHLD CURSOR          ; @CURSOR = @SCREEN (left column)
 0FC07H: 	POP H
 0FC08H: 	POP D
 0FC09H: 	POP B

@@ -26,17 +26,18 @@ LABEL F912H CODE DF912
 LABEL F92CH CODE DF92C
 LABEL F932H CODE DF932
 LABEL F93EH CODE DF93E
-COMMENT LABEL DF93E "After the call to @WEIRD, it does something strange:\nBreaks A into 4 groups of two bits\nEnsure those groups are 00 or 01\nWhen they are 01, it adds DE to (HL,H+1)\nHL is in incremented between each loop.\n(like if HL was some sortof"
+COMMENT LABEL DF93E "After the call to @WEIRD, it does something strange:\nBreaks A into 4 groups of two bits\nEnsure those groups are 00 or 01\nWhen they are 01, it adds DE to (HL,H+1)\nHL is in incremented between each loop."
+LABEL F943H CODE LOOP_383
 LABEL F955H CODE SKIP_ADD
 LABEL F95DH CODE JMP_HL
 COMMENT LABEL JMP_HL "Jumps to content of HL"
 LABEL F95EH CODE WEIRD
-COMMENT LABEL WEIRD "Weird function with a spurious POP if C is zero...\nI suspect it reads from sort of FIFO into A"
+COMMENT LABEL WEIRD "Weird function with a spurious POP if C is zero...\nIf C is not zero it reads one byte from @XXX_PTR3"
 LABEL F968H CODE NON_ZERO_C
-COMMENT LABEL NON_ZERO_C "Called when C is not Zero. Why? No idea yet."
-LABEL F971H CODE FULL
-COMMENT LABEL FULL "Buffer is full"
-LABEL F990H CODE NOT_FULL
+COMMENT LABEL NON_ZERO_C "Called when C is not Zero. Why? No idea yet.\nReads one byte out of @XXX_PTR3 until @XXX_LEN4 is zero\nResets @XXX_LEN4 to FF and @XXX_PTR to @XXX_BUFFER at last element"
+LABEL F971H CODE EMPTY
+COMMENT LABEL EMPTY "Buffer is empty"
+LABEL F990H CODE NOT_EMPTY
 LABEL F997H CODE DF997
 LABEL F99FH CODE DIV
 COMMENT LABEL DIV "Divides HL by E\n  (E may be C6H (198) from '@CMD_ENTER'?)\n"
@@ -64,7 +65,7 @@ COMMENT LABEL INTERRUPT_ERROR "I suspect this is an error code"
 LABEL FAAAH CODE INTERRUPT_RETRY
 COMMENT LABEL INTERRUPT_RETRY "I guess this is a retry to get some data\n(writes 1 in bit 4 of 51H)"
 LABEL FAB7H CODE READ_51H
-COMMENT LABEL READ_51H "Reads from 51H into PORT51_INDATA\nReads as long as 50H bits 6 and 7 are set\nStops if 50H has bit 7 set and bit 5 cleared\nB contains number of bytes read\nCalled from interrupt"
+COMMENT LABEL READ_51H "Reads from 51H into PORT51_INDATA\nReads as long as 50H bits 6 and 7 are set\nStops if 50H has bit 7 set and bit 5 cleared\nB contains number of bytes read\nAlso called from interrupt"
 LABEL FABCH CODE LOOP_576
 LABEL FAD3H CODE WRITE_51H
 COMMENT LABEL WRITE_51H "Write C chars into HL (from floppy?)\nWaits for 50H bit 4 to clear\nThen similar logic to READ:\nWaits for bit 7 set and 6 cleared"
@@ -112,7 +113,7 @@ COMMENT LABEL UPDATE_SCREEN "Outputs the content of @SCREEN to ports 9F downto 8
 LABEL FBD3H CODE LOOP_737
 LABEL FBE7H CODE PRINT_LF
 COMMENT LABEL PRINT_LF "Clear screen, put cursor at column 0"
-LABEL FBF2H CODE LOOP_272
+LABEL FBF2H CODE NEXT_COLUMN
 LABEL FC0CH CODE PRINT_PSTR
 COMMENT LABEL PRINT_PSTR "Prints pascal string pointed by HL\nFirst byte is length"
 LABEL FC0FH CODE LOOP_874
@@ -173,7 +174,6 @@ COMMENT LINE FBEBH "' '"
 COMMENT LINE FBF0H "Do 32 times (32 characters)"
 COMMENT LINE FBF5H "Copies 32 spaces"
 COMMENT LINE FBFBH "'_'"
-COMMENT LINE FBFDH "Overrides fist ' ' with '_'"
 COMMENT LINE FBAFH "'_'"
 COMMENT LINE FBC4H "'_'"
 COMMENT LINE F88BH "Loops 33990 times"
@@ -265,16 +265,41 @@ COMMENT LINE F830H "Load adrs. Can be changed by the @CMD_AMP command"
 COMMENT LINE F8F2H "A=0 ?"
 COMMENT LINE F91FH "Execute some loaded code?"
 COMMENT LINE F937H "Looks like we are trying to write to ROM"
-COMMENT LINE F96EH "@XXX_LEN4 != 0"
-COMMENT LINE F991H "Decrement @XXX_LEN4"
 COMMENT LINE F999H "XXX_PTR3++ or XXX_PTR3=&XXX_BUFFER after every 256 bytes"
-COMMENT LINE F98AH "HL = &XXX_BUFFER"
 COMMENT LINE F7EAH "From address 0017H"
 COMMENT LINE F7EDH "Copy 041CH bytes (1052 bytes)"
 COMMENT LINE F7F0H "To location @RAM_START..."
 COMMENT LINE F7FDH "Jump to copied code"
 COMMENT LINE F7FAH "This is @f7f3H in offseted binary"
-COMMENT LINE F94BH "(HL,HL+1) += DE"
+COMMENT LINE F8F6H "C = GET()"
+COMMENT LINE F8FAH "B = GET()"
+COMMENT LINE F8FEH "IF C < 3 ..."
+COMMENT LINE F904H "H = GET()"
+COMMENT LINE F908H "L = GET()"
+COMMENT LINE F90CH "IF GET()&1 THEN DE++"
+COMMENT LINE F915H "IF B=C2 THEN F932"
+COMMENT LINE F91AH "IF B=D2 THEN F93E"
+COMMENT LINE F924H "IF B=C1 THEN ABORT()"
+COMMENT LINE F929H "IF B=DB THEN ABORT()"
+COMMENT LINE F92FH "FOR (;;) GET()"
+COMMENT LINE F94EH "(HL) += E"
+COMMENT LINE F952H "(HL+1) += D (with carry from above)"
+COMMENT LINE F941H "Will work on the 4 group of 2 bits"
+COMMENT LINE F944H "10 or 11 => ABORT()"
+COMMENT LINE F94BH "All this does: (HL,HL+1) += DE"
+COMMENT LINE F960H "If C!=0 GOTO NON_ZERO_C"
+COMMENT LINE F987H "@XXX_LEN4 = FF"
+COMMENT LINE F969H "HL = @XXX_LEN4"
+COMMENT LINE F96EH "IF HL != 0 GOTO NOT_EMPTY"
+COMMENT LINE F990H "HL--"
+COMMENT LINE F991H "@XXX_LEN4 = HL"
+COMMENT LINE F997H "Get next from @XXX_PTR3"
+COMMENT LINE F998H "@XXX_PTR3++"
+COMMENT LINE F98AH "HL = &XXX_BUFFER (reset @XXX_PTR3 buffer)"
+COMMENT LINE F97EH "@XXX_PTR1 = @XXX_PTR1 / @XXX_PTR2 (first byte)"
+COMMENT LINE FBFDH "First char is '_'"
+COMMENT LINE FC04H "@CURSOR = @SCREEN (left column)"
+COMMENT LINE F8ECH "The buffer starts empty"
 IO 00H PORT00 "I have no idea what this port does.\n\nNeither do you."
 IO 10H KBDSTROBE "Bit 0 is 1 if key presse (see @WAIT_KEY)\n\nADSC    EQU     010H    ;ADRESSE PRINTER + ADRESSE STATUS\n"
 IO 11H KDBDATA "Keyboard read data (maybe something else when writing?)\nNeeds AND with 7FH"
