@@ -39,8 +39,8 @@ LABEL F971H CODE EMPTY
 COMMENT LABEL EMPTY "Buffer is empty"
 LABEL F990H CODE NOT_EMPTY
 LABEL F997H CODE DF997
-LABEL F99FH CODE DIV
-COMMENT LABEL DIV "Divides HL by E\n  (E may be C6H (198) from '@CMD_ENTER'?)\n"
+LABEL F99FH CODE DIV_AND_OTHERS
+COMMENT LABEL DIV_AND_OTHERS "Divides HL by E\n  (E may be C6H (198) from '@CMD_ENTER'?)\nIt then do stuff and return HL+1"
 LABEL F9A4H CODE LOOP
 COMMENT LABEL LOOP "16 times (every bit of HL)"
 LABEL F9ADH CODE BIT7
@@ -220,7 +220,6 @@ COMMENT LINE FAC5H "Return if 5th bit clear"
 COMMENT LINE FAC8H "Wait for bit 6"
 COMMENT LINE F9FFH "Read 9 bytes"
 COMMENT LINE FAB1H "Write [0x08]"
-COMMENT LINE F97BH "HL = HL / E"
 COMMENT LINE F9DDH "01 10 20 00"
 COMMENT LINE F8B4H "Drive 0 & 1"
 COMMENT LINE F8B7H "Drive 2 & 3"
@@ -296,10 +295,11 @@ COMMENT LINE F991H "@XXX_LEN4 = HL"
 COMMENT LINE F997H "Get next from @XXX_PTR3"
 COMMENT LINE F998H "@XXX_PTR3++"
 COMMENT LINE F98AH "HL = &XXX_BUFFER (reset @XXX_PTR3 buffer)"
-COMMENT LINE F97EH "@XXX_PTR1 = @XXX_PTR1 / @XXX_PTR2 (first byte)"
 COMMENT LINE FBFDH "First char is '_'"
 COMMENT LINE FC04H "@CURSOR = @SCREEN (left column)"
 COMMENT LINE F8ECH "The buffer starts empty"
+COMMENT LINE F97BH "???"
+COMMENT LINE F97EH "HL++"
 IO 00H PORT00 "I have no idea what this port does.\n\nNeither do you."
 IO 10H KBDSTROBE "Bit 0 is 1 if key presse (see @WAIT_KEY)\n\nADSC    EQU     010H    ;ADRESSE PRINTER + ADRESSE STATUS\n"
 IO 11H KDBDATA "Keyboard read data (maybe something else when writing?)\nNeeds AND with 7FH"
