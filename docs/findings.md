@@ -51,6 +51,19 @@ Port 11 is key (bits 0-6)
 
 WAIT_KEY is at FB81
 
+# PIC
+
+PIC:
+	0 F6 ICW1 => A7-A6-A5 = 1, Edge triggered mode, Call Adrs Interval = 4, Single mode, no ICW4
+	1 F7 ICW2 => Interrupt vector = F7E0
+	1 BF
+
+
+F7F8 = F7E0 + 18
+
+Interrupt = 6
+
+
 # Boot ports setup
 
 | Port | Values |
@@ -108,9 +121,15 @@ Allows to edit the value of 'HL' at boot (initially 0110H)
 
 # History
 
-Presented for the first time a the Paris SICOB, 17-26 Sept 1980
+Presented at the Paris SICOB, 17-26 Sept 1980.
 
 CCMC: https://www.lemonde.fr/archives/article/1988/08/20/restructuration-dans-les-services-informatiques-ccmc-entre-dans-la-galaxie-thomson_4093359_1819218.html
+
+
+An earlier version was presented at the Personal Computer Festival in Arlington, where it was called "La Valise Micral V2" (V2 of Micral Suitcase). Note the difference on the screen and printer scroll button.
+
+https://archive.org/details/ord-ind-s1-019/page/122/mode/1up
+
 
 According to Ordinateur Individuel #68, the Portal Price was 35 000F in 1985.
 
@@ -118,6 +137,3 @@ According to Ordinateur Individuel #68, the Portal Price was 35 000F in 1985.
 
 https://archive.org/details/micro-ordinateurs-oric/Micro_Ordinateurs_017-Decembre%201983%20-%20Pages%200%2C74-75%2C87%2C94-95%2C100%2C106%2C109%2C110-111/page/n5/mode/1up
 
-Picture of the Portal at the "personal computer festival" 1980 arlington, at the time where it was called "La Valise Micral V2" (V2 of Micral Suitcase). Note the difference on the screen and printer scroll button.
-
-https://archive.org/details/ord-ind-s1-019/page/122/mode/1up
