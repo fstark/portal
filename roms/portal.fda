@@ -1,16 +1,14 @@
-LABEL 0000H CODE BOOT_LOAD
-COMMENT LABEL BOOT_LOAD "Load address at boot.\nThis is then moved so 0017 is at F800\n(hence the load adress of F7E9)"
 LABEL 000AH CODE BOOT_LOOP
 LABEL 0017H CODE BOOT_START
 COMMENT LABEL BOOT_START "This is the code that is copied to F800 at boot time"
+LABEL 0110H CODE PROLOGUE
+COMMENT LABEL PROLOGUE "The address where PROLOGUE is loaded in memory"
 LABEL 0432H DATA BOOT_UNUSED
 COMMENT LABEL BOOT_UNUSED "Unused ROM space"
 LABEL F7E9H CODE IGNORE
 COMMENT LABEL IGNORE "R2E Micral Portal boot rom disassembly (in progress) \nThis code is executed from 0 and copies the rest into F800 in RAM"
 LABEL F7F8H CODE INT_VECTOR
 COMMENT LABEL INT_VECTOR "Copies the code 'JMP FA7A' (HOOK) here\nThis is also written to by F809H and becomes @INT_VECTOR\n(JMP @FA7AH / JMP @INTERRUPT)\nPIC sets interrupts to be at F7E0+4*INT#, so this is INT 6."
-LABEL F7FBH STRZ MSG1
-LABEL F7FDH CODE DF7FD
 LABEL F800H CODE RAM_START
 COMMENT LABEL RAM_START "The real start in RAM\nPorts:\n  11: 00\n  60: F6\n  61: F7 BF"
 LABEL F824H CODE MONITOR
@@ -20,20 +18,25 @@ LABEL F861H CODE CMD_B
 COMMENT LABEL CMD_B "Here the 'B' (Boot ?) command starts\nAsks for a 0-3 number (drive #?)\nthen a 4 hex number (#of bytes to read? sector?)\nand executes the 'ENTER' function (real boot)"
 LABEL F879H CODE CMD_ENTER
 COMMENT LABEL CMD_ENTER "B : Drive #"
-LABEL F886H CODE LOOP_819
+LABEL F886H CODE WAIT_LOOP
+LABEL F8DEH CODE SKIP_383
 LABEL F8EFH CODE AGAIN
 COMMENT LABEL AGAIN "Redoes whatever this function tries to do.\nWEIRD ends here if C is zero"
 LABEL F912H CODE DF912
 LABEL F92CH CODE DF92C
 LABEL F932H CODE DF932
 LABEL F93EH CODE DF93E
+COMMENT LABEL DF93E "After the call to @WEIRD, it does something strange:\nBreaks A into 4 groups of two bits\nEnsure those groups are 00 or 01\nWhen they are 01, it adds DE to (HL,H+1)\nHL is in incremented between each loop.\n(like if HL was some sortof"
+LABEL F955H CODE SKIP_ADD
 LABEL F95DH CODE JMP_HL
 COMMENT LABEL JMP_HL "Jumps to content of HL"
 LABEL F95EH CODE WEIRD
-COMMENT LABEL WEIRD "Weird function with a suprious POP if C is zero..."
+COMMENT LABEL WEIRD "Weird function with a spurious POP if C is zero...\nI suspect it reads from sort of FIFO into A"
 LABEL F968H CODE NON_ZERO_C
 COMMENT LABEL NON_ZERO_C "Called when C is not Zero. Why? No idea yet."
-LABEL F990H CODE DF990
+LABEL F971H CODE FULL
+COMMENT LABEL FULL "Buffer is full"
+LABEL F990H CODE NOT_FULL
 LABEL F997H CODE DF997
 LABEL F99FH CODE DIV
 COMMENT LABEL DIV "Divides HL by E\n  (E may be C6H (198) from '@CMD_ENTER'?)\n"
@@ -75,7 +78,7 @@ COMMENT LABEL DATA_S0 "2 bytes of data "
 LABEL FAFFH DATA DATA_TR
 COMMENT LABEL DATA_TR "Maybe track count? Inited at 40..."
 LABEL FB00H DATA DATA_X4
-COMMENT LABEL DATA_X4 "4 bytes of data"
+COMMENT LABEL DATA_X4 "4 bytes of data\n"
 LABEL FB05H CODE READ_HL
 COMMENT LABEL READ_HL "Reads HL in hex\nDigits must be entered and finished with ESC\nMy understanding is that we will crash at the 8th digit"
 LABEL FB0BH CODE LOOP_811
@@ -126,10 +129,15 @@ LABEL FC33H DATA FLAG3
 COMMENT LABEL FLAG3 "00, 01 or 7F"
 LABEL FC34H DATA SKIP_INTERRUP
 COMMENT LABEL SKIP_INTERRUP "Interrupt code does nothing if set to 1"
-LABEL FC35H DATA XXX_DATA
+LABEL FC35H DATAW XXX_PTR1
+LABEL FC37H DATAW XXX_PTR2
+LABEL FC39H DATAW XXX_PTR3
+LABEL FC3BH DATAW XXX_LEN4
+COMMENT LABEL XXX_LEN4 "Looks like a length, inited to 00FF at @F984H"
 LABEL FC3DH DATAW BOOT_HL
-COMMENT LABEL BOOT_HL "Unsure what this is for yet\n0110H by default"
-LABEL FC3FH DATA DFC3F
+COMMENT LABEL BOOT_HL "Looks like PROLOGUE load address\n0110H by default"
+LABEL FC3FH DATAW XXX_BUFFER
+COMMENT LABEL XXX_BUFFER "Looks like a 256 bytes buffer"
 LABEL FD5DH DATA CURSOR
 COMMENT LABEL CURSOR "Location of the cursor in the SCREEN area.\nBefore CURSOR, the inital Stack Frame"
 LABEL FD5FH DATA SCREEN
@@ -154,7 +162,6 @@ COMMENT LINE FB50H "' '"
 COMMENT LINE FC0EH "Length"
 COMMENT LINE FB79H "'#'"
 COMMENT LINE FB60H "Useless should have been FB5A"
-COMMENT LINE F802H "Set Serial Data Out to 1"
 COMMENT LINE F821H "Some flag?"
 COMMENT LINE FB6CH "Jumpto address"
 COMMENT LINE FB8CH "9 Bytes string"
@@ -208,7 +215,6 @@ COMMENT LINE F9A5H "A gets the high bit of HL"
 COMMENT LINE F9A4H "C = HL & 8000 ; HL <<= 1"
 COMMENT LINE FA98H "Signal we are done"
 COMMENT LINE F882H "33990 (loop counter)"
-COMMENT LINE F7F0H "Start of boot @RAM_START..."
 COMMENT LINE F80FH "LOW(@INTERRUPT)"
 COMMENT LINE FAC5H "Return if 5th bit clear"
 COMMENT LINE FAC8H "Wait for bit 6"
@@ -219,7 +225,6 @@ COMMENT LINE F9DDH "01 10 20 00"
 COMMENT LINE F8B4H "Drive 0 & 1"
 COMMENT LINE F8B7H "Drive 2 & 3"
 COMMENT LINE F861H "Drive #"
-COMMENT LINE F830H "Can be changed by the @CMD_AMP command"
 COMMENT LINE F836H "Can be changed by the @CMD_B command. I Suspect it is some track/sector"
 COMMENT LINE F839H "0 to 3, can be changed by @CMD_B command"
 COMMENT LINE F873H "Size? Len? @F836H (defaults to 0080)"
@@ -245,15 +250,33 @@ COMMENT LINE F814H "ICW1 : PIC init word 1"
 COMMENT LINE F81CH "ICW3 : PIC init word 3"
 COMMENT LINE F818H "ICW2 : PIC init word 2 (interrupt at F7E0+4*INT)"
 COMMENT LINE FB3EH "Probably current column"
-COMMENT LINE F7EAH "Test @RAM_START"
 COMMENT LINE FAB7H "Actually @FLAG2-1"
 COMMENT LINE FACDH "@FLAG2 (@PORT51_INDATA+1)"
 COMMENT LINE FA87H "B is length (0 or 1)"
 COMMENT LINE FA8FH "Data read from 51H"
 COMMENT LINE FA91H "Checks it is 0xxxxxxx"
 COMMENT LINE FA95H "Checks it is 00xxxxxx"
+COMMENT LINE F893H "0080 or something that was entered with the 'B' command"
+COMMENT LINE F8D5H "Contains 28H"
+COMMENT LINE F8E0H "Normally will put 10H in L (from @FB01H)"
+COMMENT LINE FA9DH "(Probably some sort of acknowledgment)"
+COMMENT LINE F802H "Unmap ROM (set 40H to put ROM back)"
+COMMENT LINE F830H "Load adrs. Can be changed by the @CMD_AMP command"
+COMMENT LINE F8F2H "A=0 ?"
+COMMENT LINE F91FH "Execute some loaded code?"
+COMMENT LINE F937H "Looks like we are trying to write to ROM"
+COMMENT LINE F96EH "@XXX_LEN4 != 0"
+COMMENT LINE F991H "Decrement @XXX_LEN4"
+COMMENT LINE F999H "XXX_PTR3++ or XXX_PTR3=&XXX_BUFFER after every 256 bytes"
+COMMENT LINE F98AH "HL = &XXX_BUFFER"
+COMMENT LINE F7EAH "From address 0017H"
+COMMENT LINE F7EDH "Copy 041CH bytes (1052 bytes)"
+COMMENT LINE F7F0H "To location @RAM_START..."
+COMMENT LINE F7FDH "Jump to copied code"
+COMMENT LINE F7FAH "This is @f7f3H in offseted binary"
+COMMENT LINE F94BH "(HL,HL+1) += DE"
 IO 00H PORT00 "I have no idea what this port does.\n\nNeither do you."
-IO 10H KBDSTROBE "Bit 0 is 1 if key presse (see @WAIT_KEY)"
+IO 10H KBDSTROBE "Bit 0 is 1 if key presse (see @WAIT_KEY)\n\nADSC    EQU     010H    ;ADRESSE PRINTER + ADRESSE STATUS\n"
 IO 11H KDBDATA "Keyboard read data (maybe something else when writing?)\nNeeds AND with 7FH"
 IO 50H PROBE51H "Probe for writing in 51H\nGenerally waits for bit 4 to be zero and bit 7 to be zero"
 IO 60H PIC1 "8259 Port 0"
