@@ -277,8 +277,8 @@
 0F974H: 	LHLD XXX_PTR2
 0F977H: 	XCHG
 0F978H: 	LHLD XXX_PTR1
-0F97BH: 	CALL DIV_AND_OTHERS  ; HL = HL / E
-0F97EH: 	SHLD XXX_PTR1        ; @XXX_PTR1 = @XXX_PTR1 / @XXX_PTR2 (first byte)
+0F97BH: 	CALL DIV_AND_OTHERS  ; ???
+0F97EH: 	SHLD XXX_PTR1        ; HL++
 0F981H: 	POP B
 0F982H: 	POP D
 0F983H: 	POP H
@@ -615,11 +615,11 @@
 0FB3CH: 	ORA A                ; Why?
 0FB3DH: 	RET
 0FB3EH: ;
-0FB3EH: ; Weird infinite loop with echo of the type char (if not space).
+0FB3EH: ; Infinite loop with echo of the typed char (if not space).
 0FB3EH: ; May be a keyboard tester
 0FB3EH: ;
 0FB3EH: CMD_STAR:   ; 0FB3EH
-0FB3EH: 	MVI B,9              ; Probably current column
+0FB3EH: 	MVI B,9              ; Current column
 0FB40H: LOOP_230:   ; 0FB40H
 0FB40H: 	CALL WAIT_KEY
 0FB43H: 	MOV C,A
@@ -630,7 +630,7 @@
 0FB4BH: 	JZ LF
 0FB4EH: 	INR B                ; 0AH initial call
 0FB4FH: 	MOV A,B
-0FB50H: 	CPI 20H              ; ' '
+0FB50H: 	CPI 20H              ; 32nd column
 0FB52H: 	JNZ CONT
 0FB55H: 	CALL PRINT_LF
 0FB58H: LF:   ; 0FB58H
@@ -681,7 +681,8 @@
 0FB8DH: 	DB " PORTAL..",0
 0FB95H: 
 0FB97H: ;
-0FB97H: ; ? Unsure, maybe be reading a char
+0FB97H: ; Read char with echo
+0FB97H: ; Returns char in C
 0FB97H: ;
 0FB97H: READ_CHAR_ECHO:   ; 0FB97H
 0FB97H: 	CALL WAIT_KEY

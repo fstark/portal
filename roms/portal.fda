@@ -87,7 +87,7 @@ LABEL FB23H CODE SKIP_442
 LABEL FB33H CODE FAILED
 LABEL FB3CH CODE DONE
 LABEL FB3EH CODE CMD_STAR
-COMMENT LABEL CMD_STAR "Weird infinite loop with echo of the type char (if not space).\nMay be a keyboard tester"
+COMMENT LABEL CMD_STAR "Infinite loop with echo of the typed char (if not space).\nMay be a keyboard tester"
 LABEL FB40H CODE LOOP_230
 LABEL FB58H CODE LF
 LABEL FB60H CODE CONT
@@ -103,7 +103,7 @@ LABEL FB8CH STRZ PSTR_PORTAL
 COMMENT LABEL PSTR_PORTAL "TAB+SPACE+PORTAL"
 LABEL FB8DH STRZ STR_PORTAL
 LABEL FB97H CODE READ_CHAR_ECHO
-COMMENT LABEL READ_CHAR_ECHO "? Unsure, maybe be reading a char"
+COMMENT LABEL READ_CHAR_ECHO "Read char with echo\nReturns char in C"
 LABEL FB9BH CODE PRINT_CHAR
 COMMENT LABEL PRINT_CHAR "Prints char in C"
 LABEL FBB7H CODE PRINT_CR
@@ -159,7 +159,6 @@ COMMENT LINE FB87H "Char"
 COMMENT LINE FB83H "Bit 0 -> Carry"
 COMMENT LINE FB44H "\n"
 COMMENT LINE FB49H "\r"
-COMMENT LINE FB50H "' '"
 COMMENT LINE FC0EH "Length"
 COMMENT LINE FB79H "'#'"
 COMMENT LINE FB60H "Useless should have been FB5A"
@@ -248,7 +247,6 @@ COMMENT LINE FA89H "B=0 => No data read"
 COMMENT LINE F814H "ICW1 : PIC init word 1"
 COMMENT LINE F81CH "ICW3 : PIC init word 3"
 COMMENT LINE F818H "ICW2 : PIC init word 2 (interrupt at F7E0+4*INT)"
-COMMENT LINE FB3EH "Probably current column"
 COMMENT LINE FAB7H "Actually @FLAG2-1"
 COMMENT LINE FACDH "@FLAG2 (@PORT51_INDATA+1)"
 COMMENT LINE FA87H "B is length (0 or 1)"
@@ -300,7 +298,9 @@ COMMENT LINE FC04H "@CURSOR = @SCREEN (left column)"
 COMMENT LINE F8ECH "The buffer starts empty"
 COMMENT LINE F97BH "???"
 COMMENT LINE F97EH "HL++"
-IO 00H PORT00 "I have no idea what this port does.\n\nNeither do you."
+COMMENT LINE FB50H "32nd column"
+COMMENT LINE FB3EH "Current column"
+IO 00H PORT00 "[should not be visible as there is no port 00H usage]"
 IO 10H KBDSTROBE "Bit 0 is 1 if key presse (see @WAIT_KEY)\n\nADSC    EQU     010H    ;ADRESSE PRINTER + ADRESSE STATUS\n"
 IO 11H KDBDATA "Keyboard read data (maybe something else when writing?)\nNeeds AND with 7FH"
 IO 50H PROBE51H "Probe for writing in 51H\nGenerally waits for bit 4 to be zero and bit 7 to be zero"

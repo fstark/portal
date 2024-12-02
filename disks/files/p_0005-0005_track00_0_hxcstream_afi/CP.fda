@@ -1,0 +1,3 @@
+LOAD:   ; 0CH
+	ORG 0CH
+	END
