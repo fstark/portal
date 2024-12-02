@@ -60,7 +60,7 @@ Pin assignment:
 
 Default jumper configuration: DS0 / HL. A 150 Ohm terminator resistor pack is installed.
 
-On the model we tested, the belt and stepper were both still fine.
+On the model we tested, the belt (labelled Megadyne MF40) and stepper were both still fine.
 It was likely manufactured on the 25th week of 1984. There's a 2584 sticker on the side, and the most recent datecode on the control board is 8409.
 
 When using it with a greaseweazle, you will need to :
