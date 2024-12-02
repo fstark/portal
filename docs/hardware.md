@@ -35,14 +35,34 @@ As stated in the findings, they're directly mapped on I/O ports.
 
 ## Floppy
 
-The floppy drive is an Olivetti FD501. It's single-sided, 48 TPI, 40 tracks.
+The floppy drive is an Olivetti FD501.
 
-As with many single-sided drives from the time, it has a head loading mechanism. Its stepping time is also much slower than most drives.
+Specs:
+* Single-sided (although the control board supports 2 heads)
+* 75% height (61mm)
+* 300 RPM
+* 48 TPI
+* 40 tracks
+* Head load mechanism
+* Step time: 11ms (according to µPD765 parameters)
+
+Jumpers (guesswork):
+* HS: ?
+* DS0-3: Drive select
+* HL: Enables head loading when motor spins and pin 2 is low
+* HM: Load head when motor spins 
+* MS: Motor spin when drive is selected
+
+Pin assignment:
+* 2: Head Load if HL jumper is set. Active low
+* 4: Unused
+* 34: Unused
 
 Default jumper configuration: DS0 / HL. A 150 Ohm terminator resistor pack is installed.
 
 On the model we tested, the belt and stepper were both still fine.
+It was likely manufactured on the 25th week of 1984. There's a 2584 sticker on the side, and the most recent datecode on the control board is 8409.
 
 When using it with a greaseweazle, you will need to :
-* Set a bigger step delay: `gw delays --step 50000`
-* Remove the `HL` jumper and set it on `HM`
+* Set a bigger step delay: `gw delays --step 20000`
+* Remove the `HL` jumper and set it on `HM` OR use `gw pin set 2 L`
