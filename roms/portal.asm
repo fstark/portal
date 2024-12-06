@@ -6,8 +6,8 @@
 0F7E9H: IGNORE:   ; 0F7E9H
 0F7E9H: 	DI
 0F7EAH: 	LXI H,17H            ; From address 0017H
-0F7EDH: 	LXI B,41CH           ; Copy 041CH bytes (1052 bytes)
-0F7F0H: 	LXI D,RAM_START      ; To location @RAM_START...
+0F7EDH: 	LXI B,41CH           ; Copy 041CH bytes (1052 bytes)...
+0F7F0H: 	LXI D,RAM_START      ; ...to location @RAM_START
 0F7F3H: 	MOV A,M
 0F7F4H: 	STAX D
 0F7F5H: 	INX H
@@ -38,7 +38,7 @@
 0F806H: 	XRA A
 0F807H: 	OUT 11H
 0F809H: 	LXI H,INT_VECTOR
-0F80CH: 	MVI M,0C3H           ; JMP
+0F80CH: 	MVI M,0C3H           ; JMP opcode
 0F80EH: 	INX H
 0F80FH: 	MVI M,7AH            ; LOW(@INTERRUPT)
 0F811H: 	INX H
@@ -70,8 +70,7 @@
 0F841H: 	JZ CMD_AMP           ; '&' command
 0F844H: 	CPI 0DH
 0F846H: 	XCHG
-0F847H: 	JZ CMD_ENTER         ; '
-' command
+0F847H: 	JZ CMD_ENTER         ; '\n' command
 0F84AH: 	CPI 2AH
 0F84CH: 	JZ CMD_STAR          ; '*' command
 0F84FH: 	MOV B,A
@@ -118,6 +117,12 @@
 0F889H: 	MOV A,E
 0F88AH: 	ORA D
 0F88BH: 	JNZ WAIT_LOOP        ; Loops 33990 times
+0F88EH: ;
+0F88EH: ; I suspect the FLOPPY BOOT starts here
+0F88EH: ; HL is something unclear (0080)
+0F88EH: ; B seems to be the drive number
+0F88EH: ;
+0F88EH: DF88E:   ; 0F88EH
 0F88EH: 	DI
 0F88FH: 	XRA A
 0F890H: 	STA SKIP_INTERRUP    ; We activate the @INTERRUPT code
@@ -132,8 +137,12 @@
 0F8A4H: 	MVI C,2
 0F8A6H: 	CALL MEMCPY
 0F8A9H: 	MVI C,3
-0F8ABH: 	LXI H,DATA51H_3      ; Contains [3,'S','0']
-0F8AEH: 	CALL WRITE2_51H
+0F8ABH: 	LXI H,DATA51H_3      ; Contains [03H, 53H, 30H]
+0F8AEH: ;
+0F8AEH: ; We write 03, 53, 30 to the data register
+0F8AEH: ;
+0F8AEH: DF8AE:   ; 0F8AEH
+0F8AEH: 	CALL WRITE2_51H      ; Writes [03H,53H,30H] to 51H
 0F8B1H: 	LXI H,0FFFFH
 0F8B4H: 	SHLD BUFFER          ; Drive 0 & 1
 0F8B7H: 	SHLD BUFFER+2        ; Drive 2 & 3
@@ -526,20 +535,22 @@
 0FAD3H: ;
 0FAD3H: WRITE_51H:   ; 0FAD3H
 0FAD3H: 	IN 50H
-0FAD5H: 	ANI 10H
+0FAD5H: 	ANI 10H              ; ? Wait for CB (Busy) to go zero on the UPD765
 0FAD7H: 	JNZ WRITE_51H
 0FADAH: ;
 0FADAH: ; Writes C chars from HL to 51H
 0FADAH: ; (waits for 50H bit 7 to be set)
+0FADAH: ; 
+0FADAH: ; See UDP765.pdf, page 5
 0FADAH: ;
 0FADAH: WRITE2_51H:   ; 0FADAH
 0FADAH: 	IN 50H
 0FADCH: 	RLC
-0FADDH: 	JNC WRITE2_51H
+0FADDH: 	JNC WRITE2_51H       ; ? Wait for RQM (Request to Master) to go one on the UPD765
 0FAE0H: 	RLC
-0FAE1H: 	JC WRITE2_51H
+0FAE1H: 	JC WRITE2_51H        ; ? Wait for DIO (Data Direction) to go zero (Host->Data) on the UP765
 0FAE4H: 	MOV A,M
-0FAE5H: 	OUT 51H
+0FAE5H: 	OUT 51H              ; Write to data register
 0FAE7H: 	INX H
 0FAE8H: 	DCR C
 0FAE9H: 	JNZ WRITE2_51H
