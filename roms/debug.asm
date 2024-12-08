@@ -189,10 +189,13 @@ TESTRAMFAILED:
 
 		; First digit
 	MOV A,D
-	RAL
-	RAL
-	RAL
-	RAL
+	STC
+	CMC
+	RRC
+	RRC
+	RRC
+	RRC
+
 		; A contains the high nibble
 		; Convert to ASCII using the 8085 DAA trick	
 	ADI 90H
@@ -218,10 +221,13 @@ TESTRAMFAILED:
 
 		; Third digit
 	MOV A,E
-	RAL
-	RAL
-	RAL
-	RAL
+	STC
+	CMC
+	RRC
+	RRC
+	RRC
+	RRC
+
 		; A contains the high nibble
 		; Convert to ASCII using the 8085 DAA trick	
 	ADI 90H
@@ -307,6 +313,16 @@ ERR0:
 	OUT 93H
 
 	INX H		; We skip to the next page to accelerate the test
+
+		; WAIT A BIT
+	LXI D,0FFFFH
+LOOP3:
+	XCHG
+	XCHG
+	DCR E
+	JNZ LOOP3
+	DCR D
+	JNZ LOOP3
 
 	JMP TESTRAMLOOP
 
