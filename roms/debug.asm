@@ -188,7 +188,7 @@ TESTRAMFAILED:
 	MOV E,L
 
 		; First digit
-	MVI A,D
+	MOV A,D
 	RAL
 	RAL
 	RAL
@@ -203,7 +203,7 @@ TESTRAMFAILED:
 	OUT 9FH
 
 		; Second digit
-	MVI A,D
+	MOV A,D
 	ANI 0FH
 
 		; A contains the low nibble
@@ -217,7 +217,7 @@ TESTRAMFAILED:
 
 
 		; Third digit
-	MVI A,E
+	MOV A,E
 	RAL
 	RAL
 	RAL
@@ -233,7 +233,7 @@ TESTRAMFAILED:
 
 
 		; Fourth digit
-	MVI A,E
+	MOV A,E
 	ANI 0FH
 		; A contains the low nibble
 		; Convert to ASCII using the 8085 DAA trick	
