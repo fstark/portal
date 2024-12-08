@@ -126,7 +126,7 @@ PORTAL:
 	NOP
 	NOP
 	NOP
-	JMP PORTAL
+	; JMP PORTAL
 
 	LXI H,SCREEN
 	JMP WAIT1S
@@ -152,6 +152,8 @@ WAITKEY:
 	JNC WAITKEY
 	IN KBDDATA
 	ANI 7FH
+	; TODO: TOUPPER
+
 	CPI 1BH ; ESC
 	JZ TESTRAM
 	LXI H,WAITKEY
@@ -186,7 +188,7 @@ TESTRAMFAILED:
 	MOV E,L
 
 		; First digit
-	MVI A,0
+	MVI A,D
 	RAL
 	RAL
 	RAL
@@ -201,12 +203,10 @@ TESTRAMFAILED:
 	OUT 9FH
 
 		; Second digit
-	MVI A,0
-	RAL
-	RAL
-	RAL
-	RAL
-		; A contains the high nibble
+	MVI A,D
+	ANI 0FH
+
+		; A contains the low nibble
 		; Convert to ASCII using the 8085 DAA trick	
 	ADI 90H
 	DAA
@@ -217,7 +217,7 @@ TESTRAMFAILED:
 
 
 		; Third digit
-	MVI A,0
+	MVI A,E
 	RAL
 	RAL
 	RAL
@@ -233,12 +233,9 @@ TESTRAMFAILED:
 
 
 		; Fourth digit
-	MVI A,0
-	RAL
-	RAL
-	RAL
-	RAL
-		; A contains the high nibble
+	MVI A,E
+	ANI 0FH
+		; A contains the low nibble
 		; Convert to ASCII using the 8085 DAA trick	
 	ADI 90H
 	DAA
@@ -265,49 +262,49 @@ ERR7:
 	JNZ ERR6
 	MVI A,'*'	; '*' = nok
 ERR6:
-	OUT 8FH
+	OUT 99H
 
 	ANI 020H	; Bit 5
 	MVI A,'_'   ; '_' = ok
 	JNZ ERR5
 	MVI A,'*'	; '*' = nok
 ERR5:
-	OUT 8EH
+	OUT 98H
 
 	ANI 010H	; Bit 4
 	MVI A,'_'   ; '_' = ok
 	JNZ ERR4
 	MVI A,'*'	; '*' = nok
 ERR4:
-	OUT 8DH
+	OUT 97H
 
 	ANI 008H	; Bit 3
 	MVI A,'_'   ; '_' = ok
 	JNZ ERR3
 	MVI A,'*'	; '*' = nok
 ERR3:
-	OUT 8CH
+	OUT 96H
 
 	ANI 004H	; Bit 2
 	MVI A,'_'   ; '_' = ok
 	JNZ ERR2
 	MVI A,'*'	; '*' = nok
 ERR2:
-	OUT 8BH
+	OUT 95H
 
 	ANI 002H	; Bit 1
 	MVI A,'_'   ; '_' = ok
 	JNZ ERR1
 	MVI A,'*'	; '*' = nok
 ERR1:
-	OUT 8AH
+	OUT 94H
 
 	ANI 001H	; Bit 0
 	MVI A,'_'   ; '_' = ok
 	JNZ ERR0
 	MVI A,'*'	; '*' = nok
 ERR0:
-	OUT 7FH
+	OUT 93H
 
 	INX H		; We skip to the next page to accelerate the test
 
