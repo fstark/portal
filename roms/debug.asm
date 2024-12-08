@@ -155,8 +155,13 @@ WAITKEY:
 	; TODO: TOUPPER
 
 	CPI 1BH ; ESC
-	JZ TESTRAM
+	JZ CLRSCR
 	LXI H,WAITKEY
+	JMP DISPLAYALL
+
+CLRSCR:
+	MVI A,' '
+	LXI H,TESTRAM
 	JMP DISPLAYALL
 
 ;	TEST 3 : Test all RAM
@@ -261,6 +266,7 @@ TESTRAMFAILED:
 ERR7:
 	OUT 9AH
 
+	MOV A,B
 	ANI 040H	; Bit 6
 	MVI A,'_'   ; '_' = ok
 	JNZ ERR6
@@ -268,6 +274,7 @@ ERR7:
 ERR6:
 	OUT 99H
 
+	MOV A,B
 	ANI 020H	; Bit 5
 	MVI A,'_'   ; '_' = ok
 	JNZ ERR5
@@ -275,6 +282,7 @@ ERR6:
 ERR5:
 	OUT 98H
 
+	MOV A,B
 	ANI 010H	; Bit 4
 	MVI A,'_'   ; '_' = ok
 	JNZ ERR4
@@ -282,6 +290,7 @@ ERR5:
 ERR4:
 	OUT 97H
 
+	MOV A,B
 	ANI 008H	; Bit 3
 	MVI A,'_'   ; '_' = ok
 	JNZ ERR3
@@ -289,6 +298,7 @@ ERR4:
 ERR3:
 	OUT 96H
 
+	MOV A,B
 	ANI 004H	; Bit 2
 	MVI A,'_'   ; '_' = ok
 	JNZ ERR2
@@ -296,6 +306,7 @@ ERR3:
 ERR2:
 	OUT 95H
 
+	MOV A,B
 	ANI 002H	; Bit 1
 	MVI A,'_'   ; '_' = ok
 	JNZ ERR1
@@ -303,6 +314,7 @@ ERR2:
 ERR1:
 	OUT 94H
 
+	MOV A,B
 	ANI 001H	; Bit 0
 	MVI A,'_'   ; '_' = ok
 	JNZ ERR0
@@ -310,17 +322,50 @@ ERR1:
 ERR0:
 	OUT 93H
 
-	INX H		; We skip to the next page to accelerate the test
+	INR H		; We skip to the next page to accelerate the test
+	MVI L,0
 
-		; WAIT A BIT
-	LXI D,0FFFFH
-LOOP3:
+; DE is the offending address
+; B is the offending byte pattern
+
 	XCHG
+
+SPAM:
+	MOV M,B
+	MOV M,B
+	MOV M,B
+	MOV M,B
+	MOV M,B
+	MOV M,B
+	MOV M,B
+	MOV M,B
+	MOV M,B
+	MOV M,B
+	MOV M,B
+	MOV M,B
+	MOV M,B
+	MOV M,B
+	MOV M,B
+	MOV M,B
+
+	IN KBDSTROBE
+	RRC
+	JNC SPAM
+
+	IN KBDDATA
+
 	XCHG
-	DCR E
-	JNZ LOOP3
-	DCR D
-	JNZ LOOP3
+
+
+; 		; WAIT A BIT
+; 	LXI D,0FFFFH
+; LOOP3:
+; 	XCHG
+; 	XCHG
+; 	DCR E
+; 	JNZ LOOP3
+; 	DCR D
+; 	JNZ LOOP3
 
 	JMP TESTRAMLOOP
 
