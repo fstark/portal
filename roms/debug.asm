@@ -189,8 +189,6 @@ TESTRAMFAILED:
 
 		; First digit
 	MOV A,D
-	STC
-	CMC
 	RRC
 	RRC
 	RRC
@@ -198,6 +196,7 @@ TESTRAMFAILED:
 
 		; A contains the high nibble
 		; Convert to ASCII using the 8085 DAA trick	
+	ANI 0FH
 	ADI 90H
 	DAA
 	ACI 40H
@@ -207,10 +206,10 @@ TESTRAMFAILED:
 
 		; Second digit
 	MOV A,D
-	ANI 0FH
 
 		; A contains the low nibble
 		; Convert to ASCII using the 8085 DAA trick	
+	ANI 0FH
 	ADI 90H
 	DAA
 	ACI 40H
@@ -221,8 +220,6 @@ TESTRAMFAILED:
 
 		; Third digit
 	MOV A,E
-	STC
-	CMC
 	RRC
 	RRC
 	RRC
@@ -230,6 +227,7 @@ TESTRAMFAILED:
 
 		; A contains the high nibble
 		; Convert to ASCII using the 8085 DAA trick	
+	ANI 0FH
 	ADI 90H
 	DAA
 	ACI 40H
@@ -240,9 +238,9 @@ TESTRAMFAILED:
 
 		; Fourth digit
 	MOV A,E
-	ANI 0FH
 		; A contains the low nibble
 		; Convert to ASCII using the 8085 DAA trick	
+	ANI 0FH
 	ADI 90H
 	DAA
 	ACI 40H
