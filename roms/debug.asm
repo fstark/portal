@@ -166,18 +166,31 @@ CLRSCR:
 
 ;	TEST 3 : Test all RAM
 TESTRAM:
-	MVI B,0FFH  ; Value stored
 	LXI H,0800H	; Start of RAM
+
+TESTRAMRECOVER:
+	MVI B,0FFH  ; Value stored
+	MVI C,000H  ; Alt value stored
 TESTRAMLOOP:
-	MOV M,B		; Store B
+	MOV M,B		; Store B (FF)
 	MOV A,M		; Restore A
 	XRA B
-	INX H		; Next address
 	JNZ TESTRAMFAILED
+
+	MOV M,C		; Store C (00)
+	MOV A,M		; Restore A
+	XRA C
+	JNZ TESTRAMFAILED
+
+	INX H		; Next address
+
 	MOV L,A
 	ORA H
 	JNZ TESTRAMLOOP ; Not finished
-	INX B		; Next Byte
+
+	LDA '*'			; Prints a '*' on the right of the screen
+	OUT 80H
+
 	JMP TESTRAM
 
 ; In case of failure we display
@@ -367,7 +380,7 @@ SPAM:
 ; 	DCR D
 ; 	JNZ LOOP3
 
-	JMP TESTRAMLOOP
+	JMP TESTRAMRECOVER
 
 
 	; Displays character A in all locations
