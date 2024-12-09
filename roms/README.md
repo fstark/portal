@@ -34,11 +34,11 @@ A test ROM for the portal
 
 - Test memory
 
-	- Loops writing and reading back 00H to all memory locations from 0800H to FFFFH (0000h-07FFH is ROM)
+	- Loops writing and reading back FFH followed by 00H to all memory locations from 0800H to FFFFH (0000h-07FFH is ROM)
 	
 	- Nothing is displayed on the screen during the test
 
-	- If the test fails, then the address and the failure are displayed:
+	- If the test fails (FF or 00 are not sritten), then the address and the failure are displayed:
 
 		1234:---*----
 
@@ -48,4 +48,4 @@ A test ROM for the portal
 
 		After a press of a key, the test continues at the next memory 'page', ie at the next multiple of 0100H. In the example, it would continue at 1300
 	
-	- When all the RAM has been tested, the it is tested with the next bit pattern (01H)
+	- When all the RAM has been tested, a '*' is displayed on the right of the screen and the test is restarted.
