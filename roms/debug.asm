@@ -282,7 +282,7 @@ ERR7:
 	MOV A,B
 	ANI 040H	; Bit 6
 	MVI A,'_'   ; '_' = ok
-	JNZ ERR6
+	JZ ERR6
 	MVI A,'*'	; '*' = nok
 ERR6:
 	OUT 99H
@@ -290,7 +290,7 @@ ERR6:
 	MOV A,B
 	ANI 020H	; Bit 5
 	MVI A,'_'   ; '_' = ok
-	JNZ ERR5
+	JZ ERR5
 	MVI A,'*'	; '*' = nok
 ERR5:
 	OUT 98H
@@ -298,7 +298,7 @@ ERR5:
 	MOV A,B
 	ANI 010H	; Bit 4
 	MVI A,'_'   ; '_' = ok
-	JNZ ERR4
+	JZ ERR4
 	MVI A,'*'	; '*' = nok
 ERR4:
 	OUT 97H
@@ -306,7 +306,7 @@ ERR4:
 	MOV A,B
 	ANI 008H	; Bit 3
 	MVI A,'_'   ; '_' = ok
-	JNZ ERR3
+	JZ ERR3
 	MVI A,'*'	; '*' = nok
 ERR3:
 	OUT 96H
@@ -314,7 +314,7 @@ ERR3:
 	MOV A,B
 	ANI 004H	; Bit 2
 	MVI A,'_'   ; '_' = ok
-	JNZ ERR2
+	JZ ERR2
 	MVI A,'*'	; '*' = nok
 ERR2:
 	OUT 95H
@@ -322,7 +322,7 @@ ERR2:
 	MOV A,B
 	ANI 002H	; Bit 1
 	MVI A,'_'   ; '_' = ok
-	JNZ ERR1
+	JZ ERR1
 	MVI A,'*'	; '*' = nok
 ERR1:
 	OUT 94H
@@ -330,13 +330,10 @@ ERR1:
 	MOV A,B
 	ANI 001H	; Bit 0
 	MVI A,'_'   ; '_' = ok
-	JNZ ERR0
+	JZ ERR0
 	MVI A,'*'	; '*' = nok
 ERR0:
 	OUT 93H
-
-	INR H		; We skip to the next page to accelerate the test
-	MVI L,0
 
 ; DE is the offending address
 ; B is the offending byte pattern
@@ -369,6 +366,8 @@ SPAM:
 
 	XCHG
 
+	INR H		; We skip to the next page to accelerate the test
+	MVI L,0
 
 ; 		; WAIT A BIT
 ; 	LXI D,0FFFFH
