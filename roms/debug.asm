@@ -145,6 +145,8 @@ NEXT1:
 	CPI 060H
 	JNZ LOOP		; Last char
 
+	JMP CLRSCR
+
 ;	TEST 2 : keyboards echo on all screen until ESC
 WAITKEY:
 	IN KBDSTROBE
