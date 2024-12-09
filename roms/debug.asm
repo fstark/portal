@@ -335,10 +335,8 @@ ERR1:
 ERR0:
 	OUT 93H
 
-; DE is the offending address
+; HL is the offending address
 ; B is the offending byte pattern
-
-	XCHG
 
 SPAM:
 	MOV M,B
@@ -363,8 +361,6 @@ SPAM:
 	JNC SPAM
 
 	IN KBDDATA
-
-	XCHG
 
 	INR H		; We skip to the next page to accelerate the test
 	MVI L,0
