@@ -87,6 +87,36 @@ TESTRAMRECOVER:
 	MVI B,0FFH  ; Value stored
 	MVI C,000H  ; Alt value stored
 TESTRAMLOOP:
+
+	MOV A,L		; We check if we are at the start of a page
+	ORA A
+	JNZ TESTRAMCONT
+
+				; We print the page address
+				; Convert to ASCII using the 8085 DAA trick	
+				; High nibble
+	MOV A,L
+	RRC
+	RRC
+	RRC
+	RRC
+	ANI 0FH
+	ADI 90H
+	DAA
+	ACI 40H
+	DAA
+	OUT 9FH
+
+				; Low nibble
+	MOV A,L
+	ANI 0FH
+	ADI 90H
+	DAA
+	ACI 40H
+	DAA
+	OUT 9EH
+
+TESTRAMCONT:
 	MOV M,B		; Store B (FF)
 	MOV A,M		; Restore A
 	XRA B
@@ -138,7 +168,7 @@ TESTRAMFAILED:
 	ACI 40H
 	DAA
 		; Print
-	OUT 9FH
+	OUT 9CH
 
 		; Second digit
 	MOV A,D
@@ -151,7 +181,7 @@ TESTRAMFAILED:
 	ACI 40H
 	DAA
 		; Print
-	OUT 9EH
+	OUT 9BH
 
 
 		; Third digit
@@ -169,7 +199,7 @@ TESTRAMFAILED:
 	ACI 40H
 	DAA
 		; Print
-	OUT 9DH
+	OUT 9AH
 
 
 		; Fourth digit
@@ -182,10 +212,10 @@ TESTRAMFAILED:
 	ACI 40H
 	DAA
 		; Print
-	OUT 9CH
+	OUT 99H
 
 	MVI A,':'
-	OUT 9BH
+	OUT 98H
 
 		; Display the failed bit
 	MOV A,B
@@ -195,7 +225,7 @@ TESTRAMFAILED:
 	JNZ ERR7
 	MVI A,'*'	; '*' = nok
 ERR7:
-	OUT 9AH
+	OUT 97H
 
 	MOV A,B
 	ANI 040H	; Bit 6
@@ -203,7 +233,7 @@ ERR7:
 	JZ ERR6
 	MVI A,'*'	; '*' = nok
 ERR6:
-	OUT 99H
+	OUT 96H
 
 	MOV A,B
 	ANI 020H	; Bit 5
@@ -211,7 +241,7 @@ ERR6:
 	JZ ERR5
 	MVI A,'*'	; '*' = nok
 ERR5:
-	OUT 98H
+	OUT 95H
 
 	MOV A,B
 	ANI 010H	; Bit 4
@@ -219,7 +249,7 @@ ERR5:
 	JZ ERR4
 	MVI A,'*'	; '*' = nok
 ERR4:
-	OUT 97H
+	OUT 94H
 
 	MOV A,B
 	ANI 008H	; Bit 3
@@ -227,7 +257,7 @@ ERR4:
 	JZ ERR3
 	MVI A,'*'	; '*' = nok
 ERR3:
-	OUT 96H
+	OUT 93H
 
 	MOV A,B
 	ANI 004H	; Bit 2
@@ -235,7 +265,7 @@ ERR3:
 	JZ ERR2
 	MVI A,'*'	; '*' = nok
 ERR2:
-	OUT 95H
+	OUT 92H
 
 	MOV A,B
 	ANI 002H	; Bit 1
@@ -243,7 +273,7 @@ ERR2:
 	JZ ERR1
 	MVI A,'*'	; '*' = nok
 ERR1:
-	OUT 94H
+	OUT 91H
 
 	MOV A,B
 	ANI 001H	; Bit 0
@@ -251,7 +281,7 @@ ERR1:
 	JZ ERR0
 	MVI A,'*'	; '*' = nok
 ERR0:
-	OUT 93H
+	OUT 90H
 
 ; HL is the offending address
 ; B is the offending byte pattern
