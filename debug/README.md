@@ -43,7 +43,7 @@ It tests the screen, the keyboard and the RAM.
 
 Ram layout:
 
-
+```
        (The labels A1-D8 are the coordinates printed on the motherboard)
 
                                  BACK
@@ -85,7 +85,7 @@ C000H-FFFFH  | 0 |  | 1 |  | 2 |  | 3 |  | 4 |  | 5 |  | 6 |  | 7 |
              +---+  +---+  +---+  +---+  +---+  +---+  +---+  +---+  
 
                              FRONT (KEYBOARD)
-
+```
 
 ## TODO
 
