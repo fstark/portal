@@ -26,13 +26,15 @@ It tests the screen, the keyboard and the RAM.
 
 	- Loops writing and reading back FFH followed by 00H to all memory locations from 0800H to FFFFH (0000h-07FFH is ROM)
 	
-	- NThe current tested page is displayed on the left of the screen (00-FF)
+	- The current tested page is displayed on the left of the screen (00-FF)
 
 	- If the test fails (FF or 00 are not written), then the address and the failure are displayed:
 
-		1234:---*----
+		1234:---*---- (RC)
 
 		1234 is the address of the failure, followed but the failed bit pattern ('*' represents failure)
+
+		RC is the row and column of the leftmost failed chip on the motherboard
 
 		After displaying the error, the code spams the erroneous address with a bit pattern containing '1' for failed bits. This should enable some hardware debugging to see which memory chips are receiving '1'
 
