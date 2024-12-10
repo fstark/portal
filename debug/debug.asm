@@ -145,6 +145,8 @@ TESTRAMCONT:
 ; Ports: 9F 9E 9D 9C 9B 9A 99 98 97 96 95 94 93 92 91 90
 ; Data : H  H     H  H  L  L  :  B  B  B  B  B  B  B  B
 ; -----------------------------------------------------------
+; note: we could use BC instead of DE and save two registers
+; -----------------------------------------------------------
 TESTRAMFAILED:
 	; Failed
 	MOV B,A		; Failed bits
@@ -394,6 +396,5 @@ LOOP2:
 	DCR D
 	JNZ LOOP2
 	PCHL
-
 
 	END
