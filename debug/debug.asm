@@ -142,8 +142,8 @@ TESTRAMCONT:
 ; In case of failure we display
 ; Address and failed bits with the following format
 ; 1234:__*_*___
-; Ports: 9F 9E 9D 9C 9B 9A 99 98 97 96 95 94 93 92 91 90
-; Data : H  H     H  H  L  L  :  B  B  B  B  B  B  B  B
+; Ports: 9F 9E 9D 9C 9B 9A 99 98 97 96 95 94 93 92 91 90 8F 8E 8D 8C 8B
+; Data : H  H     H  H  L  L  :  B  B  B  B  B  B  B  B     (  R  C  )
 ; -----------------------------------------------------------
 ; note: we could use BC instead of DE and save two registers
 ; -----------------------------------------------------------
@@ -284,6 +284,36 @@ ERR1:
 	MVI A,'*'	; '*' = nok
 ERR0:
 	OUT 90H
+
+	MVI A,'('
+	OUT 8EH
+
+; Find bank
+	MOV A,H
+	RLC
+	RLC
+	ANI 003H		; To two bits
+	ADI 'A'			; Bank A to D
+	OUT 8DH
+
+; Find chip
+	MOV A,B
+	MVI C,'1'
+LOOPCHIP:
+	RRC
+	JC COLFOUND
+	INR C
+	JMP LOOPCHIP
+
+COLFOUND:
+; Print column
+	MOV A,C
+	OUT 8CH
+
+	MVI A,')'
+	OUT 8BH
+
+
 
 ; HL is the offending address
 ; B is the offending byte pattern
