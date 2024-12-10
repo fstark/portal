@@ -186,7 +186,7 @@ TESTRAMLOOP:
 
 	INX H		; Next address
 
-	MOV L,A
+	MOV A,L
 	ORA H
 	JNZ TESTRAMLOOP ; Not finished
 
