@@ -1,0 +1,455 @@
+                        ; This is a debug ROM for the Portal
+                        ; It tests the screen, the keyboard and the RAM
+                        
+   0000                 	ORG 0
+                        
+                        ; IO ports (keyboard)
+   0010                 KBDSTROBE EQU 10H
+   0011                 KBDDATA EQU 11H
+                        
+                        ; Boot (portal ROM does the same)
+   0000   f3            	DI
+   0001   af            	XRA A
+   0002   d3 11         	OUT KBDDATA
+                        
+   0004   21 0a 00      	LXI H,PORTAL
+   0007   c3 d7 01      	JMP WAIT1S
+                        
+                        ;	TEST 0 : prints 'PORTAL'
+   000a                 PORTAL:
+                        	; Output 'PORTAL' to screen
+   000a   3e 50         	MVI A,'P'
+   000c   d3 9f         	OUT 9FH
+   000e   00            	NOP
+   000f   00            	NOP
+   0010   00            	NOP
+   0011   00            	NOP
+   0012   00            	NOP
+   0013   00            	NOP
+   0014   00            	NOP
+   0015   00            	NOP
+   0016   00            	NOP
+   0017   00            	NOP
+   0018   00            	NOP
+   0019   00            	NOP
+   001a   00            	NOP
+   001b   00            	NOP
+   001c   00            	NOP
+   001d   00            	NOP
+   001e   3e 4f         	MVI A,'O'
+   0020   d3 9e         	OUT 9EH
+   0022   00            	NOP
+   0023   00            	NOP
+   0024   00            	NOP
+   0025   00            	NOP
+   0026   00            	NOP
+   0027   00            	NOP
+   0028   00            	NOP
+   0029   00            	NOP
+   002a   00            	NOP
+   002b   00            	NOP
+   002c   00            	NOP
+   002d   00            	NOP
+   002e   00            	NOP
+   002f   00            	NOP
+   0030   00            	NOP
+   0031   00            	NOP
+   0032   3e 52         	MVI A,'R'
+   0034   d3 9d         	OUT 9DH
+   0036   00            	NOP
+   0037   00            	NOP
+   0038   00            	NOP
+   0039   00            	NOP
+   003a   00            	NOP
+   003b   00            	NOP
+   003c   00            	NOP
+   003d   00            	NOP
+   003e   00            	NOP
+   003f   00            	NOP
+   0040   00            	NOP
+   0041   00            	NOP
+   0042   00            	NOP
+   0043   00            	NOP
+   0044   00            	NOP
+   0045   00            	NOP
+   0046   3e 54         	MVI A,'T'
+   0048   d3 9c         	OUT 9CH
+   004a   00            	NOP
+   004b   00            	NOP
+   004c   00            	NOP
+   004d   00            	NOP
+   004e   00            	NOP
+   004f   00            	NOP
+   0050   00            	NOP
+   0051   00            	NOP
+   0052   00            	NOP
+   0053   00            	NOP
+   0054   00            	NOP
+   0055   00            	NOP
+   0056   00            	NOP
+   0057   00            	NOP
+   0058   00            	NOP
+   0059   00            	NOP
+   005a   3e 41         	MVI A,'A'
+   005c   d3 9b         	OUT 9BH
+   005e   00            	NOP
+   005f   00            	NOP
+   0060   00            	NOP
+   0061   00            	NOP
+   0062   00            	NOP
+   0063   00            	NOP
+   0064   00            	NOP
+   0065   00            	NOP
+   0066   00            	NOP
+   0067   00            	NOP
+   0068   00            	NOP
+   0069   00            	NOP
+   006a   00            	NOP
+   006b   00            	NOP
+   006c   00            	NOP
+   006d   00            	NOP
+   006e   3e 4c         	MVI A,'L'
+   0070   d3 9a         	OUT 9AH
+   0072   00            	NOP
+   0073   00            	NOP
+   0074   00            	NOP
+   0075   00            	NOP
+   0076   00            	NOP
+   0077   00            	NOP
+   0078   00            	NOP
+   0079   00            	NOP
+   007a   00            	NOP
+   007b   00            	NOP
+   007c   00            	NOP
+   007d   00            	NOP
+   007e   00            	NOP
+   007f   00            	NOP
+   0080   00            	NOP
+   0081   00            	NOP
+                        	; JMP PORTAL
+                        
+   0082   21 88 00      	LXI H,SCREEN
+   0085   c3 d7 01      	JMP WAIT1S
+                        
+                        ;	TEST 1 : prints all chars on all positions
+   0088                 SCREEN:
+   0088   3e 20         	MVI A,' '		; First char
+   008a                 LOOP:
+   008a   21 90 00      	LXI H,NEXT0
+   008d   c3 96 01      	JMP DISPLAYALL
+   0090                 NEXT0:
+   0090   21 96 00      	LXI H,NEXT1
+   0093   c3 e5 01      	JMP WAIT100MS
+   0096                 NEXT1:
+   0096   3c            	INR A
+   0097   fe 60         	CPI 060H
+   0099   c2 8a 00      	JNZ LOOP		; Last char
+                        
+   009c   c3 b4 00      	JMP CLRSCR
+                        
+                        ;	TEST 2 : keyboards echo on all screen until ESC
+   009f                 WAITKEY:
+   009f   db 10         	IN KBDSTROBE
+   00a1   0f            	RRC
+   00a2   d2 9f 00      	JNC WAITKEY
+   00a5   db 11         	IN KBDDATA
+   00a7   e6 7f         	ANI 7FH
+                        	; TODO: TOUPPER
+                        
+   00a9   fe 1b         	CPI 1BH ; ESC
+   00ab   ca b4 00      	JZ CLRSCR
+   00ae   21 9f 00      	LXI H,WAITKEY
+   00b1   c3 96 01      	JMP DISPLAYALL
+                        
+   00b4                 CLRSCR:
+   00b4   3e 20         	MVI A,' '
+   00b6   21 bc 00      	LXI H,TESTRAM
+   00b9   c3 96 01      	JMP DISPLAYALL
+                        
+                        ;	TEST 3 : Test all RAM
+   00bc                 TESTRAM:
+   00bc   21 00 08      	LXI H,0800H	; Start of RAM
+                        
+   00bf                 TESTRAMRECOVER:
+   00bf   06 ff         	MVI B,0FFH  ; Value stored
+   00c1   0e 00         	MVI C,000H  ; Alt value stored
+   00c3                 TESTRAMLOOP:
+   00c3   70            	MOV M,B		; Store B (FF)
+   00c4   7e            	MOV A,M		; Restore A
+   00c5   a8            	XRA B
+   00c6   c2 dd 00      	JNZ TESTRAMFAILED
+                        
+   00c9   71            	MOV M,C		; Store C (00)
+   00ca   7e            	MOV A,M		; Restore A
+   00cb   a9            	XRA C
+   00cc   c2 dd 00      	JNZ TESTRAMFAILED
+                        
+   00cf   23            	INX H		; Next address
+                        
+   00d0   7d            	MOV A,L
+   00d1   b4            	ORA H
+   00d2   c2 c3 00      	JNZ TESTRAMLOOP ; Not finished
+                        
+   00d5   3a 2a 00      	LDA '*'			; Prints a '*' on the right of the screen
+   00d8   d3 80         	OUT 80H
+                        
+   00da   c3 bc 00      	JMP TESTRAM
+                        
+                        ; In case of failure we display
+                        ; Address and failed bits with the following format
+                        ; 1234:__*_*___
+                        
+   00dd                 TESTRAMFAILED:
+                        	; Failed
+   00dd   47            	MOV B,A		; Failed bits
+                        
+                        	; We display the address of the failed byte
+   00de   54            	MOV D,H		; Save address
+   00df   5d            	MOV E,L
+                        
+                        		; First digit
+   00e0   7a            	MOV A,D
+   00e1   0f            	RRC
+   00e2   0f            	RRC
+   00e3   0f            	RRC
+   00e4   0f            	RRC
+                        
+                        		; A contains the high nibble
+                        		; Convert to ASCII using the 8085 DAA trick	
+   00e5   e6 0f         	ANI 0FH
+   00e7   c6 90         	ADI 90H
+   00e9   27            	DAA
+   00ea   ce 40         	ACI 40H
+   00ec   27            	DAA
+                        		; Print
+   00ed   d3 9f         	OUT 9FH
+                        
+                        		; Second digit
+   00ef   7a            	MOV A,D
+                        
+                        		; A contains the low nibble
+                        		; Convert to ASCII using the 8085 DAA trick	
+   00f0   e6 0f         	ANI 0FH
+   00f2   c6 90         	ADI 90H
+   00f4   27            	DAA
+   00f5   ce 40         	ACI 40H
+   00f7   27            	DAA
+                        		; Print
+   00f8   d3 9e         	OUT 9EH
+                        
+                        
+                        		; Third digit
+   00fa   7b            	MOV A,E
+   00fb   0f            	RRC
+   00fc   0f            	RRC
+   00fd   0f            	RRC
+   00fe   0f            	RRC
+                        
+                        		; A contains the high nibble
+                        		; Convert to ASCII using the 8085 DAA trick	
+   00ff   e6 0f         	ANI 0FH
+   0101   c6 90         	ADI 90H
+   0103   27            	DAA
+   0104   ce 40         	ACI 40H
+   0106   27            	DAA
+                        		; Print
+   0107   d3 9d         	OUT 9DH
+                        
+                        
+                        		; Fourth digit
+   0109   7b            	MOV A,E
+                        		; A contains the low nibble
+                        		; Convert to ASCII using the 8085 DAA trick	
+   010a   e6 0f         	ANI 0FH
+   010c   c6 90         	ADI 90H
+   010e   27            	DAA
+   010f   ce 40         	ACI 40H
+   0111   27            	DAA
+                        		; Print
+   0112   d3 9c         	OUT 9CH
+                        
+   0114   3e 3a         	MVI A,':'
+   0116   d3 9b         	OUT 9BH
+                        
+                        		; Display the failed bit
+   0118   78            	MOV A,B
+                        
+   0119   e6 80         	ANI 080H	; Bit 7
+   011b   3e 5f         	MVI A,'_'   ; '_' = ok
+   011d   c2 22 01      	JNZ ERR7
+   0120   3e 2a         	MVI A,'*'	; '*' = nok
+   0122                 ERR7:
+   0122   d3 9a         	OUT 9AH
+                        
+   0124   78            	MOV A,B
+   0125   e6 40         	ANI 040H	; Bit 6
+   0127   3e 5f         	MVI A,'_'   ; '_' = ok
+   0129   ca 2e 01      	JZ ERR6
+   012c   3e 2a         	MVI A,'*'	; '*' = nok
+   012e                 ERR6:
+   012e   d3 99         	OUT 99H
+                        
+   0130   78            	MOV A,B
+   0131   e6 20         	ANI 020H	; Bit 5
+   0133   3e 5f         	MVI A,'_'   ; '_' = ok
+   0135   ca 3a 01      	JZ ERR5
+   0138   3e 2a         	MVI A,'*'	; '*' = nok
+   013a                 ERR5:
+   013a   d3 98         	OUT 98H
+                        
+   013c   78            	MOV A,B
+   013d   e6 10         	ANI 010H	; Bit 4
+   013f   3e 5f         	MVI A,'_'   ; '_' = ok
+   0141   ca 46 01      	JZ ERR4
+   0144   3e 2a         	MVI A,'*'	; '*' = nok
+   0146                 ERR4:
+   0146   d3 97         	OUT 97H
+                        
+   0148   78            	MOV A,B
+   0149   e6 08         	ANI 008H	; Bit 3
+   014b   3e 5f         	MVI A,'_'   ; '_' = ok
+   014d   ca 52 01      	JZ ERR3
+   0150   3e 2a         	MVI A,'*'	; '*' = nok
+   0152                 ERR3:
+   0152   d3 96         	OUT 96H
+                        
+   0154   78            	MOV A,B
+   0155   e6 04         	ANI 004H	; Bit 2
+   0157   3e 5f         	MVI A,'_'   ; '_' = ok
+   0159   ca 5e 01      	JZ ERR2
+   015c   3e 2a         	MVI A,'*'	; '*' = nok
+   015e                 ERR2:
+   015e   d3 95         	OUT 95H
+                        
+   0160   78            	MOV A,B
+   0161   e6 02         	ANI 002H	; Bit 1
+   0163   3e 5f         	MVI A,'_'   ; '_' = ok
+   0165   ca 6a 01      	JZ ERR1
+   0168   3e 2a         	MVI A,'*'	; '*' = nok
+   016a                 ERR1:
+   016a   d3 94         	OUT 94H
+                        
+   016c   78            	MOV A,B
+   016d   e6 01         	ANI 001H	; Bit 0
+   016f   3e 5f         	MVI A,'_'   ; '_' = ok
+   0171   ca 76 01      	JZ ERR0
+   0174   3e 2a         	MVI A,'*'	; '*' = nok
+   0176                 ERR0:
+   0176   d3 93         	OUT 93H
+                        
+                        ; HL is the offending address
+                        ; B is the offending byte pattern
+                        
+   0178                 SPAM:
+   0178   70            	MOV M,B
+   0179   70            	MOV M,B
+   017a   70            	MOV M,B
+   017b   70            	MOV M,B
+   017c   70            	MOV M,B
+   017d   70            	MOV M,B
+   017e   70            	MOV M,B
+   017f   70            	MOV M,B
+   0180   70            	MOV M,B
+   0181   70            	MOV M,B
+   0182   70            	MOV M,B
+   0183   70            	MOV M,B
+   0184   70            	MOV M,B
+   0185   70            	MOV M,B
+   0186   70            	MOV M,B
+   0187   70            	MOV M,B
+                        
+   0188   db 10         	IN KBDSTROBE
+   018a   0f            	RRC
+   018b   d2 78 01      	JNC SPAM
+                        
+   018e   db 11         	IN KBDDATA
+                        
+   0190   24            	INR H		; We skip to the next page to accelerate the test
+   0191   2e 00         	MVI L,0
+                        
+                        ; 		; WAIT A BIT
+                        ; 	LXI D,0FFFFH
+                        ; LOOP3:
+                        ; 	XCHG
+                        ; 	XCHG
+                        ; 	DCR E
+                        ; 	JNZ LOOP3
+                        ; 	DCR D
+                        ; 	JNZ LOOP3
+                        
+   0193   c3 bf 00      	JMP TESTRAMRECOVER
+                        
+                        
+                        	; Displays character A in all locations
+                        	; Returns to HL
+   0196                 DISPLAYALL:
+   0196   d3 9f         	OUT 9FH
+   0198   d3 9e         	OUT 9EH
+   019a   d3 9d         	OUT 9DH
+   019c   d3 9c         	OUT 9CH
+   019e   d3 9b         	OUT 9BH
+   01a0   d3 9a         	OUT 9AH
+   01a2   d3 99         	OUT 99H
+   01a4   d3 98         	OUT 98H
+   01a6   d3 97         	OUT 97H
+   01a8   d3 96         	OUT 96H
+   01aa   d3 95         	OUT 95H
+   01ac   d3 94         	OUT 94H
+   01ae   d3 93         	OUT 93H
+   01b0   d3 92         	OUT 92H
+   01b2   d3 91         	OUT 91H
+   01b4   d3 90         	OUT 90H
+   01b6   d3 8f         	OUT 8FH
+   01b8   d3 8e         	OUT 8EH
+   01ba   d3 8d         	OUT 8DH
+   01bc   d3 8c         	OUT 8CH
+   01be   d3 8b         	OUT 8BH
+   01c0   d3 8a         	OUT 8AH
+   01c2   d3 89         	OUT 89H
+   01c4   d3 88         	OUT 88H
+   01c6   d3 87         	OUT 87H
+   01c8   d3 86         	OUT 86H
+   01ca   d3 85         	OUT 85H
+   01cc   d3 84         	OUT 84H
+   01ce   d3 83         	OUT 83H
+   01d0   d3 82         	OUT 82H
+   01d2   d3 81         	OUT 81H
+   01d4   d3 80         	OUT 80H
+   01d6   e9            	PCHL
+                        
+                        	; Waits around 1 second and jumps to HL
+                        	; Overrides DE
+   01d7                 WAIT1S:
+   01d7   11 ff ff      	LXI D,0FFFFH
+   01da                 LOOP1:
+   01da   eb            	XCHG
+   01db   eb            	XCHG
+   01dc   1d            	DCR E
+   01dd   c2 da 01      	JNZ LOOP1
+   01e0   15            	DCR D
+   01e1   c2 da 01      	JNZ LOOP1
+   01e4   e9            	PCHL
+                        
+                        	; Waits around 100ms second and jumps to HL
+                        	; Overrides DE
+   01e5                 WAIT100MS:
+   01e5   11 ff 1f      	LXI D,01FFFH
+   01e8                 LOOP2:
+   01e8   eb            	XCHG
+   01e9   eb            	XCHG
+   01ea   1d            	DCR E
+   01eb   c2 e8 01      	JNZ LOOP2
+   01ee   15            	DCR D
+   01ef   c2 e8 01      	JNZ LOOP2
+   01f2   e9            	PCHL
+                        
+                        
+   01f3                 	END
+00b4  CLRSCR        0196  DISPLAYALL    0176  ERR0          016a  ERR1      
+015e  ERR2          0152  ERR3          0146  ERR4          013a  ERR5      
+012e  ERR6          0122  ERR7          0011  KBDDATA       0010  KBDSTROBE 
+008a  LOOP          01da  LOOP1         01e8  LOOP2         0090  NEXT0     
+0096  NEXT1         000a  PORTAL        0088  SCREEN        0178  SPAM      
+00bc  TESTRAM       00dd  TESTRAMFAILED    00c3  TESTRAMLOOP    00bf  TESTRAMRECOVER
+01e5  WAIT100MS     01d7  WAIT1S        009f  WAITKEY       
+

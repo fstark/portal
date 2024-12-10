@@ -15,6 +15,10 @@ Here are the [latest findings](docs/findings.md) and the [work log](misc/logs.md
 
 The [roms directory](roms) contains roms from the portal, a disassembly and a custom debug rom (in progress)
 
+## Debug
+
+The [debug directory](debug) contais a test ROM for the portal.
+
 ## Images
 
 The [images directory](images) contains images of the portal computer externals and internals.

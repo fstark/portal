@@ -22,7 +22,7 @@ LABEL F886H CODE WAIT_LOOP
 LABEL F88EH CODE DF88E
 COMMENT LABEL DF88E "I suspect the FLOPPY BOOT starts here\nHL is something unclear (0080)\nB seems to be the drive number"
 LABEL F8AEH CODE DF8AE
-COMMENT LABEL DF8AE "We write 03, 53, 30 to the data register\n"
+COMMENT LABEL DF8AE "We write 03, 53, 30 to the data register\n\"Specify\" command (03)\nSRT = 5 (Stepping Rate = 11ms)\nHUT = 3 (Head Unload Time = 3*16ms)\nHLT = 10 (Head Load Time = 16*2ms)"
 LABEL F8DEH CODE SKIP_383
 LABEL F8EFH CODE AGAIN
 COMMENT LABEL AGAIN "Redoes whatever this function tries to do.\nWEIRD ends here if C is zero"
