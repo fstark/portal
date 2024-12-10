@@ -15,123 +15,30 @@ KBDDATA EQU 11H
 	LXI H,PORTAL
 	JMP WAIT1S
 
+; -----------------------------------------------------------
 ;	TEST 0 : prints 'PORTAL'
+; -----------------------------------------------------------
 PORTAL:
 	; Output 'PORTAL' to screen
 	MVI A,'P'
 	OUT 9FH
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
 	MVI A,'O'
 	OUT 9EH
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
 	MVI A,'R'
 	OUT 9DH
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
 	MVI A,'T'
 	OUT 9CH
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
 	MVI A,'A'
 	OUT 9BH
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
 	MVI A,'L'
 	OUT 9AH
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	; JMP PORTAL
 
 	LXI H,SCREEN
 	JMP WAIT1S
 
+; -----------------------------------------------------------
 ;	TEST 1 : prints all chars on all positions
+; -----------------------------------------------------------
 SCREEN:
 	MVI A,' '		; First char
 LOOP:
@@ -145,9 +52,12 @@ NEXT1:
 	CPI 060H
 	JNZ LOOP		; Last char
 
+; #### SKIPPING THE KEYBOARD TESTS FOR NOW
 	JMP CLRSCR
 
+; -----------------------------------------------------------
 ;	TEST 2 : keyboards echo on all screen until ESC
+; -----------------------------------------------------------
 WAITKEY:
 	IN KBDSTROBE
 	RRC
@@ -161,6 +71,9 @@ WAITKEY:
 	LXI H,WAITKEY
 	JMP DISPLAYALL
 
+; -----------------------------------------------------------
+; TEST 3 : Test RAM 0400H-FFFFH
+; -----------------------------------------------------------
 CLRSCR:
 	MVI A,' '
 	LXI H,TESTRAM
@@ -190,15 +103,18 @@ TESTRAMLOOP:
 	ORA H
 	JNZ TESTRAMLOOP ; Not finished
 
-	LDA '*'			; Prints a '*' on the right of the screen
+	MVI A,'*'			; Prints a '*' on the right of the screen
 	OUT 80H
 
 	JMP TESTRAM
 
+; -----------------------------------------------------------
 ; In case of failure we display
 ; Address and failed bits with the following format
 ; 1234:__*_*___
-
+; Ports: 9F 9E 9D 9C 9B 9A 99 98 97 96 95 94 93 92 91 90
+; Data : H  H     H  H  L  L  :  B  B  B  B  B  B  B  B
+; -----------------------------------------------------------
 TESTRAMFAILED:
 	; Failed
 	MOV B,A		; Failed bits
@@ -380,8 +296,10 @@ SPAM:
 	JMP TESTRAMRECOVER
 
 
-	; Displays character A in all locations
-	; Returns to HL
+; -----------------------------------------------------------
+; Displays a character A in all locations
+; Returns to HL
+; -----------------------------------------------------------
 DISPLAYALL:
 	OUT 9FH
 	OUT 9EH
@@ -417,8 +335,10 @@ DISPLAYALL:
 	OUT 80H
 	PCHL
 
-	; Waits around 1 second and jumps to HL
-	; Overrides DE
+; -----------------------------------------------------------
+; Waits around 1 second and jumps to HL
+; Overrides DE
+; -----------------------------------------------------------
 WAIT1S:
 	LXI D,0FFFFH
 LOOP1:
@@ -430,8 +350,10 @@ LOOP1:
 	JNZ LOOP1
 	PCHL
 
-	; Waits around 100ms second and jumps to HL
-	; Overrides DE
+; -----------------------------------------------------------
+; Waits around 100ms second and jumps to HL
+; Overrides DE
+; -----------------------------------------------------------
 WAIT100MS:
 	LXI D,01FFFH
 LOOP2:
