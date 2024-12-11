@@ -21,29 +21,29 @@ SMC          | KR3600-017    | Keyboard Encoder | 3600 | [4](../images/motherboa
 
 ### Connectors
 
-Connector list:
-* P1: Display
-* P2: Printer
-* P3: RS232/Parallel?
-* P4: RS232/Parallel?
-* P5: RS232/Parallel?
-* P5: Floppy data / control
-* P6: Floppy power out
-* P7: Motherboard power in
-* P8: Keyboard
-* P11: Expansion
-* P12: ?
-* P13: ?
-* P14: ?
-* P15: ?
+Marking | Pins | Connector   | Role
+------- | ---- | ---------   | -------------------------
+P1      | 20   | 0.1" header | Display
+P2      | 34   | 0.1" header | Printer
+P3      | 26   | 0.1" header | -> Asynchrone V.24 DB25
+P4      | 26   | 0.1" header | -> Teletransmission DB25
+P5      | 34   | 0.1" header | -> Teletransmission DB37
+P5      | 34   | 0.1" header | Floppy data / control
+P6      | 4    | Molex .062" | Floppy power out
+P7      | 6    | Molex .062" | Motherboard power in
+P8      | 34   | 0.1" header | Keyboard
+P9      | 2    | 0.1" header | Reset button
+P11     | 40   | 0.1" header | Expansion?
+P12     | 8    | 0.1" header | ?
+P13     | 8    | 0.1" header | ?
+P14     | 8    | 0.1" header | ?
+P15     | 8    | 0.1" header | ?
 
-#### P5: Floppy connector
-
-34 pin floppy control & data connector
+P10 doesn't exist on this PCB
 
 #### P7: Power connector
 
-Seen motherboard side:
+Male connector on motherboard:
 ```
   1 2 3
 ╭───────╮
