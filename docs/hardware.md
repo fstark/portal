@@ -46,21 +46,14 @@ P10 doesn't exist on this PCB
 Male connector on motherboard:
 ```
   1 2 3
-╭───────╮
-│ o o o │
-│ o o o │
-└──^─^──┘ 
+╭───────╮     1:   -12V
+│ o o o │     2,4: GND
+│ o o o │     3,6: 5V
+└──^─^──┘     5:   16V (unregulated 12V)
   4 5 6
 ```
 
 The connector is a male 3.68mm pitch PCB mount connector. One matching connector is Amp 770356-1.
-
-Pinout:
-* 1: -12V
-* 2,4: GND
-* 3,6: 5V
-* 5: 16V (unregulated 12V)
-
 
 ## Printer
 
