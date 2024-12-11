@@ -19,6 +19,49 @@ SMC          | KR3600-017    | Keyboard Encoder | 3600 | [4](../images/motherboa
 (**) PIC = Programmable Interrupt Controller
 
 
+### Connectors
+
+Connector list:
+* P1: Display
+* P2: Printer
+* P3: RS232/Parallel?
+* P4: RS232/Parallel?
+* P5: RS232/Parallel?
+* P5: Floppy data / control
+* P6: Floppy power out
+* P7: Motherboard power in
+* P8: Keyboard
+* P11: Expansion
+* P12: ?
+* P13: ?
+* P14: ?
+* P15: ?
+
+#### P5: Floppy connector
+
+34 pin floppy control & data connector
+
+#### P7: Power connector
+
+Seen motherboard side:
+```
+  1 2 3
+╭───────╮
+│ o o o │
+│ o o o │
+└──^─^──┘ 
+  4 5 6
+```
+
+The connector is a male 3.68mm pitch PCB mount connector. One matching connector is Amp 770356-1.
+
+Pinout:
+* 1: -12V
+* 2,4: GND
+* 3,6: 5V
+* 5: 16V (unregulated 12V)
+
+
 ## Printer
 
 Thermal printer, using a Mostek F8-based microcontroller.
