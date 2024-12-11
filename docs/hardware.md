@@ -46,10 +46,10 @@ P10 doesn't exist on this PCB
 Male connector on motherboard:
 ```
   1 2 3
-╭───────╮     1:   -12V
+╭───────╮     1:   16V (unregulated 12V)
 │ o o o │     2,4: GND
 │ o o o │     3,6: 5V
-└──^─^──┘     5:   16V (unregulated 12V)
+└──^─^──┘     5:   -12V
   4 5 6
 ```
 
