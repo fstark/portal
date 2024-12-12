@@ -8,6 +8,8 @@
 	MVI A,'!'
 	OUT 9FH
 DONE:
+	INR A
+	OUT 9EH
 	JMP DONE
 
 	END
