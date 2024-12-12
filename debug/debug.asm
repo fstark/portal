@@ -95,7 +95,7 @@ TESTRAMLOOP:
 				; We print the page address
 				; Convert to ASCII using the 8085 DAA trick	
 				; High nibble
-	MOV A,L
+	MOV A,H
 	RRC
 	RRC
 	RRC
@@ -108,7 +108,7 @@ TESTRAMLOOP:
 	OUT 9FH
 
 				; Low nibble
-	MOV A,L
+	MOV A,H
 	ANI 0FH
 	ADI 90H
 	DAA
