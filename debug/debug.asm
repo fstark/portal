@@ -248,7 +248,7 @@ TESTRAMFAILED:
 
 	ANI 080H	; Bit 7
 	MVI A,'_'   ; '_' = ok
-	JNZ ERR7
+	JZ ERR7
 	MVI A,'*'	; '*' = nok
 ERR7:
 	OUT 97H
