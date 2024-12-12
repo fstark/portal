@@ -79,9 +79,9 @@ CLRSCR:
 	LXI H,TESTRAM
 	JMP DISPLAYALL
 
-;	TEST 3 : Test all RAM
+;	TEST 3 : C000H-FFFFH RAM
 TESTRAM:
-	LXI H,0800H	; Start of RAM
+	LXI H,0C000H	; Start of RAM
 
 TESTRAMRECOVER:
 	MVI B,0FFH  ; Value stored
@@ -133,10 +133,16 @@ TESTRAMCONT:
 	ORA H
 	JNZ TESTRAMLOOP ; Not finished
 
-	MVI A,'*'			; Prints a '*' on the right of the screen
-	OUT 80H
+; -----------------------------------------------------------
+;	Phase 2 of test, we have some good RAM
+; -----------------------------------------------------------
 
-	JMP TESTRAM
+	MVI A,'*'
+	LXI H,COPYTORAM
+	JMP DISPLAYALL
+
+COPYTORAM:
+	JMP COPYTORAM
 
 ; -----------------------------------------------------------
 ; In case of failure we display
