@@ -19,6 +19,42 @@ SMC          | KR3600-017    | Keyboard Encoder | 3600 | [4](../images/motherboa
 (**) PIC = Programmable Interrupt Controller
 
 
+### Connectors
+
+Marking | Location | Pins | Connector   | Role
+------- | -------- | ---- | ---------   | -------------------------
+P1      | D10      | 20   | 0.1" header | Display
+P2      | E15      | 34   | 0.1" header | Printer
+P3      | J13      | 26   | 0.1" header | -> Asynchrone V.24 DB25
+P4      | J13      | 26   | 0.1" header | -> Teletransmission DB25
+P5      | J13      | 34   | 0.1" header | -> Teletransmission DB37
+P5      | J1       | 34   | 0.1" header | Floppy data / control
+P6      | J2       | 4    | Molex .062" | Floppy power out
+P7      | J11      | 6    | Molex .062" | Motherboard power in
+P8      | A15      | 34   | 0.1" header | Keyboard
+P9      | J16      | 2    | 0.1" header | Reset button
+P11     | D16      | 40   | 0.1" header | Expansion?
+P12     | E7       | 8    | 0.1" header | ?
+P13     | E8       | 8    | 0.1" header | ?
+P14     | E8       | 8    | 0.1" header | ?
+P15     | C8       | 8    | 0.1" header | ?
+
+P10 doesn't exist on this PCB
+
+#### P7: Power connector
+
+Male connector on motherboard:
+```
+  1 2 3
+╭───────╮     1:   16V (unregulated 12V)
+│ o o o │     2,5: GND
+│ o o o │     3,4: 5V
+└──^─^──┘     6:   -12V
+  6 5 4
+```
+
+The connector is a male 3.68mm pitch PCB mount connector. One matching connector is Amp 770356-1.
+
 ## Printer
 
 Thermal printer, using a Mostek F8-based microcontroller.

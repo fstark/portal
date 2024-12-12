@@ -15,7 +15,7 @@ Number | Title                              | Dump | Bootable | Contents
  0007  | 2bis                               |  OK  | ?        | ?
  0008  | Test floppy sous TSMG              |  OK  | ?        | ?
  0009  | TSMG.FLOPPY                        |  OK  | ?        | ?
- 0010  | Prologue Portal avec S/P IMP-O     |  OK  | ?        | ?
+ 0010  | Prologue Portal avec S/P IMP-O     |  OK  | Yes      | ?
  0011  | Systeme Prologue avec sortie EPSON |  OK  | ?        | ?
  0012  | Portal Test Mémoire CR             |  OK* | ?        | ?
  0013  | PORTAL.AZM PATCH 2                 |  OK  | ?        | ?
