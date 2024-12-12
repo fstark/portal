@@ -21,23 +21,23 @@ SMC          | KR3600-017    | Keyboard Encoder | 3600 | [4](../images/motherboa
 
 ### Connectors
 
-Marking | Pins | Connector   | Role
-------- | ---- | ---------   | -------------------------
-P1      | 20   | 0.1" header | Display
-P2      | 34   | 0.1" header | Printer
-P3      | 26   | 0.1" header | -> Asynchrone V.24 DB25
-P4      | 26   | 0.1" header | -> Teletransmission DB25
-P5      | 34   | 0.1" header | -> Teletransmission DB37
-P5      | 34   | 0.1" header | Floppy data / control
-P6      | 4    | Molex .062" | Floppy power out
-P7      | 6    | Molex .062" | Motherboard power in
-P8      | 34   | 0.1" header | Keyboard
-P9      | 2    | 0.1" header | Reset button
-P11     | 40   | 0.1" header | Expansion?
-P12     | 8    | 0.1" header | ?
-P13     | 8    | 0.1" header | ?
-P14     | 8    | 0.1" header | ?
-P15     | 8    | 0.1" header | ?
+Marking | Location | Pins | Connector   | Role
+------- | -------- | ---- | ---------   | -------------------------
+P1      | D10      | 20   | 0.1" header | Display
+P2      | E15      | 34   | 0.1" header | Printer
+P3      | J13      | 26   | 0.1" header | -> Asynchrone V.24 DB25
+P4      | J13      | 26   | 0.1" header | -> Teletransmission DB25
+P5      | J13      | 34   | 0.1" header | -> Teletransmission DB37
+P5      | J1       | 34   | 0.1" header | Floppy data / control
+P6      | J2       | 4    | Molex .062" | Floppy power out
+P7      | J11      | 6    | Molex .062" | Motherboard power in
+P8      | A15      | 34   | 0.1" header | Keyboard
+P9      | J16      | 2    | 0.1" header | Reset button
+P11     | D16      | 40   | 0.1" header | Expansion?
+P12     | E7       | 8    | 0.1" header | ?
+P13     | E8       | 8    | 0.1" header | ?
+P14     | E8       | 8    | 0.1" header | ?
+P15     | C8       | 8    | 0.1" header | ?
 
 P10 doesn't exist on this PCB
 
