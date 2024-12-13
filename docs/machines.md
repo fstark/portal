@@ -2,12 +2,13 @@
 
 This is a list of Portal we know of, and their specificities
 
-| Nickname | Serial | Date | Version | Link                                  |
-| Mickael  | ?      | ?    | 1       |                                       |
-| Fred     | ?      | 1984 | 2       |                                       |
+| Nickname | Serial | Date | Version |
+| -------- | ------ | ---- | ------- |
+| Mickael  | ?      | ?    | 1       |
+| Fred     | ?      | 1984 | 2       |
 | ebay     |        |      | 2       |
-| Rouillac | 2029   | ?    | 2       | https://www.rouillac.com/fr/lot-441-121055-r2e_ccmc_portal_n2029_c._1981._lun#pid=6 |
-| MO5      |        |      |         |                                       |
+| Rouillac | 2029   | ?    | 2       |
+| MO5      |        |      |         |
 
 Original price seems to be 35000FF, as seen in L'Ordinateur Individuel #50bis
 
