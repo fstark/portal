@@ -6,14 +6,15 @@ This is the structure for Portal-specific disks:
 * 16 soft sectors per track
 * 256 bytes per sector
 
-| Start  | End     | Sectors | Contents             |
-| ------ | ------- | ------- | -------------------- |
-| 0x0    | 0xFF    | 1       | Block allocation map |
-| 0x100  | 0x3FF   | 3       | Empty                |
-| 0x400  | 0X1FFF  | 28      | File table           |
-| 0x2000 | 0x27FFF | 608     | File contents        |
+| Start  | End     | Sectors | Contents               |
+| ------ | ------- | ------- | ---------------------- |
+| 0x0    | 0xFF    | 1       | Granule allocation map |
+| 0x100  | 0x3FF   | 3       | Empty                  |
+| 0x400  | 0X1FFF  | 28      | File table (catalog)   |
+| 0x2000 | 0x27FFF | 608     | File contents          |
 
-Disks can hold 152 KB of data, including the OS.
+Disks can theorically hold 152 KB of data, including the OS.
+The exact size per disk depends on the filesystem headers.
 
 # Prologue filesystem
 
@@ -54,7 +55,7 @@ struct file_descriptor
 struct catalog_entries
 {
 	/* First catalog entry is a struct ngr */
-	uint8_t filename[31][8];
+	uint8_t filename[32][8];
 	uint8_t unused[64];
 	struct file_descriptor descriptors[32];
 };
@@ -101,7 +102,7 @@ Granules values below are annotated as number(address)
 | 15    | `SYSTER.O`  | 1(0x1e)              | 1    |
 | 16    | `TEST.T`    | 1(0x20)              | 1    |
 
-Total: 33 allocated. Header says 33 though?
+Total: 33 allocated. Header bitmap says 34 though?
 
 ```
 0X0000: 23 00 FF FF FF FF 60 00
