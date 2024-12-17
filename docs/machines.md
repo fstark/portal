@@ -6,9 +6,9 @@ This is a list of Portal we know of, and their specificities
 | -------- | ------ | ---- | ------- |
 | Mickael  | ?      | ?    | 1       |
 | Fred     | ?      | 1984 | 2       |
-| ebay     |        |      | 2       |
+| ebay     | ?      | ?    | 2       |
 | Rouillac | 2029   | ?    | 2       |
-| MO5      |        |      |         |
+| MO5      | ?      | ?    | ?       |
 
 Original price seems to be 35000FF, as seen in L'Ordinateur Individuel #50bis
 
@@ -39,7 +39,8 @@ It appears the screen is more inclined and has a better viewing angle, but it mi
 
 ### V1
 
-Black bezel around floppy. Olivetti floppy drive
+Black bezel around floppy. Olivetti floppy drive.
+An unknown ad picture shows the same chassis with a Canon drive.
 
 ### V2
 
