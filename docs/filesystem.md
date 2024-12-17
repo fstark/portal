@@ -22,15 +22,15 @@ Some information not relevant to the Portal use-case is omitted.
 
 It is based off the official documentation. Some concepts:
 * Granule = logical blocks
-* Catalogue = File Allocation Table
+* Catalog = File Allocation Table
 
 ```C
-/* First entry in the File Allocation table, defines disk properties */
+/* First entry in the catalog, defines disk properties */
 struct ngr {
 	/* Number of 256 byte sectors used in granules.
 	 * Defines the minimum file size. Can only be multiples of 2. */
 	uint8_t lgr;
-	/* Number of the first sector not belonging to the catalogue.
+	/* Number of the first sector not belonging to the catalog.
 	 * Limited between 13 and 76. */
 	uint8_t lcat;
 	/* Magic value = 9F */
@@ -38,6 +38,7 @@ struct ngr {
 	uint8_t unused[5];
 };
 
+/* Not applicable to the first catalog entry */
 struct file_descriptor
 {
 	uint16_t read_permissions;
@@ -50,19 +51,20 @@ struct file_descriptor
 	} granules[19];
 };
 
-struct catalogue_entries
+struct catalog_entries
 {
+	/* First catalog entry is a struct ngr */
 	uint8_t filename[31][8];
 	uint8_t unused[64];
 	struct file_descriptor descriptors[32];
 };
 
-struct prologue_catalogue
+struct prologue_catalog
 {
 	struct ngr ngr;
 
 	/* number of entries depends on ngr.lcat */
-	struct catalogue_entries *entries;
+	struct catalog_entries *entries;
 };
 ```
 
@@ -77,26 +79,50 @@ R2E Prologue documentation: https://oldcomputers.dyndns.org/public/pub/rechner/o
 
 Analyzing disk 10. Converted it with `hxcfe -finput:dumps/0010.afi -conv:RAW_LOADER -foutput:0010.img`
 
+Granules values below are annotated as number(address)
+
+| Index | Name        | Granules             | Size |
+| ----- | ----------- | -------------------- | ---- |
+| 0     | -           |                      |      |
+| 1     | `SYSTPOT.O` | 4(0x8)               | 4    |
+| 2     | `MM.O`      | 2(0x10)              | 2    |
+| 3     | `ED.O`      | 2(0x18)              | 2    |
+| 4     | `LOEXT.O`   | 2(0x4)               | 2    |
+| 5     | `FM.O`      | 2(0xc)               | 2    |
+| 6     | `TEST.S`    | 1(0x14)              | 1    |
+| 7     | `MODENS.O`  | 1(0x1c)              | 1    |
+| 8     | `EX.O`      | 1(0x2) 1(0x1f) 2(0x21)| 4    |
+| 9     | `CP.O`      | 2(0xe)               | 2    |
+| 10    | `/.O`       | 2(0x12)              | 2    |
+| 11    | `TRANSP.S`  | 2(0x16) 1(0x1a)      | 3    |
+| 12    | `IMP.S`     | 1(0x15)              | 1    |
+| 13    | `IMP.O`     | 1(0x6)               | 1    |
+| 14    | `TR.O`      | 1(0x3) 1(0x7) 1(0x1b) 1(0x1d) | 4    |
+| 15    | `SYSTER.O`  | 1(0x1e)              | 1    |
+| 16    | `TEST.T`    | 1(0x20)              | 1    |
+
+Total: 33 allocated. Header says 33 though?
+
 ```
 0X0000: 23 00 FF FF FF FF 60 00
--> 37 used granuless?
+-> 0x23 = 35 max granules
+-> 0xFFFFFFFF60 = 34 bits set, only one free.
 
 0x400: 1016 9f00 0000 0000
--> LGR = 0x10 = 16 sectors per granule
+-> LGR  = 0x10 = 16 sectors per granule
 -> LCAT = 0x16 = files start at sector 22 (0x1600?)
 
+We get a max capacity of 35 * 16 * 256 = 140KB
+
 First two entries:
-0x408: 5359 5354 504f 524f   SYSTPORO
-0x410: 2f20 2020 2020 204f   /      O
+0x408: 5359 5354 504f 544f   SYSTPOTO
+0x410: 4d4d 2020 2020 204f   MM     O
 
 0x500: 5359 5354 2020 2020 0000 0000 0000 0000  SYST    ........
-0x510: 0000 0000 0000 0000 0000 0000 0000 0000  ................
-0x520: 0000 0000 0000 0000 0000 0000 0000 0000  ................
-0x530: 0000 0000 0000 0000 0000 0000 0000 0000  ................
-
+[0000]
 0x540: 2020 2020 0000 0004 0008 0000 0000 0000      ............
-0x550: 0000 0000 0000 0000 0000 0000 0000 0000  ................
-0x560: 0000 0000 0000 0000 0000 0000 0000 0000  ................
-0x570: 0000 0000 0000 0000 0000 0000 0000 0000  ................
-
+[0000]
+0x580: 2020 2020 0000 0002 0010 0000 0000 0000      ............
+-> SYSPOT.O = 4 granules, starts at 8th
+-> MM.O = 2 granules, start at 0x10th
 ```
