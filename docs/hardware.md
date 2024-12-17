@@ -2,6 +2,7 @@
 
 ## Motherboard
 
+P/N 07010
 
 Manufacturer | Part Number   | Description | Board Marking | Pictures | Documentation
 ------------ | ------------- | ----------- | ------------- | -------- | -------------
@@ -61,11 +62,13 @@ Thermal printer, using a Mostek F8-based microcontroller.
 
 When resetted, it moves the head back to the first column and feeds one line.
 
+48 columns, can print 28 characters per second.
+
 TODO: More details
 
 ## Display
 
-The display module is made by R2E, and comprised of 8 Litronix/Siemens DL1416T displays ([datasheet](datasheets/DL1416T.pdf)).
+The display module is made by R2E (P/N 07040), and comprised of 8 Litronix/Siemens DL1416T displays ([datasheet](datasheets/DL1416T.pdf)).
 
 As stated in the findings, they're directly mapped on I/O ports.
 
@@ -94,7 +97,7 @@ Pin assignment:
 * 4: Unused
 * 34: Unused
 
-Default jumper configuration: DS0 / HL. A 150 Ohm terminator resistor pack is installed.
+Default jumper configuration: `DS0 / HL`. A 150 Ohm terminator resistor pack is installed.
 
 On the model we tested, the belt (labelled Megadyne MF40) and stepper were both still fine.
 It was likely manufactured on the 25th week of 1984. There's a 2584 sticker on the side, and the most recent datecode on the control board is 8409.
