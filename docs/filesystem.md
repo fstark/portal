@@ -20,23 +20,23 @@ Disks can hold 152 KB of data, including the OS.
 Below is a description of the Prologue filesystem headers, applicable to the Portal.
 Some information not relevant to the Portal use-case is omitted.
 
-It is based off the official documentation, and we translate the French terms as follows:
-* Granule -> Block
-* Catalogue -> File Allocation Table
+It is based off the official documentation. Some concepts:
+* Granule = logical blocks
+* Catalogue = File Allocation Table
 
 ```C
 /* First entry in the File Allocation table, defines disk properties */
 struct ngr {
-	/* Number of 256 byte sectors used in logical blocks.
+	/* Number of 256 byte sectors used in granules.
 	 * Defines the minimum file size. Can only be multiples of 2. */
 	uint8_t lgr;
-	/* Number of the first sector not belonging to the FAT.
+	/* Number of the first sector not belonging to the catalogue.
 	 * Limited between 13 and 76. */
 	uint8_t lcat;
 	/* Magic value = 9F */
 	uint8_t ind;
-	uint8_t unused[5];	
-}
+	uint8_t unused[5];
+};
 
 struct file_descriptor
 {
@@ -44,29 +44,29 @@ struct file_descriptor
 	uint16_t write_permissions;
 	uint8_t unused[3];
 	struct {
-		uint8_t block_quantity;
+		uint8_t quantity;
 		/* First 4 bits are ignored */
-		uint16_t block_number;
-	} blocks[19];
-}
+		uint16_t number;
+	} granules[19];
+};
 
-struct fat_blocks
+struct catalogue_entries
 {
 	uint8_t filename[31][8];
 	uint8_t unused[64];
 	struct file_descriptor descriptors[32];
-}
+};
 
-struct prologue_fat
+struct prologue_catalogue
 {
 	struct ngr ngr;
 
 	/* number of entries depends on ngr.lcat */
-	struct fat_blocks fat[...];
-}
+	struct catalogue_entries *entries;
+};
 ```
 
-Similar to CP/M, the exact filesize is not known. It's a multiple of the block size, in this case 4KB.
+Similar to CP/M, the exact filesize is not known. It's a multiple of the granule size, in this case 4KB.
 
 Sources:
 
@@ -79,10 +79,10 @@ Analyzing disk 10. Converted it with `hxcfe -finput:dumps/0010.afi -conv:RAW_LOA
 
 ```
 0X0000: 23 00 FF FF FF FF 60 00
--> 37 used blocks?
+-> 37 used granuless?
 
 0x400: 1016 9f00 0000 0000
--> LGR = 0x10 = 16 sectors per block
+-> LGR = 0x10 = 16 sectors per granule
 -> LCAT = 0x16 = files start at sector 22 (0x1600?)
 
 First two entries:
