@@ -1,8 +1,10 @@
 # Micral R2E Portal CCMC
 
-Reverse engineering of the Micral Portal computer.
+Why spending valuable time on a weird French luggable computer designed for accountants ?
 
-The reverse engineered specimen has no readable serial number. Many internal components are dated 1984.
+Excellent question! Well, I have bought one, and it doesn't work, so it is important to understand its details to restore the machine is an good state.
+
+Also, I intend to write code for the portal (like a debug rom) and interoperate with it, so understanding its hardware is a must.
 
 ![The Portal](images/portal.jpg)
 
