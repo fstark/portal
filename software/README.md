@@ -6,6 +6,25 @@ Some software extracted from disks.
 
 Since the filesystem uses 4K multiples for file sizes, most contain remnants of previous files. These remnants are sometimes source code!
 
+## System
+
+Bootable OS, always the first disk catalog entry, located at 0x8000 on the floppy disks.
+
+We count 9 different versions, which come with various names.
+
+| Version | Disks     | Name(s)   |
+| ------- | --------- | --------- |
+| A       | 1,20,21   | PORTAL.O  |
+| B       | 2,16      | SYSPOT.O  |
+| C       | 5,15,19   | PORTAL.O  |
+| D       | 6,7,22,25 | SYSTPOR.O |
+| E       | 8,9,14    | SY/PO.O   |
+| F       | 10,13     | SYSTPOR, SYSTPOT |
+| G       | 11,23     | TELECOM.O |
+| H       | 12        | SYSTPOR.O |
+
+A and C are almost identical. Need to check the rest and overwritten files
+
 ## Slash
 
 Program used for listing files.
