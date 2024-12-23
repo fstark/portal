@@ -58,13 +58,27 @@ The connector is a male 3.68mm pitch PCB mount connector. One matching connector
 
 ## Printer
 
-Thermal printer, using a Mostek F8-based microcontroller.
+Thermal printer manufactured by Telpar, inc. Specifications match the PS-48 described in Radio Electrnics from March 1979.
+
+Specs:
+* Mostek MK3870/20 (F8) based control board (IB-13, PN:300015)
+* 5x7 matrix print head.
+* 48 columns
+* 28 characters per second (according to Portal brochure)
 
 When resetted, it moves the head back to the first column and feeds one line.
 
-48 columns, can print 28 characters per second.
+Connectors and adjustments:
+* VR1: 100K potentiometer that adjusts the contrast. Turn to the left for darker print.
+* SW1: 8 position dip switch, purpose unknown. Default configuration has 4 set to ON, the rest off.
+* P1: 34 pin connector, goes to motherboard
+* P3: 9 pin connector, purpose unknown
+* P4: 9 pin, power in
+* P5: 2 * 9 pins,to stepper motors
 
-TODO: More details
+Uses two stepper motors for paper advance and print head lateral movement. Two solenoids for "loading" the head. 
+
+We had issues with a line not working, which were fixed by carefully cleaning the contacts between the PCB and the flex ribbon, as well as changing the rubber strip used to press down on that ribbon.
 
 ## Display
 
