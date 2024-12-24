@@ -5,9 +5,9 @@
 Some software (`.O`) extracted from disks:
 * `SYSTEM`: bootable Prologue operating system
 * `/`: list files on floppy disk
-* `ASG`: ?
+* `ASG`: run command scripts
 * `CP`: File manipulation util (format, duplicate, create, rename, delete, copy)
-* `CPS`: ?
+* `CPS`: Raw sector copy
 * `ED`: Text editor
 * `EDL`: ?
 * `EX`: Another text editor?
@@ -18,7 +18,7 @@ Some software (`.O`) extracted from disks:
 * `MAC`: ?
 * `MEM`: ?
 * `MPORT`: ?
-* `PATCH`: ?
+* `PATCH`: View & modify sector data
 * `MM`: MOMIC monitor
 * `STATUS`: floppy disk status
 * `STT`: ?
