@@ -2,7 +2,35 @@
 
 (Messy unorganized section ahead)
 
-Some software extracted from disks.
+Some software (`.O`) extracted from disks:
+* `SYSTEM`: bootable Prologue operating system
+* `/`: list files on floppy disk
+* `ASG`: ?
+* `CP`: File manipulation util (format, duplicate, create, rename, delete, copy)
+* `CPS`: ?
+* `ED`: Text editor
+* `EDL`: ?
+* `EX`: Another text editor?
+* `FM`: Formatting util?
+* `IMP`: Small printer test program?
+* `LIST`: ?
+* `LOEXT`: ?
+* `MAC`: ?
+* `MEM`: ?
+* `MPORT`: ?
+* `PATCH`: ?
+* `MM`: MOMIC monitor
+* `STATUS`: floppy disk status
+* `STT`: ?
+* `TELECOM`: ?
+* `TR`: Micral BAL language compiler
+* `TSMG`: ?
+
+Other files:
+* `.VOLUME`: Disk name
+* `*.S`: Scripts?
+* `*.T`: Not sure, there's some BAL programs (`CLAVIER.T`) and other misc. stuff, maybe compiled BAL?
+* `RETOUR`, `SAISIE`, `LABEL`: Some accounting work test files. No confidential company data
 
 Since the filesystem uses 4K multiples for file sizes, most contain remnants of previous files. These remnants are sometimes source code!
 
