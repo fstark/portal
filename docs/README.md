@@ -5,9 +5,10 @@ Documentations
 
 There is a [Wikipedia page](https://en.wikipedia.org/wiki/Portal_(computer)) of questionable accuracy:
 * Not the first portable computer.
-  See MCM/70, IBM 5100, Scrib, Sharp PC-1211, Scrib, Xerox NoteTaker, Findex, HP-85 (yes, it's as portable as the Portal and marketed as such)...
-  And that's excluding mostly unknown very low production & one-off machines.
-  We could even stretch the definition as the Rockwell AIM-65 is functionally identical to the Portal, just without a handle
+  See MCM/70, IBM 5100, Scrib, Sharp PC-1211, Findex, HP-85 (yes, it's as portable as the Portal and marketed as such)...
+  And that's excluding mostly unknown very low production & one-off machines (NoteTaker, Micral V, ...).
+  We could even stretch the definition as the Rockwell AIM-65 is functionally identical to the Portal, just without a handle.
+  Even further, there were a bunch of portable terminals which paved the way design-wise.
 * "Several hundreds sold" seem to go against the serial numbers of 2000+, unless there was a S/N bump with each major revision. To be confirmed with more S/N data
 * Some ramblings about the link to the Micral N to ramp up value.
 * "Extremely rare" oops we have two, soon three in the same room.
