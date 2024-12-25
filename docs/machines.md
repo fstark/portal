@@ -1,6 +1,8 @@
 # Portal inventory
 
-This is a list of Portal we know of, and their specificities
+This is a list of Portal we know of, and their specificities.
+
+We only list machines for which we know the whereabouts and have either extensive pictures or physical access to.
 
 | Nickname | Serial | Date | Version |
 | -------- | ------ | ---- | ------- |
