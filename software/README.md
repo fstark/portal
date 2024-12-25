@@ -1,7 +1,5 @@
 # Software
 
-(Messy unorganized section ahead)
-
 Some software (`.O`) extracted from disks:
 * `SYSTEM`: bootable Prologue operating system
 * `/`, `LIST`: list files on floppy disk. Usually named `CAT` on other Prologue systems
@@ -33,6 +31,11 @@ Other files:
 
 Since the filesystem uses 4K multiples for file sizes, most contain remnants of previous files. These remnants are sometimes source code!
 
+TODO:
+* Check unused sectors on disks, and unused sectors in files for recoverable source code
+* Identify purpose of unknown programs
+* Identify differences between OS and program versions
+
 ## System
 
 Bootable OS, always the first disk catalog entry, located at 0x8000 on the floppy disks.
@@ -50,7 +53,9 @@ We count 9 different versions, which come with various names.
 | G       | 11,23     | TELECOM.O |
 | H       | 12        | SYSTPOR.O |
 
-A and C are almost identical. Need to check the rest and overwritten files
+A and C are almost identical.
+
+TODO: Check differences between versions, see if there's data in unused sectors
 
 ## Slash
 
@@ -82,4 +87,4 @@ Known arguments:
 * A: in disks 3,4,6,7,12,14,17,18,22,25
 * B: in disks 5,15,19
 
-A contained partial source code
+A contained partial source code.
