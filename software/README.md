@@ -62,7 +62,7 @@ Known arguments:
 
 We count 3 versions, we name as such:
 * A: in disks 01,08,09,11,15,19,20,21,23.
-* B: in disks 06,07,10,12,14,22,25.
+* B: in disks 02,06,07,10,12,14,16,22,25  (named `LIST` in disks 2 & 16).
 * C: in disk  13.
 
 The corrupted one from disk 05 matches the one in 01.
@@ -79,7 +79,7 @@ Known arguments:
 * `,LIS=LO`: output on printer
 
 2 versions:
-* A: in disks 2,3,4,6,7,12,14,16,17,18,22,25 (named `LIST` in disks 2 & 16)
+* A: in disks 3,4,6,7,12,14,17,18,22,25
 * B: in disks 5,15,19
 
 A contained partial source code
