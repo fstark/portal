@@ -4,7 +4,7 @@
 
 Some software (`.O`) extracted from disks:
 * `SYSTEM`: bootable Prologue operating system
-* `/`: list files on floppy disk
+* `/`, `LIST`: list files on floppy disk. Usually named `CAT` on other Prologue systems
 * `ASG`: run command scripts
 * `CP`: File manipulation util (format, duplicate, create, rename, delete, copy)
 * `CPS`: Raw sector copy
@@ -13,7 +13,6 @@ Some software (`.O`) extracted from disks:
 * `EX`: Another text editor?
 * `FM`: Formatting util?
 * `IMP`: Small printer test program?
-* `LIST`: ?
 * `LOEXT`: ?
 * `MAC`: ?
 * `MEM`: ?
@@ -28,7 +27,7 @@ Some software (`.O`) extracted from disks:
 
 Other files:
 * `.VOLUME`: Disk name
-* `*.S`: Scripts?
+* `*.S`: Some scripts (`TS.S`, ...), some sources (`TRANSP.S`, `MPORT.S`, `IMP.S`) and some BAL programs
 * `*.T`: Not sure, there's some BAL programs (`CLAVIER.T`) and other misc. stuff, maybe compiled BAL?
 * `RETOUR`, `SAISIE`, `LABEL`: Some accounting work test files. No confidential company data
 
@@ -80,7 +79,7 @@ Known arguments:
 * `,LIS=LO`: output on printer
 
 2 versions:
-* A: in disks 3,4,6,7,12,14,17,18,22,25
+* A: in disks 2,3,4,6,7,12,14,16,17,18,22,25 (named `LIST` in disks 2 & 16)
 * B: in disks 5,15,19
 
 A contained partial source code
