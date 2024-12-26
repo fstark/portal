@@ -127,3 +127,17 @@ First two entries:
 -> SYSPOT.O = 4 granules, starts at 8th
 -> MM.O = 2 granules, start at 0x10th
 ```
+
+# Binary files
+
+It appears binary files have a header, which purpose is unknown yet.
+
+For instance, the two versions of `STATUS.O` start with:
+* Version A: `03d0 065e ffc2 0000 0100 c34f 02`
+* Version B: `03d0 0799 ffc2 0000 0100 c34f 03`
+
+It is safe to assume the program really starts at the 10th byte, as it's `NOP`
+followed by a `JMP`. This is because the (French) R2E Prologue documentation
+mentions programs starting with a `NOP` can be "reinitialized without being reloaded".
+
+All executable files start with `0x03D0`, including the OS. The rest appears to be of varying size and finishes with `0x0001`, except for the OS.
