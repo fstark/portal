@@ -8,15 +8,15 @@ Also, I intend to write code for the portal (like a debug ROM) and interoperate 
 
 ## Structure
 
-* [roms](roms): ROM dumps and disassembly
-* [disks](disks): Floppy disk dumps
 * [debug](debug): Custom debug ROM
-* [images](images): Pictures
+* [disks](disks): Floppy disk dumps
 * [docs](docs): Some marketing documents, datasheets and reverse-engineering.
-  * [hardware](docs/hardware.md): Hardware specs, details and datasheets
-  * [findings](docs/findings.md): Software reverse-engineering and some history
   * [filesystem](docs/filesystem.md): Anatomy of the floppy disks & Prologue filesystem
+  * [findings](docs/findings.md): Software reverse-engineering and some history
+  * [hardware](docs/hardware.md): Hardware specs, details and datasheets
   * [machines](docs/machines.md): List of known machines and their revisions
+* [images](images): Pictures
+* [roms](roms): ROM dumps and disassembly
 * [software](software): Extracted software
 
 ## Pictures
