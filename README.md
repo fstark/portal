@@ -1,4 +1,6 @@
-# Micral R2E Portal CCMC
+# R2E/CCMC Portal
+
+The Portal is a computer co-designed by CCMC and R2E, released in 1980 to the French market.
 
 Why spend valuable time on a weird French luggable computer designed for accountants?
 
