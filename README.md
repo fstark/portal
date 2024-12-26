@@ -6,10 +6,6 @@ Excellent question! Well, I have bought one, and it doesn't work, so it is impor
 
 Also, I intend to write code for the portal (like a debug ROM) and interoperate with it, so understanding its hardware is a must.
 
-![The Portal](images/portal.jpg)
-
-![After re-cap and a custom ROM](images/boot1.jpg)
-
 ## Structure
 
 * [roms](roms): ROM dumps and disassembly
@@ -22,3 +18,9 @@ Also, I intend to write code for the portal (like a debug ROM) and interoperate 
   * [filesystem](docs/filesystem.md): Anatomy of the floppy disks & Prologue filesystem
   * [machines](docs/machines.md): List of known machines and their revisions
 * [software](software): Extracted software
+
+## Pictures
+
+![The Portal](images/portal.jpg)
+
+![After re-cap and a custom ROM](images/boot1.jpg)
