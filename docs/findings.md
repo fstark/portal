@@ -114,6 +114,16 @@ An earlier version was presented at the Personal Computer Festival in Arlington,
 https://archive.org/details/ord-ind-s1-019/page/122/mode/1up
 
 
+L'Ordinateur individuel #46 (1983/03): Portal listed among a list of various portable and luggable computers
+
+https://archive.org/details/ord-ind-s1-046/page/132/mode/2up
+
+
+L'Ordinateur individuel #50bis (1983/06): Lists the Portal as selling 700 units since 11/1981 (???)
+
+https://archive.org/details/ord-ind-s1-050bis/page/168/mode/2up
+
+
 According to Ordinateur Individuel #68, the Portal Price was 35 000F in 1985.
 
 "FAST PORTAL" software
