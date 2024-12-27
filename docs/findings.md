@@ -109,24 +109,15 @@ Presented at the Paris SICOB, 17-26 Sept 1980.
 CCMC: https://www.lemonde.fr/archives/article/1988/08/20/restructuration-dans-les-services-informatiques-ccmc-entre-dans-la-galaxie-thomson_4093359_1819218.html
 
 
-An earlier version was presented at the Personal Computer Festival in Arlington, where it was called "La Valise Micral V2" (V2 of Micral Suitcase). Note the difference on the screen and printer scroll button.
+[L'Ordinateur Individuel #19 (1980/06)](https://archive.org/details/ord-ind-s1-019/page/122/mode/1up): An earlier version was presented at the Personal Computer Festival in Arlington, where it was called "La Valise Micral V2" (V2 of Micral Suitcase). Note the difference on the screen and printer scroll button. Price is speculated around 15000FF, and specs are 16k instead of 64k RAM.
 
-https://archive.org/details/ord-ind-s1-019/page/122/mode/1up
+[L'Ordinateur individuel #46 (1983/03)](https://archive.org/details/ord-ind-s1-046/page/132/mode/2up): Portal listed among a list of various portable and luggable computers
 
+[L'Ordinateur individuel #50bis (1983/06)](https://archive.org/details/ord-ind-s1-050bis/page/168/mode/2up): Lists the Portal as selling 700 units since 11/1981 (???)
 
-L'Ordinateur individuel #46 (1983/03): Portal listed among a list of various portable and luggable computers
+L'Ordinateur Individuel #68: the Portal price was 35 000F in 1985.
 
-https://archive.org/details/ord-ind-s1-046/page/132/mode/2up
-
-
-L'Ordinateur individuel #50bis (1983/06): Lists the Portal as selling 700 units since 11/1981 (???)
-
-https://archive.org/details/ord-ind-s1-050bis/page/168/mode/2up
+[Micro Ordinateurs #17 (1983/12)](https://archive.org/details/micro-ordinateurs-oric/Micro_Ordinateurs_017-Decembre%201983%20-%20Pages%200%2C74-75%2C87%2C94-95%2C100%2C106%2C109%2C110-111/page/n5/mode/1up): "FAST PORTAL" software
 
 
-According to Ordinateur Individuel #68, the Portal Price was 35 000F in 1985.
-
-"FAST PORTAL" software
-
-https://archive.org/details/micro-ordinateurs-oric/Micro_Ordinateurs_017-Decembre%201983%20-%20Pages%200%2C74-75%2C87%2C94-95%2C100%2C106%2C109%2C110-111/page/n5/mode/1up
-
+[Computer Weekly Supplement , 1979](https://archive.org/details/ComputerWeeklySupplement1979UKEnglish/Jul%2005%201979%252C%20Computer%20Weekly%20Supplement%252C%20%2523660%252C%20UK%20(en)/page/n7/mode/2up): Data Logic (succursal of Raytheon) & Allied Breweries announces the "Microframe" luggable computer and claim it's the world first briefcase computer. R2E contests, as the Micral V was shown at Sicob 1977. I can't find any surviving info or unit of the Microframe. Micral V doesn't appear to have been sold to the public either, although a prototype from an ex-R2E engineer still exists.
