@@ -6,7 +6,7 @@ We only list machines for which we know the whereabouts and have either extensiv
 
 | Nickname | Serial | Date | Version |
 | -------- | ------ | ---- | ------- |
-| Mickael  | ?      | ?    | 1       |
+| Mickael  | 443    | ?    | 1       |
 | Fred     | ?      | 1984 | 2       |
 | ebay     | ?      | ?    | 2       |
 | Rouillac | 2029   | ?    | 2       |
